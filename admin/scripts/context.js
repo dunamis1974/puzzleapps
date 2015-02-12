@@ -2,11 +2,11 @@
 document.writeln('<div id="contextmenu__" class="context__" onMouseover="highlight__(event)" onMouseout="lowlight__(event)" onClick="jumpto__(event)" style="display: none; position: absolute; top: 0px; left: 0px; z-index: 10000">.</div>');
 
 if (typeof lang == "undefined") {
-    document.writeln('<script src="./admin/scripts/lang/en.lang.js" type="text/javascript"></script>');
+    document.writeln('<script src="/admin/scripts/lang/en.lang.js" type="text/javascript"></script>');
 }
 
-var systemimages = './admin/images/';
-var sysindex = './index.php';
+var systemimages = '/admin/images/';
+var sysindex = '/index.php';
 
 var ie = (document.all && document.getElementById)? true : false;
 var ns = (document.getElementById && !document.all)? true : false;
