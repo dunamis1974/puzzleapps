@@ -1,0 +1,1 @@
+Content Management System developed in PHP, using XSLT as templating engine. Can run on different SQL servers (MySql, SQLite, PostgreSQL, MSSQL) with ADODB or PEAR::DB as DBAL. UNIX/Linux like permissions system.
