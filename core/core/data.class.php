@@ -548,6 +548,17 @@ class DATA extends CORE
             $ID = $_GET["id"];
         }
         
+        if (!$ID && ($_GET["tid"] || $_GET["id"])) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+            header("Status: 404 Not Found");
+            if (file_exists($RUNNINGNDIR . "404.php")) {
+                include($RUNNINGNDIR . "404.php");
+            } else {
+                echo "<html><head>\n<title>404 Not Found</title></head><body>\n<h1>Not Found</h1> <p>The requested URL was not found on this server.</p>\n<p><a href=\"/\">Click here to continue</a></p>\n<hr>\n<address><a href=\"http://www.puzzleapps.org/\">PuzzleApps CMS</a></address>\n</body></html>\n";
+            }
+            die();
+        }
+        
         if ($CURRENTPLATFORM->writeAccess())
             $add .= " canedit='1'";
         

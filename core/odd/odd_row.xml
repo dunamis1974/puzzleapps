@@ -62,12 +62,12 @@
             <drop>None (Use it for WYSIWYG fields):none|Email:email|Web Site:www|Numbers only:number|Text:text|Date:date|Time:time</drop>
             <description>For more information review the LEGEND.</description>
         </validate>
+        -->
         <value reqired="0">
             <formfield>Default value</formfield>
             <field>text</field>
             <description>This field is used for default value</description>
         </value>
-        -->
         <submit>
             <formfield submit="Submit" cancel="Cancel" />
             <field>submit</field>

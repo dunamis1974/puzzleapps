@@ -21,6 +21,7 @@ $_TINYMCEINIT = "
 		theme_advanced_toolbar_align : \"left\",
 		theme_advanced_statusbar_location : \"bottom\",
 		theme_advanced_resizing : true,
+		file_browser_callback : \"ajaxfilemanager\",
 		content_css : \"css/content.css\",
 
 		paste_auto_cleanup_on_paste : true,
@@ -28,13 +29,33 @@ $_TINYMCEINIT = "
 		paste_strip_class_attributes : \"all\"
 	});
 
-	function fileBrowserCallBack(field_name, url, type, win) {
-		// This is where you insert your custom filebrowser logic
-		//alert(\"Filebrowser callback: field_name: \" + field_name + \", url: \" + url + \", type: \" + type);
-
-		// Insert new URL, this would normaly be done in a popup
-		win.document.forms[0].elements[field_name].value = \"\"; //someurl.htm
-	}
+	
+        function ajaxfilemanager(field_name, url, type, win) {
+            var ajaxfilemanagerurl = \"../../../../admin/tiny_mce/plugins/ajaxfilemanager/ajaxfilemanager.php\";
+            switch (type) {
+                case \"image\":
+                    break;
+                case \"media\":
+                    break;
+                case \"flash\": 
+                    break;
+                case \"file\":
+                    break;
+                default:
+                    return false;
+            }
+            tinyMCE.activeEditor.windowManager.open({
+                url: \"../../../../admin/tiny_mce/plugins/ajaxfilemanager/ajaxfilemanager.php\",
+                width: 782,
+                height: 440,
+                inline : \"yes\",
+                close_previous : \"no\"
+            },{
+                window : win,
+                input : field_name
+            });
+            
+        }
 	
     function toggleEditor(id) {
     	if (!tinyMCE.get(id))

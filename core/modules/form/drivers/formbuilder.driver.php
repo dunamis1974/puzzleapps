@@ -705,7 +705,12 @@ class FormBuilder
          * But can't handle languages
          */
         for($i = 0; $i < count($this->DTD); $i++) {
+            
             $this->values[$this->DTD[$i]["element_name"]] = $val[$this->DTD[$i]["element_name"]];
+            if (trim($this->values[$this->DTD[$i]["element_name"]]) == '' && count($val) == 0) {
+                $this->values[$this->DTD[$i]["element_name"]] = $this->get_default($this->DTD[$i]["data"]);
+            }
+            
             if ($val["_primary"] && $this->MULTILANG) {
                 $this->values_primary[$this->DTD[$i]["element_name"]] = $val["_primary"][$this->DTD[$i]["element_name"]];
                 if (! $this->DTD[$i]["attributes"]["lang"]) {
@@ -714,6 +719,26 @@ class FormBuilder
             }
         }
         return true;
+    }
+    
+    /**
+     * Function that will load default values into form
+     * 
+     * FormBuilder::get_default()
+     * 
+     * @param  $data 
+     * @return value or null
+     * @access private 
+     */
+    function get_default ($data) {
+        
+        foreach ($data AS $val) {
+            if ($val["element_name"] == "value") {
+                return $val["data"];
+            }
+        }
+        
+        return null;
     }
 
     /**

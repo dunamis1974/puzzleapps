@@ -91,13 +91,7 @@ if ($_POST) {
             } else {
                 $O = new CORE($_POST["id"], $VALIDATED);
             }
-            /*
-            echo "<pre>";
-            print_r($_POST);
-            print_r($_FILES);
-            print_r($VALIDATED);
-            die();
-            */
+            
             $O->update();
             $O->permissionsForm($O);
             $O->changeGroup($O->id, $VALIDATED["_group"]);

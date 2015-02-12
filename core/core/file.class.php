@@ -261,13 +261,13 @@ class FILES extends CORE {
      * uploaded with current object
      * can be used on object delete
      * 
-     * FILES::_delete_files()
+     * FILES::delete_files()
      * 
      * @param  $id 
      * @return boolean true
-     * @access private 
+     * @access public 
      */
-    private function _delete_files($id) {
+    function delete_files($id) {
         global $SYS_LANGUAGES, $LANGUAGES, $FILEROOT;
 
         $O = CORE::load ( $id );

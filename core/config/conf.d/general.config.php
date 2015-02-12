@@ -18,21 +18,14 @@ $_GENERAL_SEED = "PuZzLeApPs";
  */
 //$_GENERAL_MOD_XSLT = "text/mxml";
 
-
 $_GENERAL_XSL_FOLDER = "xslt/";
-
 
 $_FORM_IMPLODE_STRING = "; ";
 
 $_SYSINDEX = "index.php";
 
-
 $_SKIN = "puzzle";
 
-
 $_MEDIA_URL = "/media";
-
-
-$_EXTRA_SECURITY = false;
 
 ?>

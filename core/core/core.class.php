@@ -249,7 +249,8 @@ class CORE extends PERMISSIONS
         if ($this->_objectname != '')
             $val["_object"] = $this->_objectname;
         if (! $PLATFORMID)
-            $_PLATFORMID = "'" . (getLastID("global") + 1) . "'"; else
+            $_PLATFORMID = "'" . (getLastID("global") + 1) . "'";
+        else
             $_PLATFORMID = "'" . $PLATFORMID . "'";
         
         $this->_w = ($this->_w)?$this->_w:4;
@@ -262,9 +263,9 @@ class CORE extends PERMISSIONS
         
         // insert in main elements in "ids" table
         $sql = "
-        INSERT INTO " . TQT . "global" . TQT . " (" . TQT . "_owner" . TQT . ", " . TQT . "_object" . TQT . ", " . TQT . "_date" . TQT . ", " . TQT . "_zone" . TQT . ", " . TQT . "_platform" . TQT . ", " . TQT . "_workflow" . TQT . ", " . TQT . "_module" . TQT . ", " . TQT . "_xslt" . TQT . ", " . TQT . "_group" . TQT . ", " . TQT . "_o" . TQT . ", " . TQT . "_g" . TQT . ", " . TQT . "_w" . TQT . ")
-        VALUES
-        ('" . (($CURRENTUSER->id)?$CURRENTUSER->id:0) . "', '" . $this->_object . "', '" . time() . "', " . $zone . ", " . $_PLATFORMID . ", '" . (($_workflow)?$_workflow:0) . "', '" . $this->_module . "', '" . $this->_xslt . "', '" . (($this->_group)?$this->_group:0) . "', '" . $this->_o . "', '" . $this->_g . "', '" . $this->_w . "')";
+            INSERT INTO " . TQT . "global" . TQT . " (" . TQT . "_owner" . TQT . ", " . TQT . "_object" . TQT . ", " . TQT . "_date" . TQT . ", " . TQT . "_zone" . TQT . ", " . TQT . "_platform" . TQT . ", " . TQT . "_workflow" . TQT . ", " . TQT . "_module" . TQT . ", " . TQT . "_xslt" . TQT . ", " . TQT . "_group" . TQT . ", " . TQT . "_o" . TQT . ", " . TQT . "_g" . TQT . ", " . TQT . "_w" . TQT . ")
+            	VALUES
+            ('" . (($CURRENTUSER->id)?$CURRENTUSER->id:0) . "', '" . $this->_object . "', '" . time() . "', " . $zone . ", " . $_PLATFORMID . ", '" . (($_workflow)?$_workflow:0) . "', '" . $this->_module . "', '" . $this->_xslt . "', '" . (($this->_group)?$this->_group:0) . "', '" . $this->_o . "', '" . $this->_g . "', '" . $this->_w . "')";
         
         $DB->query($sql);
         // take id from last insert
@@ -286,6 +287,7 @@ class CORE extends PERMISSIONS
             // load new object
             $O = $this->load($oid);
         }
+        
         $this->_assgin_object($O);
         
         return;
@@ -412,8 +414,59 @@ class CORE extends PERMISSIONS
         if (! is_array($val))
             settype($val, "array");
         
-        $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . time() . "', " . TQT . "_workflow" . TQT . " = '" . $val["_workflow"] . "', " . TQT . "_module" . TQT . " = '" . $val["_module"] . "', " . TQT . "_xslt" . TQT . " = '" . $val["_xslt"] . "', " . TQT . "_group" . TQT . " = '" . $val["_group"] . "' WHERE " . TQT . "id" . TQT . "='" . $val["id"] . "'";
+        $now = time();
+        
+        $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . $now . "', " . TQT . "_workflow" . TQT . " = '" . $val["_workflow"] . "', " . TQT . "_module" . TQT . " = '" . $val["_module"] . "', " . TQT . "_xslt" . TQT . " = '" . $val["_xslt"] . "', " . TQT . "_group" . TQT . " = '" . $val["_group"] . "' WHERE " . TQT . "id" . TQT . "='" . $val["id"] . "'";
         $DB->query($sql);
+        
+        $this->_update_parent($val["id"], $now);
+        $this->_execute_after_hooks($val["id"], "update");
+
+    }
+    
+	/**
+     * CORE::_update_parent()
+     * 
+     * This function updates the modifikation time on the parent object if some.
+     *
+     * @param  $id
+     * @param  $now
+     * @return NULL
+     * @access private
+     */
+    function _update_parent($id, $now)
+    {
+        global $DB;
+        
+        $sql = "SELECT parentid FROM relations WHERE targetid = '$id' AND relationtype IS NULL";
+        $parents = $DB->GetAll($sql);
+        
+        foreach ($parents AS $parent) {
+            $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . $now . "'
+            			WHERE
+        			" . TQT . "id" . TQT . "='" . $parent->parentid . "'";
+            $DB->query($sql);
+        }
+    }
+    
+    /**
+     * CORE::_execute_after_hooks()
+     * 
+     * Execute hooks that are intended to run after object update
+     * 
+     * @param $oid
+     * @return unknown_type
+     */
+    function _execute_after_hooks ($oid, $action = false) {
+        global $_HOOKS_AFTER;
+        
+        foreach ($_HOOKS_AFTER AS $HOOK) {
+            $function = "{$HOOK}_hook_after";
+            $mod = dirname ( __FILE__ ) . "/../modules/{$HOOK}/{$HOOK}.hook.php";
+            
+            include_once($mod);
+            $done = $function($oid, $action);
+        }
     }
 
     /**
@@ -439,13 +492,16 @@ class CORE extends PERMISSIONS
             return false;
         
         if ($this->candelete($id)) {
-            FILES::_delete_files($id);
+            $this->_update_parent($id, time());
+            $this->_execute_after_hooks($id, "delete");
+            FILES::delete_files($id);
             $this->_delete_ids($id);
             $this->_delete_data($id, 1);
             $this->_delete_relations($id);
             if (strtoupper($this->_objectname) == "PERSON")
                 $this->_delete_user();
         }
+        
         return true;
     }
 
@@ -694,13 +750,16 @@ class CORE extends PERMISSIONS
             rel.targetid=glb.id and
             glb._platform='" . $CURRENTPLATFORM->id . "'
           ";
+        
         $_data = $DB->getAll($sql);
         if (count($_data) > 0) {
             $data_ = SQL_fixNames($_data[0]);
             $data = $this->load($data_->parentid);
         }
+        
         if (! is_object($data))
             return $CURRENTPLATFORM;
+            
         return $data;
     }
 
@@ -757,8 +816,13 @@ class CORE extends PERMISSIONS
         } else {
             $id = $_id;
         }
-        if ($this->_add_relation($id, $zone))
+        if ($this->_add_relation($id, $zone)) {
+            $this->_update_parent($id, time());
+            $this->_execute_after_hooks($id, "addchild");
+            
             return true;
+        }
+        
         return false;
     }
 
@@ -938,6 +1002,8 @@ class CORE extends PERMISSIONS
             $id = $_id;
         }
         $this->_delete_relation($id);
+        $this->_update_parent($id, time());
+        $this->_execute_after_hooks($id, "removechild");
     }
 
     /**
@@ -991,6 +1057,7 @@ class CORE extends PERMISSIONS
         } else {
             $id = $parent;
         }
+        $this->_update_parent($this->id, time());
         $this->_delete_relation($id);
         if (is_object($newparent)) {
             $PO = $newparent;
@@ -1000,8 +1067,11 @@ class CORE extends PERMISSIONS
         
         $result = $PO->_add_relation($this->id);
         
-        if ($result)
+        if ($result) {
+            $this->_update_parent($this->id, time());
+            $this->_execute_after_hooks($this->id, "changeparent");
             return true;
+        }
         
         return false;
     }
@@ -1062,15 +1132,19 @@ class CORE extends PERMISSIONS
             return false;
         
         if ($relationtype)
-            $relationtypesql = " and relationtype='$relationtype'"; else
+            $relationtypesql = " and relationtype='$relationtype'";
+        else
             $relationtypesql = " and relationtype is NULL";
         
         $sql = "UPDATE relations SET " . TQT . "_order" . TQT . "='" . $objects[$i + $direction]->_order . "' WHERE parentid='" . $this->id . "' and targetid='" . $objects[$i]->targetid . "'$relationtypesql";
         $DB->query($sql);
+        
         $sql = "UPDATE relations SET " . TQT . "_order" . TQT . "='" . $objects[$i]->_order . "' WHERE parentid='" . $this->id . "' and targetid='" . $objects[$i + $direction]->targetid . "'$relationtypesql";
         $DB->query($sql);
         
         $this->_reorder_children($zone, $relationtype);
+        
+        $this->_update_parent($objectid, time());
         
         return true;
     }
