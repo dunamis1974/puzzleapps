@@ -1,0 +1,11 @@
+RewriteEngine on
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/index.php
+
+RewriteRule ^(.*).html index.php?tid=$1 [L]
+RewriteRule ^gallery/(.*) index.php?id=$1 [L]
+RewriteRule ^media(.*) index.php?downloadfile=tid&tid=$1 [L]

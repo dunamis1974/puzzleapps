@@ -1,0 +1,20 @@
+var lang = new Array();
+
+lang["hidden"] = "hidden";
+lang["zone"] = "zone";
+lang["add"] = "add";
+lang["category"] = "category";
+lang["container"] = "container";
+lang["text"] = "text";
+lang["news"] = "news";
+lang["hint"] = "hint";
+lang["id"] = "id";
+lang["administration"] = "administration";
+lang["move up"] = "move up";
+lang["move left"] = "move left";
+lang["move down"] = "move down";
+lang["move right"] = "move right";
+lang["edit"] = "edit";
+lang["delete"] = "delete";
+lang["move object"] = "move object";
+lang["logout"] = "logout";

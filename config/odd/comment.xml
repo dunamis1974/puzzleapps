@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <elements>
+        <title reqired="0" lang="0">
+            <formfield><![CDATA[Enter your comment]]></formfield>
+            <field><![CDATA[title]]></field>
+        </title>
+        <rating reqired="0" lang="0" order="1">
+            <formfield><![CDATA[Poor:Excellent]]></formfield>
+            <field><![CDATA[radio]]></field>
+            <quiz><![CDATA[5]]></quiz>
+            <top><![CDATA[true]]></top>
+        </rating>
+        <name reqired="" lang="" order="1">
+            <formfield><![CDATA[Your Name]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </name>
+        <email reqired="0" lang="0" order="2">
+            <formfield><![CDATA[Your Email]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[email]]></validate>
+        </email>
+        <comment reqired="1" lang="0" order="4">
+            <formfield><![CDATA[Comment]]></formfield>
+            <field rows="8" cols="35"><![CDATA[textarea]]></field>
+            <validate><![CDATA[text]]></validate>
+        </comment>
+    </elements>
+</odd>

@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<dtd>
+    <elements lang="1">
+        <titleform order="0" reqired="0">
+            <formfield>Add/Edit Text</formfield>
+            <field>title</field>
+        </titleform>
+        <title order="1" reqired="1" lang="1">
+            <formfield>Title</formfield>
+            <field>text</field>
+            <validate>text</validate>
+        </title>
+        <tid order="1" reqired="0" lang="0">
+            <formfield>Textual ID</formfield>
+            <field>text</field>
+            <validate>text</validate>
+        </tid>
+        <date reqired="1" lang="0" order="6">
+            <formfield>Date</formfield>
+            <field>date</field>
+        </date>
+        <image reqired="0" lang="1" order="3">
+            <formfield>Image</formfield>
+            <field>file</field>
+            <validate>file</validate>
+        </image>
+        <shorttext order="3" reqired="0" lang="1">
+            <formfield>Short text</formfield>
+            <field rows="8" cols="35">textarea</field>
+            <validate>none</validate>
+        </shorttext>
+        <longtext order="5" reqired="0" lang="1">
+            <formfield>Long text</formfield>
+            <field rows="15" style="width:100%">htmlarea</field>
+            <validate>none</validate>
+        </longtext>
+    </elements>
+</dtd>

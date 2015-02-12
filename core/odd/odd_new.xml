@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<dtd>
+    <elements>
+        <dtd reqired="1">
+            <formfield>ODD name</formfield>
+            <field>text</field>
+
+        </dtd>
+        <title reqired="1">
+            <formfield>Title</formfield>
+            <field>text</field>
+            <description>This is ODD title</description>
+        </title>
+        <description reqired="0">
+            <formfield>Description</formfield>
+            <field>text</field>
+            <description>This is ODD description</description>
+        </description>
+        <edit reqired="1">
+            <formfield>Can change?</formfield>
+            <field>dropdown</field>
+            <drop>No:0|Yes:1</drop>
+            <description>If 'No' only super user will be able to edit it!</description>
+        </edit>
+        <pool reqired="1">
+            <formfield>Add to pool</formfield>
+            <field>dropdown</field>
+            <drop>No:0|Yes:1</drop>
+            <description>Display current ODD in data pool</description>
+        </pool>
+        <lang reqired="0">
+            <formfield>Multilingual</formfield>
+            <field>dropdown</field>
+            <drop>No:0|Yes:1</drop>
+            <description>Is current ODD multilingual?</description>
+        </lang>
+        <submit>
+            <formfield submit="Submit" cancel="Cancel" />
+            <field>submit</field>
+        </submit>
+    </elements>
+</dtd>

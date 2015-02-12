@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <elements lang="1">
+        <titleform order="0" reqired="0">
+            <formfield><![CDATA[Add/Edit Text]]></formfield>
+            <field><![CDATA[title]]></field>
+        </titleform>
+        <title order="1" reqired="1" lang="1">
+            <formfield><![CDATA[Title]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </title>
+        <tid order="1" reqired="0" lang="0">
+            <formfield><![CDATA[Textual ID]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </tid>
+        <shorttext order="3" reqired="0" lang="1">
+            <formfield><![CDATA[Short text]]></formfield>
+            <field rows="8" cols="35"><![CDATA[htmlarea]]></field>
+            <validate><![CDATA[none]]></validate>
+        </shorttext>
+        <longtext order="5" reqired="0" lang="1">
+            <formfield><![CDATA[Long text]]></formfield>
+            <field rows="15" style="width:100%"><![CDATA[htmlarea]]></field>
+            <validate><![CDATA[none]]></validate>
+        </longtext>
+        <seccode order="1" reqired="0" lang="1">
+            <formfield><![CDATA[Security code]]></formfield>
+            <field><![CDATA[library]]></field>
+            <validate><![CDATA[seccode]]></validate>
+            <libdata><![CDATA[]]></libdata>
+        </seccode>
+        <_module reqired="" lang="" order="5">
+            <formfield><![CDATA[Assign Module]]></formfield>
+            <field><![CDATA[module]]></field>
+        </_module>
+    </elements>
+</odd>

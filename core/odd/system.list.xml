@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<list>
+  <dtds>
+    <dtd type="system" name="platform" edit="0">
+      <title>Platform</title>
+      <description>This is a system ODD used for platform</description>
+    </dtd>
+    <dtd type="system" name="person" edit="0">
+      <title>Person</title>
+      <description>System ODD used for platform</description>
+    </dtd>
+    <dtd type="system" name="file" edit="0" pool="1">
+      <title>File</title>
+      <description>ODD used for files</description>
+    </dtd>
+    <dtd type="system" name="container" edit="0" pool="1">
+      <title>Container</title>
+      <description>This ODD is used for text.</description>
+    </dtd>
+  </dtds>
+</list>

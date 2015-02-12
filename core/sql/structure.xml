@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<schema version="0.2">
+  <table name="data">
+    <field name="gid" type="I"><NOTNULL/></field>
+    <field name="langid" type="I"><NOTNULL/></field>
+    <field name="data" type="TEXT" />
+    <index name="dataIndex">
+      <col>gid</col>
+      <col>langid</col>
+    </index>
+  </table>
+  <table name="elm_date">
+    <field name="gid" type="I"><NOTNULL/></field>
+    <field name="elm" type="C" size="55"><NOTNULL/></field>
+    <field name="data" type="DATE" />
+    <field name="lang" type="I"><NOTNULL/></field>
+    <index name="elmDateIndex">
+      <col>gid</col>
+      <col>lang</col>
+      <col>data</col>
+    </index>
+    <index name="elmEmlIndexDate"><col>elm</col></index>
+  </table>
+  <table name="elm_number">
+    <field name="gid" type="I"><NOTNULL/></field>
+    <field name="elm" type="C" size="55"><NOTNULL/></field>
+    <field name="data" type="I" />
+    <field name="lang" type="I"><NOTNULL/></field>
+    <index name="elmNumberIndex">
+      <col>gid</col>
+      <col>lang</col>
+      <col>data</col>
+    </index>
+    <index name="elmEmlIndexNumber"><col>elm</col></index>
+  </table>
+  <table name="elm_text">
+    <field name="gid" type="I"><NOTNULL/></field>
+    <field name="elm" type="C" size="55"><NOTNULL/></field>
+    <field name="data" type="TEXT" />
+    <field name="lang" type="I"><NOTNULL/></field>
+    <index name="elmTextIndex">
+      <col>gid</col>
+      <col>lang</col>
+    </index>
+    <index name="elmEmlIndexText"><col>elm</col></index>
+  </table>
+  
+  <table name="global">
+    <field name="id" type="I"><KEY/><AUTOINCREMENT/></field>
+    <field name="_owner" type="I"><NOTNULL/></field>
+    <field name="_object" type="I"><NOTNULL/></field>
+    <field name="_date" type="I"><DEFAULT value="NULL" /></field>
+    <field name="_zone" type="C" size="55"><DEFAULT value="NULL" /></field>
+    <field name="_module" type="C" size="55"><DEFAULT value="NULL" /></field>
+    <field name="_xslt" type="C" size="55"><DEFAULT value="NULL" /></field>
+    <field name="_platform" type="I"><NOTNULL/></field>
+    <field name="_workflow" type="I"><DEFAULT value="0" /></field>
+    <field name="_group" type="I"><DEFAULT value="NULL" /></field>
+    <field name="_o" type="I"><NOTNULL/><DEFAULT value="6" /></field>
+    <field name="_g" type="I"><NOTNULL/><DEFAULT value="6" /></field>
+    <field name="_w" type="I"><NOTNULL/><DEFAULT value="4" /></field>
+    <index name="GlobalIndex">
+      <col>_group</col>
+      <col>_owner</col>
+      <col>_platform</col>
+      <col>_object</col>
+    </index>
+    <index name="GlobalPermissionsIndex">
+      <col>_o</col>
+      <col>_g</col>
+      <col>_w</col>
+    </index>
+  </table>
+  <table name="groups">
+    <field name="id" type="I"><KEY/><AUTOINCREMENT/></field>
+    <field name="platform" type="I"><NOTNULL/></field>
+    <field name="groupname" type="C" size="55"><NOTNULL/></field>
+    <field name="note" type="C" size="255"><DEFAULT value="NULL" /></field>
+    <field name="permissions" type="TEXT"><DEFAULT value="NULL" /></field>
+    <index name="GroupsIndex">
+      <col>platform</col>
+    </index>
+  </table>
+  <table name="platform">
+    <field name="gid" type="I"><NOTNULL/></field>
+    <field name="name" type="C" size="55"><NOTNULL/></field>
+    <field name="descrption" type="C" size="255"><DEFAULT value="NULL" /></field>
+    <index name="PlatformIndex">
+      <col>gid</col>
+    </index>
+  </table>
+  <table name="relations">
+    <field name="parentid" type="I"><NOTNULL/></field>
+    <field name="targetid" type="I"><NOTNULL/></field>
+    <field name="relationtype" type="C" size="55"><DEFAULT value="NULL" /></field>
+    <field name="_order" type="I"><DEFAULT value="0" /></field>
+    <index name="RelationsIndex">
+      <col>parentid</col>
+      <col>targetid</col>
+      <col>relationtype</col>
+      <col>_order</col>
+    </index>
+  </table>
+  <table name="users">
+    <field name="gid" type="I"><KEY/></field>
+    <field name="username" type="C" size="255"><DEFAULT value="NULL" /></field>
+    <field name="password" type="C" size="255"><DEFAULT value="NULL" /></field>
+    <field name="_group" type="I"><NOTNULL/><DEFAULT value="1" /></field>
+    <field name="hash" type="C" size="32"><DEFAULT value="NULL" /></field>
+    <index name="UsersIndex">
+      <col>_group</col>
+    </index>
+  </table>
+  <table name="users_in_groups">
+    <field name="id" type="I"><KEY/><AUTOINCREMENT/></field>
+    <field name="userid" type="I"><NOTNULL/></field>
+    <field name="_group" type="I"><NOTNULL/></field>
+    <index name="UIGIndex">
+      <col>user</col>
+      <col>_group</col>
+    </index>
+  </table>
+</schema>

@@ -1,0 +1,71 @@
+.admin__ {
+    background:url("/admin/images/menuicon.gif");
+    background-color: #426ca8;
+    z-index:10000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width:12px;
+    height:12px;
+}
+
+
+.admin_zone__ {
+    background:url("/admin/images/menuicon.gif");
+    background-color: #C6D3EF;
+    z-index:10000;
+    position: absolute;
+    width:12px;
+    height:12px;
+}
+
+
+.context__ {
+    position:absolute;
+    width:150px;
+    border:1px solid #426ca8;
+    background-color: #FFFFFF;
+    z-index:100000;
+    visibility:hidden;
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 10px;
+    color: #808080;
+    cursor:default;
+    text-align: left;
+}
+
+.contexthead__ {
+    border:0px;
+    background-color: #426ca8;
+    font-family: Verdana,Arial,Helvetica;
+    font-size: 10px;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 2px 2px 3px 2px;
+}
+
+.cmenuitems__ {
+    padding: 2px 2px 3px 2px;
+}
+
+.cmenuitems_hover__ {
+    padding: 2px 2px 3px 2px;
+    background-color: #C6D3EF;
+}
+
+.highlite__ {
+    border: 0px dashed #000000;
+    background-color: #C6D3EF;
+}
+
+.highlite_zone__ {
+    border: 0px dashed #000000;
+    background-color: #426ca8;
+}
+
+img.cmenuimage__ {
+    border: 0px solid #ebebeb;
+    vertical-align: middle;
+    text-align: middle;
+}
+

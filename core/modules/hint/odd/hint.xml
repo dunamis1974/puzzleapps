@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<dtd>
+    <elements>
+        <_title reqired="0">
+            <formfield>Hint data</formfield>
+            <field>title</field>
+        </_title>
+        <replace reqired="0" lang="1" id="1">
+            <formfield>Word/Sentence</formfield>
+            <field>text</field>
+        </replace>
+        <title reqired="0" lang="1" id="1">
+            <formfield>Hint Title</formfield>
+            <field>text</field>
+        </title>
+        <hint reqired="1" lang="1" id="1">
+            <formfield>Hint Text</formfield>
+            <field>text</field>
+        </hint>
+    </elements>
+</dtd>

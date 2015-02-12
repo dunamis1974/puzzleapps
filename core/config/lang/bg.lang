@@ -1,0 +1,111 @@
+## Controls
+administration=администратор
+logout=изход
++ text=+ текст
+edit=редакт.
+X=изтрий
+new=добави
+Delete=Изтрий
+Submit=Изпрати
+Cancel=Откажи
+Add=Добави
+Note=Бележка
+
+## Administration main menus
+Administration=Администратор
+Home=Начало
+General=Общи настройки
+File manager=Файлов манипулатор
+Templates=Шаблони
+People/Groups=Потребители/Групи
+Site statistics=Статистика
+Content=Съдържание
+Orders=Поръчки
+Credits=Кредити
+
+
+## Administration sub menus
+Platform configuration=Основни настройки
+Platform default group=Основна група
+Platform zones definition=Дефиниране на зоните
+Platform languages=Използвани езици
+Change templates set=Смяна на темплейтите
+Edit ODD=Редактиране описанието на обектите
+Configure modules=Конфигуриране на модулите
+
+Platform templates (XSLT)=Използвани шаблони (XSLT)
+Platform style sheets (CSS)=Използвани стилове (CSS)
+Platform images=Използвани картинки
+
+Edit My Profile=Личен профил
+Add/Edit People=Добави/Редактирай потребители
+Add/Edit user groups=Добави/Редактирай потребителски групи
+
+## File manager
+add file=Добави файл
+Title=Наименование
+File type=Тип на файла
+delete=изтрий
+File=Файл
+
+## User groups
+Add new group=Добави нова група
+Description=Описание
+Access administration=Достъп до администратора
+Edit objects=Редактиране на обекти
+Delete objects=Изтриване на обекти
+Move objects=Местене на обекти
+Add objects=Добавяне на обекти
+Change parent=Смяна на родителя
+
+Select main permissions=Основни права
+Select group permissions=Права в администратора
+
+## People
+Name=Име
+Gender=Пол
+
+## Templates
+Template name=Име на шаблона
+view archive=архив
+new template=нов шаблон
+download the active templates=свали всички активни шаблони
+CSS name=Име на стила
+new css=добави стил
+download the active CSS=свали всички активни стилове
+new image=добави картинка
+download all images=свали всички картинки
+
+## Languages
+Language name=Език
+add new language=добави нов език
+Add Language=Добави език
+
+## Images
+Image=Картинка
+Size=Размер
+Date=Дата
+
+## Content
+Content Pagination=Страниране
+Data pools=Данни
+
+## Other sentences
+This is the language manager of your web site.=От тук можете да редактирате езиците на вашата страница.
+This tool can affect the look of the system in a dramatic way.=Този инструмент може драматично да повлияе на изгледа на вашия сайт.
+Use with care.=Използвайте много внимателно.
+
+## General
+XSLT transform=XSLT трансформатор
+Use textual ID=Текстово ID
+Custom perm.=Права
+Temp files=Временни файлове
+
+Add object=Добави обект
+welcome to administration console of=добре дошъл в административната конзола на
+Platform=Платформа
+Host=Сървър
+Your IP=Вашето IP
+Your Browser=Вашият браузер
+Hello=Здравей
+view/edit site=преглед/редактиране на сайта

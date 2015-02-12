@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<dtd>
+    <elements>
+        <elementname reqired="1">
+            <formfield>Field name</formfield>
+            <field>text</field>
+            <description>This is ODD field name/This should not be changed</description>
+        </elementname>
+        <formfield reqired="0">
+            <formfield>Title</formfield>
+            <field>text</field>
+        </formfield>
+        <description reqired="0">
+            <formfield>Description</formfield>
+            <field>text</field>
+        </description>
+        <field reqired="1">
+            <formfield>Field type</formfield>
+            <field>dropdown</field>
+            <description>ODD field type</description>
+            <drop>Library:library|List of modules:module|Text field:text|Enter plain text:textarea|WYSIWYG HTML editor:htmlarea|Radio button:radio|Check box button:checkbox|Hidden field:hidden|Submit/Resset buttons:submit|Title field:title|Upload file/image:file|Add image by ID:cmsimage|Password field:password|Date field:date|Dropdown field:dropdown|On top/bottom field:add_top_bottom</drop>
+        </field>
+        <lang reqired="0">
+            <formfield>Multilingual field</formfield>
+            <field>dropdown</field>
+            <drop>No:0|Yes:1</drop>
+        </lang>
+        <reqired reqired="0">
+            <formfield>Reqired field</formfield>
+            <field>dropdown</field>
+            <drop>No:0|Yes:1</drop>
+        </reqired>
+        <drop reqired="0">
+            <formfield>Drop values</formfield>
+            <field>text</field>
+            <description>You can enter drop values in this format - title:val|title:val</description>
+        </drop>
+        <validate reqired="0">
+            <formfield>Validation rules</formfield>
+            <field>text</field>
+            <description>Rules separated by ':'. For more information review the LEGEND.</description>
+        </validate>
+        <params reqired="0">
+            <formfield>Extra params</formfield>
+            <field>text</field>
+            <description>Parameters that will be inclided into HTML tag like 'width', 'style', etc.</description>
+        </params>
+        <quiz reqired="0">
+            <formfield>Quiz?</formfield>
+            <field>text</field>
+            <description>This option is valid only for 'radio' buttons (enter number)</description>
+        </quiz>
+        <top reqired="0">
+            <formfield>Add Top Labels?</formfield>
+            <field>checkbox</field>
+            <description>This option is valid only for 'radio' buttons</description>
+        </top>
+        <!--
+        <validate reqired="0">
+            <formfield>Validation rules</formfield>
+            <field multiple="1" size="5" title="Hold Ctrl to select or deselect more then one">dropdown</field>
+            <drop>None (Use it for WYSIWYG fields):none|Email:email|Web Site:www|Numbers only:number|Text:text|Date:date|Time:time</drop>
+            <description>For more information review the LEGEND.</description>
+        </validate>
+        <value reqired="0">
+            <formfield>Default value</formfield>
+            <field>text</field>
+            <description>This field is used for default value</description>
+        </value>
+        -->
+        <submit>
+            <formfield submit="Submit" cancel="Cancel" />
+            <field>submit</field>
+        </submit>
+    </elements>
+</dtd>

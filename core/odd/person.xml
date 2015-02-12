@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements nolang="1">
+    <group reqired="0" id="1">
+      <formfield>User Group</formfield>
+      <field>hidden</field>
+    </group>
+    <groupapplay reqired="0" id="2">
+      <formfield>Applay for User Group</formfield>
+      <field>hidden</field>
+    </groupapplay>
+    <username reqired="1" id="3">
+      <formfield>Username</formfield>
+      <field>text</field>
+      <description>Please enter username</description>
+    </username>
+    <password reqired="0" id="4">
+      <formfield>Password</formfield>
+      <field>password</field>
+      <validate>password</validate>
+    </password>
+    <firstname reqired="1" id="5">
+      <formfield>First name</formfield>
+      <field>text</field>
+    </firstname>
+      <middlename reqired="0" id="6">
+      <formfield>Middle name</formfield>
+      <field>text</field>
+    </middlename>
+    <lastname reqired="1" id="7">
+      <formfield>Last name</formfield>
+      <field>text</field>
+    </lastname>
+    <email reqired="1" id="9">
+      <formfield>Email</formfield>
+      <field>text</field>
+      <validate>email</validate>
+      <description>Enter the email for current user.</description>
+    </email>
+  </elements>
+</dtd>

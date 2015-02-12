@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <elements lang="1">
+        <category>
+            <formfield><![CDATA[Add/Edit Category]]></formfield>
+            <field><![CDATA[title]]></field>
+        </category>
+        <title reqired="1" lang="1">
+            <formfield><![CDATA[Category Title]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </title>
+        <tid order="1" reqired="0" lang="0">
+            <formfield><![CDATA[Textual ID]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </tid>
+        <description reqired="0" lang="1" order="3">
+            <formfield><![CDATA[Category Description]]></formfield>
+            <field size="50"><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </description>
+        <keywords reqired="0" lang="1" order="4">
+            <formfield><![CDATA[Keywords]]></formfield>
+            <field size="50"><![CDATA[text]]></field>
+        </keywords>
+        <_module reqired="0" lang="0" order="5">
+            <formfield><![CDATA[Assign Module]]></formfield>
+            <field><![CDATA[module]]></field>
+        </_module>
+        <_xslt reqired="0" lang="0" order="6">
+            <formfield><![CDATA[Assign template]]></formfield>
+            <field><![CDATA[dropdown]]></field>
+            <drop><![CDATA[Standart:index.xsl|Gallery:gallery.xsl]]></drop>
+            <validate><![CDATA[text]]></validate>
+        </_xslt>
+    </elements>
+</odd>

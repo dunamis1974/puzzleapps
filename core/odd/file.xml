@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <elements>
+        <_title reqired="0">
+            <formfield><![CDATA[Add Files/Folders]]></formfield>
+            <field><![CDATA[title]]></field>
+        </_title>
+        <name reqired="0" id="1">
+            <formfield><![CDATA[Name]]></formfield>
+            <field><![CDATA[text]]></field>
+            <description><![CDATA[If You enter 'Name' only this will create folder.]]></description>
+        </name>
+        <file reqired="0" id="2">
+            <formfield><![CDATA[File]]></formfield>
+            <field><![CDATA[file]]></field>
+        </file>
+        <type reqired="0" id="3">
+            <formfield><![CDATA[Type]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </type>
+        <relaname reqired="0" id="4">
+            <formfield><![CDATA[Real name]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </relaname>
+        <size reqired="" lang="" order="4">
+            <formfield><![CDATA[File Size]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </size>
+        <tid order="1" reqired="0" lang="0">
+            <formfield><![CDATA[Textual ID]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </tid>
+        <submit>
+            <formfield submit="Submit" cancel="Cancel" close="0"><![CDATA[]]></formfield>
+            <field><![CDATA[submit]]></field>
+        </submit>
+    </elements>
+</odd>

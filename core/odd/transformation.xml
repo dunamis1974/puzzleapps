@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements nolang="1">
+    <transform reqired="1">
+      <formfield>Select transformation method</formfield>
+      <field>dropdown</field>
+      <drop>Apache (mod_xslt2):mod-xslt|PHP4/5 (XSLT/XSL):PHP|PHP4/5 (domxml):domxml|Command line:command</drop>
+    </transform>
+    <command reqired="0">
+      <formfield>Command</formfield>
+      <field>text</field>
+      <value>sabcmd %xsl %xml</value>
+    </command>
+    <target reqired="0">
+      <formfield>Target transformation</formfield>
+      <field>dropdown</field>
+      <drop>HTML:hmtl|XML(XHTML):xml</drop>
+    </target>
+    <submit>
+      <formfield submit="Submit" cancel="Cancel" close='0' />
+      <field>submit</field>
+    </submit>
+  </elements>
+</dtd>

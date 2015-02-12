@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <dtds>
+        <dtd type="system" name="platform" edit="0">
+            <title><![CDATA[Platform]]></title>
+            <description><![CDATA[This is a system ODD used for platform]]></description>
+        </dtd>
+        <dtd type="system" name="person" edit="0">
+            <title><![CDATA[Person]]></title>
+            <description><![CDATA[This is a system ODD used for users]]></description>
+        </dtd>
+        <dtd type="user" name="category" edit="1" pool="1" lang="1">
+            <title><![CDATA[Category]]></title>
+            <description><![CDATA[This ODD is normal category]]></description>
+        </dtd>
+        <dtd type="user" name="text" edit="1" pool="1" lang="1">
+            <title><![CDATA[Text]]></title>
+            <description><![CDATA[This ODD is used for text.]]></description>
+        </dtd>
+        <dtd type="user" name="form2mail" edit="1">
+            <title><![CDATA[Form2Mail]]></title>
+            <description><![CDATA[This ODD is used for form2mail module.]]></description>
+        </dtd>
+        <dtd type="user" name="file" edit="0" pool="1">
+            <title><![CDATA[File]]></title>
+            <description><![CDATA[ODD used for files]]></description>
+        </dtd>
+        <dtd type="user" name="image" edit="1" pool="1" module="gallery">
+            <title><![CDATA[Gallery image]]></title>
+            <description><![CDATA[Gallery image ODD]]></description>
+        </dtd>
+        <dtd type="system" name="container" edit="0" pool="1" lang="1">
+            <title><![CDATA[Container]]></title>
+            <description><![CDATA[This ODD is used for text.]]></description>
+        </dtd>
+        <dtd type="user" name="news" edit="1" pool="1" lang="1">
+            <title><![CDATA[News]]></title>
+            <description><![CDATA[News data ODD]]></description>
+        </dtd>
+        <dtd type="module" name="hint" edit="1" pool="1" module="hint">
+            <title><![CDATA[Hint]]></title>
+            <description><![CDATA[HTMLBaloon ODD]]></description>
+        </dtd>
+        <dtd type="user" name="comment" edit="1" pool="1" lang="0">
+            <title><![CDATA[Comment]]></title>
+            <description><![CDATA[Comments ODD]]></description>
+        </dtd>
+        <dtd type="user" name="image2" edit="1" pool="1" lang="0">
+            <title><![CDATA[Image]]></title>
+            <description><![CDATA[This is the image for XSLT Gallery]]></description>
+        </dtd>
+    </dtds>
+</odd>

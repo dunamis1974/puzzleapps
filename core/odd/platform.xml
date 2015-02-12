@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements nolang="1">
+    <name reqired="1" id="1">
+      <formfield>Platform name</formfield>
+      <field>text</field>
+      <value>text</value>
+      <description>You should not change this value!</description>
+    </name>
+    <descrption reqired="1" id="2">
+      <formfield>Platform Description</formfield>
+      <field>text</field>
+      <value>text</value>
+    </descrption>
+    <submit>
+      <formfield submit="Submit" cancel="Cancel" close='0' />
+      <field>submit</field>
+    </submit>
+  </elements>
+</dtd>

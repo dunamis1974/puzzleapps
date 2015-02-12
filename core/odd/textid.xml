@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements nolang="1">
+    <tid reqired="1">
+      <formfield>Textual ID</formfield>
+      <field>text</field>
+      <description>Select unique textual ID field in the object</description>
+    </tid>
+    <submit>
+      <formfield submit="Submit" cancel="Cancel" close='0' />
+      <field>submit</field>
+    </submit>
+  </elements>
+</dtd>

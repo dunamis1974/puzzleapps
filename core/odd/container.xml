@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements nolang="1">
+    <group reqired="0" id="1">
+      <formfield>Add/Edit Container</formfield>
+      <field>hidden</field>
+    </group>
+    <name reqired="1" id="2">
+      <formfield>Container name</formfield>
+      <field>text</field>
+    </name>
+    <count reqired="0" lang="0" id="3">
+        <formfield>Count</formfield>
+        <field>text</field>
+    </count>
+    <type reqired="1" lang="0" id="4">
+        <formfield>Container type</formfield>
+        <field>dropdown</field>
+        <drop>Exact:exact|PHP Script:php|Pool:pool|Pool + filter:filterpool|Module:module|Category + filter:filtercategory|Category:category|Object:object|Atom URL:atom|RSS URL:rss|RDF URL:rdf</drop>
+    </type>
+    <filter reqired="0" lang="0" id="5">
+        <formfield>Filter</formfield>
+        <field>text</field>
+        <description>Field|Value</description>
+    </filter>
+    <exact reqired="0" lang="0" id="5">
+        <formfield>Exact (Text, HTML ,PHP)</formfield>
+        <field rows="8" cols="35">textarea</field>
+    </exact>
+    <pool reqired="0" lang="0" id="5">
+        <formfield>Pool</formfield>
+        <field>text</field>
+    </pool>
+    <module reqired="0" lang="0" id="6">
+        <formfield>Module</formfield>
+        <field>module</field>
+    </module>
+    <onlyzone reqired="0" lang="0" id="7">
+        <formfield>Get Only Zone</formfield>
+        <field>text</field>
+    </onlyzone>
+    <object reqired="0" lang="0" id="7">
+        <formfield>Object ID</formfield>
+        <field>text</field>
+    </object>
+    <url reqired="0" lang="0" id="8">
+        <formfield>RSS URL</formfield>
+        <field>text</field>
+    </url>
+    <random reqired="0" lang="0" id="9">
+        <formfield>Random</formfield>
+        <field>dropdown</field>
+        <validate>text</validate>
+        <drop>yes:1|no:0</drop>
+    </random>
+    <_hidden reqired="0" lang="0" id="10">
+        <formfield>Hidden</formfield>
+        <field>dropdown</field>
+        <validate>text</validate>
+        <drop>yes:1|no:0</drop>
+    </_hidden>
+  </elements>
+</dtd>

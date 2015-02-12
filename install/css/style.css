@@ -1,0 +1,196 @@
+body {
+    font : 11px Verdana, sans-serif;
+}
+
+.main_table {
+    border: solid; 
+    border-width: 1px 1px 1px 1px; 
+    border-color: #183441 #183441 #183441 #183441
+}
+
+td {
+    font : 11px Verdana, sans-serif;
+}
+
+td.steps {
+    color: #ffffff; 
+    font : 11px Verdana, sans-serif;
+    text-decoration: none;
+    background-color: #183441;
+}
+
+.error {
+    color: #ff0000; 
+    font : 11px Verdana, sans-serif;
+    text-decoration: none;
+}
+
+a:link {
+    color: #322405; 
+    font : 11px Verdana, sans-serif;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #322405; 
+    font : 11px Verdana, sans-serif; 
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000; 
+    font : 11px Verdana, sans-serif; 
+    text-decoration: underline;
+}
+
+.normal {
+    color: #000033; 
+    font-family: Verdana, sans-serif; 
+    font-size: 11px; 
+    fontsize: 13px; 
+    font-weight: none;
+}
+
+.copyright {
+    color: #000000; 
+    font-family: Verdana, sans-serif; 
+    font-size: 11px; 
+    fontsize: 11px; 
+    font-weight: none;
+}
+
+.title {
+    font : 14px Verdana, sans-serif;
+    font-weight: bold;
+}
+
+.shorttext {
+    font : 14px serif;
+}
+
+.longtext {
+    font : 11px Verdana, sans-serif;
+}
+
+
+/*
+This is system part of the CSS
+she can be modifyed to fit the site look
+*/
+
+.mytd__ {
+    font : 11px Verdana, sans-serif;
+}
+/*
+.mytable__   {
+    border: 1px #242433 solid;
+}
+*/
+.odd__ {
+    background-color: White;
+}
+
+.even__ {
+    background-color: Silver;
+}
+
+.title__ {
+    background-color: Silver;
+}
+
+.bordertable__   {
+    border: 1px #000000 solid;
+}
+
+.mandatory__ {
+    font-weight : bold;
+    font-size : 10pt;
+    font-style : normal;
+    font-family : sans-serif;
+}
+
+.non_mandatory__ {
+    font-weight : normal;
+    font-size : 10pt;
+    font-style : italic;
+    font-family : sans-serif;
+}
+
+a.admin__ {
+    border: 1px solid Navy;
+    color: Navy;
+    background-color: #F6F9FF;
+    font: normal 9px Verdana, sans-serif;
+    text-decoration: none;
+    padding: 0px 1px 1px 1px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+a.admin__:hover {
+    border: 1px solid Red;
+    color: Red;
+    background-color: #FFF9F6;
+    font: normal 9px Verdana, sans-serif;
+    text-decoration: none;
+    padding: 0px 1px 1px 1px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+a.admin__:visited {
+    border: 1px solid Navy;
+    color: Navy;
+    background-color: #F6F9FF;
+    font: normal 9px Verdana, sans-serif;
+    text-decoration: none;
+    padding: 0px 1px 1px 1px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+/*
+Some modules CSS
+*/
+
+.pool_title_tr__ {
+    border: 1px solid Red;
+    color: #000000;
+    font: bold 18px Verdana, sans-serif;
+    background-color: #FFF9F6;
+    padding: 5px 10px 5px 10px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+.pool_title_td__ {
+    color: #322405;
+    font: bold 11px Verdana, sans-serif;
+    background-color: #C0C0C0;
+}
+
+/*
+Errors
+*/
+.block_error_ {
+    border: 1px solid Red;
+    background-color: #FFF9EB;
+    padding: 5px 5px 5px 0px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+.error_title__ {
+    border: 1px solid Red;
+    color: Red;
+    font: bold 18px Verdan, sans-serif;
+    background-color: #FFF9F6;
+    padding: 5px 10px 5px 10px;
+    margin: 0px 1px 0px 1px;
+    border-radius: 3px; -moz-border-radius: 3px;
+}
+
+.error__ {
+    color: Red;
+    font: bold 11px Verdana;
+}

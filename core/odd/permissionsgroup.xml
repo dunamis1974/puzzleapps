@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<dtd>
+  <elements>
+    <_title reqired="0">
+      <formfield>Permissions group</formfield>
+      <field>title</field>
+    </_title>
+    <groupname reqired="0">
+      <formfield>Name</formfield>
+      <field>text</field>
+    </groupname>
+    <note reqired="0">
+      <formfield>Note</formfield>
+      <field>textarea</field>
+    </note>
+    <submit>
+      <formfield submit="Submit" cancel="Cancel" close='0' />
+      <field>submit</field>
+    </submit>
+  </elements>
+</dtd>

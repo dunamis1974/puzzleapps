@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odd>
+    <elements>
+        <title reqired="" lang="" order="1">
+            <formfield><![CDATA[Add Image]]></formfield>
+            <field><![CDATA[title]]></field>
+        </title>
+        <name reqired="1" lang="0" order="1">
+            <formfield><![CDATA[Image Name]]></formfield>
+            <field><![CDATA[text]]></field>
+            <validate><![CDATA[text]]></validate>
+        </name>
+        <file reqired="1" lang="0" order="2">
+            <formfield><![CDATA[Image File]]></formfield>
+            <field><![CDATA[file]]></field>
+            <validate><![CDATA[file]]></validate>
+        </file>
+        <type reqired="" lang="" order="3">
+            <formfield><![CDATA[Image Type]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </type>
+        <size reqired="" lang="" order="4">
+            <formfield><![CDATA[Image Size]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </size>
+        <dimensions reqired="" lang="" order="5">
+            <formfield><![CDATA[Dimensions]]></formfield>
+            <field><![CDATA[hidden]]></field>
+        </dimensions>
+        <_module reqired="0" lang="0" order="6">
+            <formfield><![CDATA[Module]]></formfield>
+            <field><![CDATA[module]]></field>
+        </_module>
+    </elements>
+</odd>

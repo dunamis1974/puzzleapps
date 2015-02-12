@@ -1,0 +1,470 @@
+﻿## Controls
+administration=Verwaltung
+logout=abmelden
+Logout=Abmelden
++ text=+ Text
+edit=bearbeiten
+X=Löschen
+new=Einfügen
+Delete=Löschen
+Cancel=Abbrechen
+Add=Hinzufügen
+Note=Notiz
+View/Edit Site=Ansicht/Webinhalt einsehen/ändern
+
+
+## Administration main menus–Admin Hauptmenü
+Administration=Verwaltung
+Home=Startseite
+Shortcuts=Verknüpfungen
+General=Allgemein
+File manager=Dateimanager
+Templates=Schablonen
+People/Groups=Benutzer/Gruppen
+Site statistics=Webstatistik
+Content=Inhalt
+Orders=Bestellungen
+Credits=Credits
+
+Group=Gruppe
+Permissions=Schreib-/Leserechte
+Object position=Objekt-Anordnung
+Assign Module=Erweiterung zuordnen
+Assign template=Schablone zuordnen
+Hidden=Verbergen
+
+## Administration sub menus-Admin Untermenü
+Platform configuration=Plattform-Konfiguration
+Platform default group=Plattform-Standardgruppe
+Platform zones definition=Plattform-Zonendefinition
+Platform languages=Plattform-Sprachen
+Change templates set=Schablonenwechsel
+Edit objects=Objekte bearbeiten
+Configure modules=Erweiterungen konfigurieren
+
+Platform templates (XSLT)=Plattform-Schablonen (XSLT)
+Platform style sheets (CSS)=Plattform-Stylesheets (CSS)
+Platform images=Plattform-Bilder
+
+Edit My Profile=Mein Profil bearbeiten
+Add/Edit People=Benutzer hinzufügen/bearbeiten
+Add/Edit user groups=Benutzergruppen hinzufügen/bearbeiten
+
+Access modules=Auf Erweiterungen zugreifen
+Action=Aktion
+Activate module=Erweiterung aktivieren
+Add=Hinzufügen
+Add current ODD to platform=Aktuelles ODD-Objekt zur Plattform hinzufügen
+Add data to zone=Daten zur Zone hinzufügen
+add file=Datei hinzufügen
+add gallery=Bildergalerie hinzufügen
+add image=Bild hinzufügen
+add language=Sprache hinzufügen
+Add new field= Neues Datenfeld  hinzufügen
+Add new field to ODD=Neues Datenfeld zum ODD-Objekt hinzufügen
+add new group=Neue Gruppe hinzufügen
+Add new ODD=Neues ODD-Objekt hinzufügen
+Add new ODD file=Neue ODD-Datei hinzufügen
+Add new zone in the bottom area=Neue Zone im unteren Bereich hinzufügen
+Add new zone in the center area=Neue Zone im mittleren Bereich hinzufügen
+Add new zone in the left area=Neue Zone auf der linken Seite hinzufügen
+Add new zone in the right area= Neue Zone auf der rechten Seite hinzufügen
+Add new zone in the top area=Neue Zone im oberen Bereich hinzufügen
+
+Edit zone=Zone bearbeiten
+Delete zone=Zone löschen
+Move zone up=Zone nach oben bewegen
+
+Add object= Neues Objekt hinzufügen
+Add on top=Von oben einfügen
+add person=Neuen Benutzer hinzufügen
+Add to the bottom=Von unten einfügen
+Administration=Verwaltung
+<< back=zurück
+Browse by ... (textual ID)=Durchsuchen mittels...(textual ID)
+<br />There was a problem sending your data!<br />Please try again later!=Beim Übertragen Ihrer Daten ist ein Fehler aufgetreten!<br>Bitte versuchen Sie es später noch einmal!
+<b>Thank you!<br />Your data was submmited.</b>=Vielen Dank! Ihre Daten wurden erfolgreich übermittelt.
+Cancel=Abbrechen
+can not be empty=kann nicht leer sein!
+Categories section=Kategorien-Bereich
+Category zone=Kategorien-Zone
+Change zone=Zone wechseln
+characters=Zeichen
+Clear JPCache cache files=JPCache-Zwischenspeicher leeren
+JPCache status changed to=JPCache-Erweiterung erfolgreich geändert zu
+Error! JPCache status is not changed!=Fehler! JPCache Status konnte nicht geändert werden.
+Click here to continue.=Hier klicken um fortzufahren.
+Click here to login=Klicken Sie hier um sich einzuloggen.
+Close=Schließen
+Commandline transformer=Konvertierung über Konsole
+Components:=Komponenten:
+Configuration hints=Konfigurationstipps
+configuration name=Konfigurationsname
+Configuration not saved!=Konfiguration wurde nicht gespeichert!
+Configuration saved.=Konfiguration wurde erfolgreich gespeichert.
+Configure Gallery module=Bildergalerie konfigurieren.
+Configure transformation method for your website.=Transformationsmethode für Ihre Web-Seite konfigurieren.
+contains=enthält
+Core:=Kern:
+Convert to user ODD=Zum Benutzer ODD konvertieren
+CSS name=CSS Name
+Current page=aktuelle Seite
+Custom platform permissions=Kundenspezifische Plattformrechte
+Data Pools=Dateien-Pool
+Data pools=Dateien-Pool
+Date=Datum
+Default platform group=Plattform-Standardgruppe
+Default platform permissions=Plattform-Standardrechte
+delete=löschen
+Delete=Löschen
+Description=Beschreibung
+Do not use ' or "= Bitte nicht ' oder " benutzen
+download all images=alle Bilder herunterladen
+download all XSLT=alle XSLT-Dateien herunterladen
+download the active configuration=die aktuelle Konfigurations-Datei herunterladen
+download the active CSS=die aktuelle CSS-Datei herunterladen
+Do you want to delete current field?=Möchten Sie das ausgewählte Feld löschen?
+Do you want to delete current gallery?=Möchten Sie die ausgewählte Galerie löschen?
+Do you want to delete current image?= Möchten Sie das ausgewählte Bild löschen?
+edit=bearbeiten
+Edit=Bearbeiten
+Edit config files=Konfigurations-Dateien bearbeiten
+Edit object content=Objektinhalt bearbeiten
+Edit ODD file=ODD-Datei bearbeiten
+Email=E-Mail
+Email is send from (field):= E-Mail Absender (Feld):
+Email is send to:=E-Mail Empfänger:
+Email subject (field):=E-Mail Betreff (Feld):
+Empty=Leer
+Encoding= Verschlüsseln
+Enter email subject=E-Mail Betreff eingeben
+Enter ODD description=ODD Beschreibung eingeben
+Enter ODD description file=ODD Beschreibungungsdatei eingeben
+Enter ODD email field=ODD E-Mail Feld eingeben
+Enter ODD subject field=ODD Betreff-Feld eingeben
+Enter the email for current user.=E-Mail-Adresse des Benutzers eingeben
+Enter TO email=E-Mail Empfänger eingeben
+Enter your email to subscribe.=Geben Sie bitte Ihre E-Mail ein um sich einzuschreiben.
+Error! Form2Mail configuration is not saved.=Fehler!  Form2Mail Konfiguration konnte nicht gespeichert werden.
+Error! Gallery configuration is not saved.=Fehler! Die Konfiguration für die Bildergalerie konnte nicht gespeichert werden.
+Error! guestbook configuration is not saved.=Fehler! Die Konfiguration für das Gästebuch konnte nicht gespeichert werden.
+Error! JPCache status is not changed!=Fehler!  JPCache Status konnte nicht geändert werden.
+Error! Web statistic status is not changed!=Fehler!  Web-Statistiken Status konnte nicht geändert werden.
+Extra params=Zusätzliche Parameter
+Files in your <b>PAS tmp</b> folder=Auflistung der Dateien, die sich in Ihrem <b>PAS tmp</b> Verzeichnis befinden
+File type=Datentyp
+First name=Vorname
+Forgot password?=Passwort vergessen?
+Form2Mail=Form2Mail
+Form2Mail module is not configured.= Die Form2Mail-Erweiterung wurde nicht konfiguriert.
+Form is build from ODD file:=Die Form wurde anhand der ODD Datei gebildet.
+Form preview=Form Vorschau
+Gallery=Bildergalerie
+gallery cell not selected= Bildergaleriezelle wurde nicht ausgewählt
+gallery cell selected= Bildergaleriezelle wurde ausgewählt
+Gallery columns= Bildergaleriespalten
+Gallery module is not configured.=Die Bildergalerie-Erweiterung wurde nicht konfiguriert.
+Gallery statistic section=Bereich für die Statistik der Bildergalerie
+Gallery welcome message=Herzlich willkommen Nachricht der Bildergalerie
+Gallery categories position=Positionierung der Kategorien in der Bildergalerie
+Central zone=Mittlere Zone
+
+Add/Edit Gallery=Bildergalerie hinzufügen/bearbeiten
+Gallery Title=Bildergalerie-Titel
+Gallery Title Iamge=Bildergalerie-Titelbild
+Gallery Description=Bildegalerie-Beschreibung
+Object position=Objekt-Anordnung
+
+Add Files/Folders=Dateien/Ordner hinzufügen/bearbeiten
+Image Name=Bilder-Namen
+Object position=Objekt-Anordnung
+
+
+Generate Java Script=Java Script erstellen
+Generate Meta Tags Configuration=Meta Tags Konfiguration erstellen
+group=Gruppe
+Groups=Gruppen
+Guest Book=Gästebuch
+guestbook module is not configured.=Die Gästebuch-Erweiterung wurde nicht konfiguriert.
+Hello=Hallo
+Here you can configure the textual ID (TID) if you need to browse via TID and not only by normal ID.=Hier können Sie die Text ID(TID) einstellen, falls Sie über TID browsen wollen und nicht nur per normalen ID.
+Host=Host
+If you want to configure this module click here.=Wenn Sie die Erweiterung konfigurieren wollen, dann klicken Sie bitte hier!
+Image=Bild
+image cells=Bildzellen
+images=Bilder
+Images per page=Bilder pro Seite
+images section table=Bildbereichtabelle
+in=in
+Is actions menu hidden?=Ist das Aktionsmenü versteckt?
+is not a valide e-mail address=ist keine korrekte E-Mail-Adresse
+is not corect=ist nicht korrekt
+JPCache=JPCache
+JPCache module administration=JPCache Verwaltungs-Erweiterung
+Keywords=Schlüsselwörter
+Language name=Sprache
+Last name=Nachname
+List of ODD files=Liste der ODD-Dateien
+List of System ODD files=Liste der System-ODD-Dateien
+Login=Einloggen
+logout=Abmelden
+main gallery table=Haupttabelle der Bildergalerie
+Main permissions=Hauptrechte
+Mark XML and XSL file names with %xml and %xsl=Markieren Sie die XML und XSL Dateiennamen mit %xml und %xsl
+Meta Data=Meta Daten
+Metatags=Meta Tags
+Metatags administration=Meta Tags Verwaltung
+Middle name=zweiter Name
+mod_xslt2 - in this case Apache will handle the XML transformation.=mod_xslt2 – in diesem Fall wird Apache die XML Transformierung übernehmen.
+move object=Objekt bewegen
+Move zone down=Zone nach Unten bewegen
+must be a web site www.*.*=muss eine Webseite sein www.*.*
+must contain characters from a to z and numbers from 0 to 9=muss Zeichen von a bis z und Nummern von 0 bis 9 enthalten
+must contain numbers from 0 to 9=muss Zahlen von 0 bis 9 enthalten
+Name=Name
+new css=neue CSS-Datei
+new image=neues Bild
+new xslt=neue XSLT-Datei
+None (Use it for WYSIWYG fields)=Keine (Bei WYSIWYG Felder einsetzen um Validierungen auszuschalten)
+NOTE=Hinweis
+NOTE:If you change the keywords data you should regenerate JavaScript!=Hinweis: Wenn Sie die Daten für die Schlüsselwörter anpassen, sollten Sie einen neuen Java Script erstellen!
+NOTE:If you change the meta data you should regenerate meta tags configuration!= Hinweis: Wenn Sie die Daten für die Meta Tags anpassen, sollten Sie einen neuen Java Script erstellen!
+NOTE: This are default pemissions matrix for default group=Hinweis: Das ist die Standardrechte-Matrix für die Standardgruppe
+NOTE: This is a visual zones editor!<br />It will not include new zones automatically into XSLT templates. You will have to do this manually or use template generator.=Hinweis: Das ist der visuelle Zoneneditor!<br> Er werden keine neuen Zonen automatisch in die XSLT Schablone einpflegen. Dafür müssen Sie die Änderungen entweder manuell, oder mit einem Template-Generator erstellen.
+NOTE: This is default group.<br />This group os loaded if user is not logged=Hinweis: Das ist die Standardgruppe <br />Diese Gruppe wird geladen, wenn der Benutzer nicht eingeloggt ist.
+Not registered?=Noch nicht registriert?
+Numbers only=Nur Zahlen
+Object default group ID=Standardgruppen-ID des Objektes
+Object default group ID:=Standardgruppen-ID des Objektes:
+On=eingeschaltet
+Off=ausgeschaltet
+Other=Andere
+Owner=Besitzer
+Pages=Seiten
+pages link style=Style der Webseiten-Links
+Pages section=Seitenbereich
+pages selected link style=Link-Style der ausgewählten Seite
+pages table style=Style der Webseiten-Tabellen
+Password=Passwort
+PHP - XSLT for PHP4 and XSL for PHP5 (auto detected)= PHP – XSLT für PHP4 und XSL für PHP5 (automatisch entdecken)
+Plaese click 'Back' and enter correct data!=Bitte klicken Sie auf „Zurück“ und geben Sie korrekte Daten ein!
+Please enter username=Bitte Benutzername eingeben.
+Platform=Plattform
+Platform options=Plattformoptionen
+Platform specified permissions=Plattformspezifische Rechte
+Please enter corect Image name!=Bitte geben Sie einen korrekten Bildnamen ein
+Please enter corect Image name length!=Bitte geben Sie einen korrekte Namenlänge des Bildes ein!
+Please enter corect time value=Bitte geben Sie ein korrektes Zeitformat ein
+Please enter corect zip value in= Bitte geben Sie eine korrekte PLZ ein
+Please enter your email address, and we will send your password.=Bitte geben Sie Ihre E-Mail ein und Sie erhalten in kürze Ihr Passwort.
+PopUp=PopUp
+PopUp module is off!=Die PopUp-Erweiterung ist ausgeschaltet!
+Read=Lesen
+Reset=Rückstellung
+RSS=RSS
+RSS module administration=RSS-Erweiterungs-Verwaltung
+Save configuration=Konfiguration speichern
+Scan modules=Erweiterungen prüfen
+Scanning modules ...=Erweiterungen prüfen ...
+Select date=Wählen Sie ein Datum aus
+Select group permissions=Wählen Sie die Gruppenrechte aus
+Select groups to assign selected user.=Wählen Sie eine Gruppe aus zu welcher der aktuelle Benutzer zugeordnet wird.
+Select image quality (1 ... 100)=Wählen Sie die Bildqualität aus (1 ... 100)
+Select image size (horizontal)=Wählen Sie die Bildgröße aus(horizontal)
+Select new parent=Wählen Sie einen Stamm
+Size=Größe
+Slect actions:=Aktion  auswählen:
+Slect objects:=Objekt auswählen:
+Sort Alphabetically=Alphabetisch anordnen
+Statistics:=Statistiken
+statistics div style=Statistik für den div-Style
+Status=Status
+Submit=Eintragen
+Subscribe=Einschreiben
+Summary syze is=Die Gesamtgröße ist
+Target=Ziel
+Temp files=Temporäre Dateien
+Temporary files administration=Verwaltung der Temporären Dateien
+Text=Text
+Thank you!Your data was submmited.=Vielen Dank! Ihre Daten wurden übermittelt.
+The format of this parameters is: key=value|key1=value1.=Die Syntax für diese Parametern ist: Schlüsselwort=Wert|Schlüsselwort1= Wert1.
+There are three different metheods.=Es gibt 3 verschiedene Methoden.
+There was a problem sending your data!\nPlease try again later!= Es ist ein Fehler aufgetreten beim versenden Ihrer Daten!\nBitte versuchen Sie es später noch einmal!
+This is the language manager of your web site.=Das ist die Sprach-Verwaltung Ihrer Webseite.
+This is a system ODD used for platform=Das ist eine System-ODD-Datei, welche für die Plattform genutzt wird
+This module is=Diese Erweiterung ist
+This object can contain .... (other objects)=Dieses Objekt kann... (andere Objekte) enthalten
+This ODD can't be edited nor converted.=Dieses ODD-Objekt kann weder bearbeitet noch konvertiert werden.
+This ODD is used.=Dieses ODD-Objekt wird schon benutzt.
+This tool can affect the look of the system in a dramatic way.=Dieses Tool kann das Aussehen des Systems nachhaltig beschädigen.
+This will delete current object.<br>To proceed click "Delete". To cancel click "Cancel"=Wollen Sie das ausgewählte Objekt wirklich löschen?<br>Um fortzufahren drücken Sie auf "Löschen", zum Abbruch - auf "Abbrechen".
+Time=Zeit
+Title=Titel
+Top=Top
+Transformation method=Transformationsmethode
+Turn JPCache On=JPCache einschalten
+Turn JPCache Off=JPCache ausschalten
+
+Turn keywords module off=Die Schlüsselwörter-Erweiterung ausschalten
+Turn keywords module on=Die Schlüsselwörter-Erweiterung einschalten
+Keyword module administration=Verwaltung der Schlüsselwörter
+Generate JavaScript=Java Script generieren
+
+Turn MEC engine on=MEC Engine einschalten
+Turn Webanalyse engine on=Webanalyse Engine einschalten
+Turn web statistic off=Die Webstatistik ausschalten
+
+type=Typ
+Type=Typ
+Under developement.=In Entwicklung.
+URL address=URL Adresse
+URL/Color/Email/Engine=URL/Farbe/E-Mail/Engine
+Username=Benutzername
+Use textual ID=Text-ID einsetzen
+Use with care.=Mit Vorsicht benutzen.
+User Group=Benutzer Gruppe
+view=Ansicht
+view/edit site=Ansicht/Eingabeseite ändern
+
+Web shop module is not active!=Die Web-Shop-Erweiterung ist nicht aktiv!
+Web shop is not activated.=Der Web-Shop ist nicht aktiviert.
+Web statistic=Webstatistik
+Web statistic module administration=Webstatistik Verwaltung
+Web statistic module not activated!=Die Webstatistik ist nicht aktiviert
+Currently used webstat module is=Die aktuell eingesetzte Webstatistik-Engine ist
+Web statistic status changed to=Die Webstatistik-Erweiterung ist
+
+welcome to administration console of=Willkommen im Bedienungsfeld von
+Where to add current object?=Wo soll das aktuelle Objekt hinzugefügt werden?
+Word=Wort
+Write=Schreiben
+WYSIWYG HTML editor is not visualized for speed.=Der WYSIWYG HTML Editor ist aus Performance-Gründen nicht visualisiert.
+XSLT name=XSLT Name
+XSLT transform=XSLT transformieren
+You are required to configure objects that will be used in the website!=Es ist erforderlich, dass Sie die Objekten konfigurieren die in der Webseite benutzt werden!
+You can change groups.=Sie können die Gruppen anpassen.
+You can change permissions.= Sie können die Rechte anpassen.
+You can change the link of the gallery by using CSS:=Sie können mithilfe von CSS das Aussehen der Bildergalerie ändern:
+You can convert any of this ODD files to user type so you can edit it.=Sie können jeder dieser ODD-Dateien zu einem Benutzertyp konvertieren, so dass Sie diese bearbeiten können.
+You can make your url to look like this <i>textid/textid2</i> and the use <i>mod_rewrite</i> to convert it to <i>index.php?tid=textid2</i>.= Sie können Ihre URL so einstellen, dass sie wie folgt aussieht <i>textid/textid2</i> und dann mit <i>mod_rewrite</i> zu konvertieren <i>index.php?tid=textid2</i>.
+You can't edit this object!=Sie können dieses Objekt nicht bearbeiten.
+You can't edit your platform name, this will break the installation!=Vorsicht! Das Ändern des Plattform-Namens wird die Installation zerstören!
+You do not have to configure 'platform', form2mail, gallery etc..=Folgende Erweiterungen sind schon für Sie vorkonfiguriert: Plattform, Form2Mail-Erweiterung und Bildergalerie.
+Your Browser=Ihr Browser ist
+Your data was not submited! Please try again!=Ihre Eingaben wurden nicht übernommen. Probieren Sie es bitte noch einmal!
+Your form was submited!=Ihre Nachricht wurde übermittelt.
+Your IP=Ihre IP ist
+Your version is up to date=Ihre Version ist auf dem neuesten Stand
+
+Use 'Ctrl' key to select multiple groups.=Für mehrfache Auswahl benutzen Sie die 'STRG' Taste.
+
+## New
+For more information visit:=Für mehr Informationen gehen Sie bitte auf:
+Social Bookmarks=Social Bookmarks
+
+Platform name=Plattformname
+Platform Description=Plattform-Beschreibung
+
+Hint=Hinweis
+You should not change this value!=Sie sollten diese Einstellungen nicht ändern!
+
+Generate Google Sitemap=Google Sitemap generieren
+Download Google Sitemap=Google Sitemap downloaden
+Sitemap generated=Die Sitemap ist fertig erstellt!
+Objects included into sitemap=Objekte, die in die Sitemap eingebunden
+(default is 'category' or can be 'category,text, ....')=(Standard ist 'Kategorie' oder kann 'Kategorie,Text,...' sein)
+Google Sitemap configuration is saved.=Die Google Sitemap Konfiguration wurde erfolgreich gespeichert.
+Please edit module configuration!=Bitte konfigurieren Sie die Erweiterung!
+Current configuration=Aktuelle Konfiguration
+SEO On?=SEO einschalten?
+Edit Configuration=Konfiguration bearbeiten
+
+Category=Kategorie
+
+on=eingeschaltet
+off=ausgeschaltet
+
+Select transformation method=Transformationsmethode auswählen
+Command=Befehle
+Target transformation=Ziel auswählen
+
+HTMLBaloon module administration= HTMLBaloon-Erweiterungs-Verwaltung
+Turn hint On=Hinweis einschalten
+Turn hint Off=Hinweis ausschalten
+HTMLBaloon status changed to=HTMLBaloon-Status wurde erfolgreich geändert
+
+Example=Beispiel
+
+Back=Zurück
+
+Select unique textual ID field in the object=Bitte ein einzigartiges Text-ID Feld auswählen für das Objekt.
+Textual ID=Text-ID
+Custom perm.=Kundenspezifische Plattformrechte.
+
+Update=Aktualisieren
+
+default group=Standardgruppe
+select default group=Als Standardgruppe auswählen?
+
+Zone name=Zonen Name
+Zone description=Zonen Beschreibung
+Default zone=Standardzone
+Yes=Ja
+No=Nein
+Zone position=Zonen Position
+Top=Oben
+Bottom=Unten
+Left=Links
+Center=Mitte
+Right=Rechts
+Zone type=Zonen Typ
+Ignor selection=Auswahl ignorieren
+Can contain=Kann enthalten
+category=Kategorie
+text=Text
+container=Container
+news=News
+Add/Edit Zone=Zone Hinzufügen/Bearbeiten
+
+HTMLTidy extension is not enabled!=Die HTMLTidy Erweiterung ist ausgeschaltet!
+
+
+Category=Kategorie
+File=Datei
+Gallery image=Bild der Bildergalerie
+News=News
+Gallery=Bildergalerie
+Guestbook=Gästebuch
+
+Add/Edit Category=Kategorie hinzufügen/bearbeiten
+Category Title=Kategorie Titel
+Textual ID=Text-ID
+Category Description=Kategorie Beschreibung
+
+Add/Edit Text=hinzufügen/bearbeiten
+Short text=kurzer Text
+Long text=langer Text
+
+Add Files/Folders=Dateien/Ordner hinzufügen
+Image Name=Bild-Titel
+
+Container name=Container-Titel
+Container type=Container-Typ
+Module=Erweiterung
+yes=Ja
+no=Nein
+
+Random=Zufall
+
+##Login
+Please provide your login information:=Bitte geben Sie Ihre Zugangsdaten ein:
+Username:=Benutzername:
+Password:=Passwort:
+Access denied!=Zugang verweigert!
+Wrong username/password.=Ungültiger Benutzername oder ungültiges Passwort!
+You do not have sufficient permissions to access this area!=Sie haben nicht genügend Rechte um diesen Bereich zu betreten!
+Click here to logout=Bitte klicken Sie hier um die Session zu schließen.
+
+#PAS <i>(Puzzle Apps Application Server)</i>=OSGAS <i>(OSG Application Server)</i>
+Version=Version
+
