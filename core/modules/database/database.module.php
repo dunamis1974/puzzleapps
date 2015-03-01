@@ -18,6 +18,8 @@ $this->LoadDriver($DB_DRIVER);
 if ($DB_DRIVER == "sqlite") {
     $path = urlencode($RUNNINGNDIR . $DB_HOST); //urlencode
     $dsn = "$DB_DRIVER://$path";
+} else if ($DB_DBAL == "pdodb") {
+	$dsn = "{$DB_DRIVER}:host={$DB_HOST};port=5432;dbname={$DB_DATABASE};user={$DB_USERNAME};password={$DB_PASSWORD}";
 } else {
     $dsn = "$DB_DRIVER://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_DATABASE";
 }
@@ -37,4 +39,3 @@ function getLastID($table, $id = "id") {
     return $GLOBALS["DB"]->GetOne("SELECT MAX($id) FROM $table");
 } 
 
-?>

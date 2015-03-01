@@ -45,6 +45,6 @@ if ($error == true) {
 </form><br />
 </td></tr>
 </table>
-<p /><div class="copyright" align="center">(c) 2004 Puzzle Apps CMS</div>
+<p /><div class="copyright" align="center">Puzzle Apps CMS</div>
 </body>
 </html>

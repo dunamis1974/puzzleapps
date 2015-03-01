@@ -19,6 +19,10 @@ td.steps {
     background-color: #183441;
 }
 
+.item {
+	width: 200px;
+}
+
 .error {
     color: #ff0000; 
     font : 11px Verdana, sans-serif;

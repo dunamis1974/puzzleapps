@@ -11,10 +11,6 @@
     <td align="left"><? echo (php_sapi_name() != "cgi") ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.php_sapi_name().')</span>' : '<b class="error">'.$failedImg.' CGI mode is likely to have problems</b>';?></td>
 </tr>
 <tr>
-    <td class="item"><li>Is PEAR::DB present (optional)</li></td>
-    <td align="left"><? echo DetectPEARDB() ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b><span class="error"> PEAR::DB was not found in your include path!</span>';?></td>
-</tr>
-<tr>
     <td class="item"><li>XSL Support (PHP5)</li></td>
     <td align="left"><? echo extension_loaded('xsl') ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b>';?></td>
 </tr>
@@ -32,12 +28,11 @@
 </tr>
 <tr>
     <td class="item" colspan="2">
-        The next tests check for database support compiled with php. We use the PEAR::DB database abstraction layer which comes with drivers for
-        many databases. Consult the PEAR::DB documentation for details. <br />
+        The next tests check for database support compiled with php.<br />
         For most users: MySQL will probably be the database of your choice - make sure MySQL Support is available.
         <br /><br />
         Currently "Puzzle Apps CMS" supports only <strong>MySql</strong>, <strong>SQLite</strong> and <strong>PostgreSql</strong>.<br />
-        If you need support for other database plase write to <a href="mailto:puzzle@planicus.com">Puzzle Apps Team</a><br /><br />
+        If you need support for other database plase write to <a href="mailto:support@puzzleapps.org">Puzzle Apps Team</a><br /><br />
     </td>
 </tr>
 <tr>
@@ -105,29 +100,9 @@
 
 if (phpversion() < '5') $error = true;
 if (!php_sapi_name() == "cgi") $error = true;
-if (!DetectPEARDB());
 if (!extension_loaded('xsl')) $error = true;
-//if (!function_exists( 'mssql_connect' ) && !function_exists( 'mysql_connect' ) && !function_exists( 'pg_connect' ) && !function_exists( 'sqlite_open' )) $error = true;
 
 function CheckWritable($file, $msg) {
     global $okImg, $failedImg;
     return (file_exists($file) && is_writable($file))  ? '<b class="ok">'.$okImg.'</b>'.$okMessage : '<b class="error">'.$failedImg.'</b><span class="error">' . $msg . '</span>';
 }
-
-
-
-
-function DetectPEARDB() {
-    $incl_ = ini_get("include_path");
-    
-    $incl = split("[:;]", $incl_);
-    for ($i = 0; $i < count($incl); $i++) {
-        $FILE = $incl[$i] . "/DB.php";
-        if (file_exists($FILE)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-?>
