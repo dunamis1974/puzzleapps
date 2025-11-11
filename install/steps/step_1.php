@@ -40,7 +40,7 @@
 </tr>
 <tr>
     <td class="item"><li>MySQL Support</li></td>
-    <td align="left"><? echo function_exists( 'mysql_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.mysql_get_client_info().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
+    <td align="left"><? echo function_exists( 'mysqli_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.mysqli_get_client_info().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
 </tr>
 <tr>
     <td class="item"><li>PostgreSQL Support</li></td>

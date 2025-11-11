@@ -48,7 +48,7 @@ $image_fld = $basedir . "/files/";
 
 if ($_GET["img"]) {
     $name = $tumbs_fld . $size . $_GET["nomag"] . $_GET["img"];
-    $format = strtoupper(ereg_replace(".*\.(.*)$", "\\1", $_GET["img"]));
+    $format = strtoupper(preg_replace("/.*\.(.*)$/", "\\1", $_GET["img"]));
     //header("Content-Type: image/$format");
     if (file_exists($name)) {
         header("Content-Length: " . filesize($name));
@@ -69,7 +69,7 @@ class thumbnail {
 
     function thumbnail($imgfile) {
         // detect image format
-        $this->img["format"] = ereg_replace(".*\.(.*)$", "\\1", $imgfile);
+        $this->img["format"] = preg_replace("/.*\.(.*)$/", "\\1", $imgfile);
         $this->img["format"] = strtoupper($this->img["format"]);
         if ($this->img["format"] == "JPG" || $this->img["format"] == "JPEG") {
             // JPEG

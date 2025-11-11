@@ -60,7 +60,7 @@ if ($_POST) {
     if (!$UFV->hasErrors() || $_GET["content"]) {
         $back = 1;
         if ($_GET["edit"]) {
-            $FIELDID = ereg_replace("f", "", $_GET["edit"]);
+            $FIELDID = preg_replace("/f/", "", $_GET["edit"]);
             $DTD->edit_row($_GET["odd"], $FIELDID, $VALIDATED);
         } else if ($_GET["add"]) {
             if (!$_GET["odd"]) {
@@ -87,7 +87,7 @@ if ($_POST) {
 }
 
 if ($_GET["del"]) {
-    $FIELDID = ereg_replace("f", "", $_GET["del"]);
+    $FIELDID = preg_replace("/f/", "", $_GET["del"]);
     $DTD->delete_row($_GET["odd"], $FIELDID);
     $newloc = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"] . $doFORM->cancel_uri();
     header('Location: ' . $newloc);
@@ -96,10 +96,10 @@ if ($_GET["del"]) {
 
 if ($_GET["up"] || $_GET["down"]) {
     if ($_GET["up"]) {
-        $FIELDID = ereg_replace("f", "", $_GET["up"]);
+        $FIELDID = preg_replace("/f/", "", $_GET["up"]);
         $GOTO = $FIELDID - 1;
     } elseif ($_GET["down"]) {
-        $FIELDID = ereg_replace("f", "", $_GET["down"]);
+        $FIELDID = preg_replace("/f/", "", $_GET["down"]);
         $GOTO = $FIELDID + 1;
     }
     $DTD->move($_GET["odd"], $FIELDID, $GOTO);
@@ -109,7 +109,7 @@ if ($_GET["up"] || $_GET["down"]) {
 }
 
 if ($_GET["sys2paltform"]) {
-    $FIELDID = ereg_replace("o", "", $_GET["sys2paltform"]);
+    $FIELDID = preg_replace("/o/", "", $_GET["sys2paltform"]);
     $DTD->sys2paltform($FIELDID);
     $newloc = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"] . $doFORM->cancel_uri();
     header('Location: ' . $newloc);
@@ -117,7 +117,7 @@ if ($_GET["sys2paltform"]) {
 }
 
 if ($_GET["sys2user"]) {
-    $FIELDID = ereg_replace("o", "", $_GET["sys2user"]);
+    $FIELDID = preg_replace("/o/", "", $_GET["sys2user"]);
     $DTD->sys2user($FIELDID);
     $newloc = "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"] . $doFORM->cancel_uri();
     header('Location: ' . $newloc);
@@ -205,7 +205,7 @@ if (!$_GET["odd"]) {
 } else if ($_GET["edit"]) {
     $_DTD = $_GET["odd"];
     $DTDDATA = $DTD->get_odd($_DTD);
-    $FIELDID = ereg_replace("f", "", $_GET["edit"]);
+    $FIELDID = preg_replace("/f/", "", $_GET["edit"]);
     $FIELD = $DTDDATA[$FIELDID];
     if ($VALIDATED) {
         $data = $VALIDATED;

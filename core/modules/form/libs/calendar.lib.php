@@ -23,7 +23,7 @@ function calendar ($date = -1, $type = 1, $range = "-5|+5", $name = "date", $req
                 $this_date = date("Y-m-d", $date);
             }
         }
-        //list ($year, $month, $day) = split("[:-]", $this_date);
+        //list ($year, $month, $day) = preg_split("/[:-]/", $this_date);
         $this_unix = Validator::make_unix($this_date);
     }
     
