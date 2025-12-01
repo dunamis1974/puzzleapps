@@ -451,34 +451,40 @@ class ADODB_mysql extends ADOConnection {
 	// returns true or false
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if (!empty($this->port)) $argHostname .= ":".$this->port;
+		$port = !empty($this->port) ? $this->port : 3306;
+		$socket = null;
 
-		if (ADODB_PHPVER >= 0x4300)
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword,
-												$this->forceNewConnect,$this->clientFlags);
-		else if (ADODB_PHPVER >= 0x4200)
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword,
-												$this->forceNewConnect);
-		else
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword);
+		// Use mysqli_init() and mysqli_real_connect() to support client flags
+		$this->_connectionID = mysqli_init();
+		if (!$this->_connectionID) return false;
 
-		if ($this->_connectionID === false) return false;
-		if ($argDatabasename) return $this->SelectDB($argDatabasename);
+		if (!mysqli_real_connect($this->_connectionID, $argHostname, $argUsername, $argPassword,
+								$argDatabasename, $port, $socket, $this->clientFlags)) {
+			$this->_connectionID = false;
+			return false;
+		}
+
 		return true;
 	}
 
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if (!empty($this->port)) $argHostname .= ":".$this->port;
+		$port = !empty($this->port) ? $this->port : 3306;
+		$socket = null;
 
-		if (ADODB_PHPVER >= 0x4300)
-			$this->_connectionID = mysqli_connect('p:'.$argHostname,$argUsername,$argPassword,$this->clientFlags);
-		else
-			$this->_connectionID = mysqli_connect('p:'.$argHostname,$argUsername,$argPassword);
-		if ($this->_connectionID === false) return false;
+		// Use mysqli_init() and mysqli_real_connect() to support client flags
+		// Use 'p:' prefix for persistent connections
+		$this->_connectionID = mysqli_init();
+		if (!$this->_connectionID) return false;
+
+		if (!mysqli_real_connect($this->_connectionID, 'p:'.$argHostname, $argUsername, $argPassword,
+								$argDatabasename, $port, $socket, $this->clientFlags)) {
+			$this->_connectionID = false;
+			return false;
+		}
+
 		if ($this->autoRollback) $this->RollbackTrans();
-		if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;
 	}
 
