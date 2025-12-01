@@ -451,34 +451,49 @@ class ADODB_mysql extends ADOConnection {
 	// returns true or false
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if (!empty($this->port)) $argHostname .= ":".$this->port;
+		$port = !empty($this->port) ? $this->port : 3306;
 
-		if (ADODB_PHPVER >= 0x4300)
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword,
-												$this->forceNewConnect,$this->clientFlags);
-		else if (ADODB_PHPVER >= 0x4200)
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword,
-												$this->forceNewConnect);
-		else
-			$this->_connectionID = mysqli_connect($argHostname,$argUsername,$argPassword);
+		// Use mysqli_init + mysqli_real_connect to support client flags
+		if ($this->clientFlags) {
+			$this->_connectionID = mysqli_init();
+			if (!$this->_connectionID) return false;
+			if (!mysqli_real_connect($this->_connectionID, $argHostname, $argUsername, $argPassword, 
+									$argDatabasename, $port, null, $this->clientFlags)) {
+				$this->_connectionID = false;
+				return false;
+			}
+			return true;
+		}
+
+		// Simple connection without client flags
+		$this->_connectionID = @mysqli_connect($argHostname, $argUsername, $argPassword, $argDatabasename, $port);
 
 		if ($this->_connectionID === false) return false;
-		if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;
 	}
 
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if (!empty($this->port)) $argHostname .= ":".$this->port;
+		$port = !empty($this->port) ? $this->port : 3306;
 
-		if (ADODB_PHPVER >= 0x4300)
-			$this->_connectionID = mysqli_connect('p:'.$argHostname,$argUsername,$argPassword,$this->clientFlags);
-		else
-			$this->_connectionID = mysqli_connect('p:'.$argHostname,$argUsername,$argPassword);
-		if ($this->_connectionID === false) return false;
+		// Use mysqli_init + mysqli_real_connect to support client flags and persistent connections
+		if ($this->clientFlags) {
+			$this->_connectionID = mysqli_init();
+			if (!$this->_connectionID) return false;
+			// 'p:' prefix for persistent connection
+			if (!mysqli_real_connect($this->_connectionID, 'p:'.$argHostname, $argUsername, $argPassword, 
+									$argDatabasename, $port, null, $this->clientFlags)) {
+				$this->_connectionID = false;
+				return false;
+			}
+		} else {
+			// Simple persistent connection without client flags
+			$this->_connectionID = @mysqli_connect('p:'.$argHostname, $argUsername, $argPassword, $argDatabasename, $port);
+			if ($this->_connectionID === false) return false;
+		}
+
 		if ($this->autoRollback) $this->RollbackTrans();
-		if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;
 	}
 
