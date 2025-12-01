@@ -490,9 +490,9 @@ class ADODB_mysql extends ADOConnection {
 		} else {
 			// Simple persistent connection without client flags
 			$this->_connectionID = @mysqli_connect('p:'.$argHostname, $argUsername, $argPassword, $argDatabasename, $port);
+			if ($this->_connectionID === false) return false;
 		}
 
-		if ($this->_connectionID === false) return false;
 		if ($this->autoRollback) $this->RollbackTrans();
 		return true;
 	}
