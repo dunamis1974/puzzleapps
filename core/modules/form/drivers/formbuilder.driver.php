@@ -654,7 +654,7 @@ class FormBuilder
         $this->_FORM .= "<div class=\"formrow " . $this->rowStyle() . "\" id=\"f_{$this->DTD[$i]["element_name"]}\">\n";
         
         if ($field["quiz"]) {
-            $titles = split(":", $field["formfield"]);
+            $titles = preg_split("/:/", $field["formfield"]);
             if ($titles[2]) {
                 $this->_FORM .= "<div class=\"col1form {$this->mandatory}\">{$description}##" . $titles[0] . "##</div>\n";
             } else {

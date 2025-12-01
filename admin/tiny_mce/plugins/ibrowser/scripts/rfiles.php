@@ -259,7 +259,7 @@ html, body {
 			$files = array();
 			$valids = implode('|', $valid);			
 			while (($file = readdir($handle)) !== false) {                                                            
-				if (is_file($path . $file) && eregi('\.(' . $valids . ')$', $file, $matches)) {                                                                                   
+				if (is_file($path . $file) && preg_match('/\.(' . $valids . ')$/i', $file, $matches)) {
 					$files[$path . $file] = $matches[0];
 				}
 			}
@@ -517,7 +517,7 @@ html, body {
 	//-------------------------------------------------------------------------
 	// escape and clean up file name (only lowercase letters, numbers and underscores are allowed) 
 	function fixFileName($file) {
-		$file = ereg_replace("[^a-z0-9._-]", "", str_replace(" ", "_", str_replace("%20", "_", strtolower($file))));
+		$file = preg_replace("/[^a-z0-9._-]/", "", str_replace(" ", "_", str_replace("%20", "_", strtolower($file))));
 		return $file;
 	}
 	//-------------------------------------------------------------------------
@@ -527,7 +527,7 @@ html, body {
 		$tfile = $nfile;
 		$i = 1;
 		while (file_exists($path . $nfile)) {
-			$nfile = ereg_replace('(.*)(\.[a-zA-Z]+)$', '\1_' . sprintf('%02d',$i) . '\2', $tfile);				
+			$nfile = preg_replace('/(.*)(\.[a-zA-Z]+)$/', '\1_' . sprintf('%02d',$i) . '\2', $tfile);
 			$i++;
 		}
 		return $nfile;		

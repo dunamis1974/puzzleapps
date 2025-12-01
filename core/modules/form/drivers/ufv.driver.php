@@ -57,8 +57,8 @@ class Validator
             unset($this->data);
 
             if (($key[$i] != "redir") && (! is_array($post_vars[$key[$i]]))) {
-                $val[$i] = ereg_replace('\\\"', "\"", $val[$i]);
-                $val[$i] = ereg_replace("\\\'", "'", $val[$i]);
+                $val[$i] = preg_replace('/\\\"/', "\"", $val[$i]);
+                $val[$i] = preg_replace("/\\\'/", "'", $val[$i]);
             }
 
             $this->data = $this->getValidation($key[$i]);
@@ -315,7 +315,7 @@ class Validator
      */
     function case_($case, $val)
     {
-        if (eregi("max", $case) || eregi("min", $case)) {
+        if (preg_match("/max/i", $case) || preg_match("/min/i", $case)) {
             $case_old = $case;
             $case = substr($case, 0, 3);
         }
@@ -486,7 +486,7 @@ class Validator
     function mail_val($value)
     {
         if (trim($value) != "") {
-            if (eregi("^[A-Z0-9._%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$", $value)) {
+            if (preg_match("/^[A-Z0-9._%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*(\.[A-Z]{2,4})$/i", $value)) {
                 $key = 0;
             } else {
                 $key = 1;
@@ -505,8 +505,8 @@ class Validator
     {
         // name:email:notNull...
         if (trim($value) != "") {
-            $UrlPtn = "^[_a-z0-9-]+(\.[_a-z0-9-]+)+[\.a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$";
-            if (ereg($UrlPtn, $value)) {
+            $UrlPtn = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)+[\.a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/";
+            if (preg_match($UrlPtn, $value)) {
                 // '/^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\//i'
                 // $UrlPtn  = "(http:|mailto:|https:|ftp:|gopher:|news:)" ."([^ \\/\"\']*\\/)*[^ \\t\\n\\/\"\']*[A-Za-z0-9\\/?=&~_]";
                 $key = 0;
@@ -689,7 +689,7 @@ class Validator
             $this_date = "$yyyy:$mm:$dd";
             if (checkdate($mm, $dd, $yyyy)) {
                 if ($this->data[2] == "unix") {
-                    list($yyyy, $mm, $dd) = split(':', $this_date);
+                    list($yyyy, $mm, $dd) = preg_split('/:/', $this_date);
                     $this_date = mktime(0, 0, 0, $mm, $dd, $yyyy);
                 }
             }
@@ -765,7 +765,7 @@ class Validator
      */
     function make_unix($date, $h = 0, $m = 0)
     {
-        list($yyyy, $mm, $dd) = split('[:-]', $date);
+        list($yyyy, $mm, $dd) = preg_split('/[:-]/', $date);
 
         if (! $dd || ! $mm || ! $yyyy)
             return $date;
@@ -781,12 +781,12 @@ class Validator
     function make_readible($date)
     {
         if (($date != - 1) && (trim($date) != '')) {
-            if (eregi("-", $date)) {
-                list($yyyy, $mm, $dd) = split('[:-]', $date);
+            if (preg_match("/-/", $date)) {
+                list($yyyy, $mm, $dd) = preg_split('/[:-]/', $date);
                 if (! $dd) {
                     $date = date("Y-m-d", $date);
                 }
-                list($yyyy, $mm, $dd) = split('[:-]', $date);
+                list($yyyy, $mm, $dd) = preg_split('/[:-]/', $date);
                 $date_ = date("M j, Y", mktime(0, 0, 0, $mm, $dd, $yyyy));
             } else {
                 $date_ = date("M j, Y", $date);

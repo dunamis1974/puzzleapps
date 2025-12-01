@@ -123,7 +123,7 @@
 	$cfg['root_dir']    = ((@$_SERVER['DOCUMENT_ROOT'] && file_exists(@$_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'])) ? $_SERVER['DOCUMENT_ROOT'] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace('\\', '/', realpath('.'))));
 	$cfg['base_url'] 	= 'http://' . $_SERVER['SERVER_NAME']; 							// base url; e.g. 'http://localhost/'	
 	//$cfg['main_dir'] 	= dirname($_SERVER['PHP_SELF']); 								// iBrowser main dir; e.g. '/home/domain/public_html/ibrowser/'	
-	$cfg['main_dir']    = ereg_replace("//", "/", dirname($_SERVER['PHP_SELF']));
+	$cfg['main_dir']    = preg_replace("/\/\//", "/", dirname($_SERVER['PHP_SELF']));
 	$cfg['scripts']  	= $cfg['main_dir'] . '/scripts/'; 								// scripts dir; e.g. '/home/domain/public_html/ibrowser/scripts/'	
 	$cfg['pop_url']    	= $cfg['scripts'] . 'popup.php'; 								// popup dir; relative to 'script' dir	
 	$cfg['temp']     	= realpath(dirname(__FILE__) . '/../temp'); 					// temp dir; e.g. 'D:/www/temp'	

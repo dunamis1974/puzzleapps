@@ -175,7 +175,7 @@ function DownloadZIP ($FOLDER, $NAME="files.zip") {
  * @return string $ERR_
  */
 function BuildErrorMsg ($msg) {
-    $_msg = ereg_replace("\n", "<li>", $msg);
+    $_msg = preg_replace("/\n/", "<li>", $msg);
     $ERR_ .= "<div class=\"block_error_\">
     <table>
     <tr>
@@ -357,7 +357,7 @@ function isUpdatableComponents () {
 
 
 function mime_icon ($case) {
-    if (ereg("image", $case)) {
+    if (preg_match("/image/", $case)) {
         $case = "image";
     } 
     switch ($case) {

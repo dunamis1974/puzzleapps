@@ -12,14 +12,14 @@ if ($handle = opendir($dir)) {
             if ($CONFIGURATION_TYPE == "xml") {
                 // If XML configuration is used
                 unset($conf);
-                $TITLE = strtoupper(ereg_replace(".xml", "", $file));
+                $TITLE = strtoupper(preg_replace("/\.xml$/", "", $file));
                 $_conf = $XML->toArray($dir . $file);
                 $__end = count($_conf[0]["data"][0]["data"]);
                 for ($i = 0; $i < $__end; $i++) $conf[] = $_conf[0]["data"][0]["data"][$i]["attributes"]["name"];
                 $$TITLE = $conf;
             } elseif ($CONFIGURATION_TYPE == "text") {
                 // If text configuration is used
-                $TITLE = strtoupper(ereg_replace(".conf", "", $file));
+                $TITLE = strtoupper(preg_replace("/\.conf$/", "", $file));
                 $fp = fopen ($dir . $file, "r");
                 $$TITLE = fgetcsv($fp, 10000, ";");
                 fclose($fp);

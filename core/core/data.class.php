@@ -312,7 +312,7 @@ class DATA extends CORE
                 $lines = file($C["url"]);
                 $end = count($lines);
                 for($i = 0; $i < $end; $i++) {
-                    if (! eregi("<\?xml", $lines[$i]))
+                    if (! preg_match("/<\?xml/i", $lines[$i]))
                         $XML .= $lines[$i];
                 }
                 $XML = utf8_encode($XML);
@@ -638,8 +638,8 @@ class DATA extends CORE
                     "controls" => "new", "zone" => $ZONE, "hide" => "yes", "cat" => $ZONE, "edit" => "zone"
                 ));
                 foreach ($controls as $KEY => $ROW) {
-                    $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $replace = preg_quote($KEY, '/');
+                    $xsl = preg_replace('/' . $replace . '/', $ROW, $xsl);
                 }
             }
             
@@ -655,8 +655,8 @@ class DATA extends CORE
                 }
                 
                 foreach ($controls as $KEY => $ROW) {
-                    $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $replace = preg_quote($KEY, '/');
+                    $xsl = preg_replace('/' . $replace . '/', $ROW, $xsl);
                 }
             }
             
@@ -665,7 +665,7 @@ class DATA extends CORE
                     "controls" => $OBJ["controls"], "zone" => "{@zone}", "odd" => $KEY, "hide" => $OBJ["hide"], "cat" => "@id", "parent" => "{@parentid}", "edit" => "object"
                 ));
                 $keys = array_keys($controls);
-                $xsl = ereg_replace($keys[0], $controls[$keys[0]], $xsl);
+                $xsl = str_replace($keys[0], $controls[$keys[0]], $xsl);
             }
             
             $controls = $this->doControls("body", array(
@@ -674,7 +674,7 @@ class DATA extends CORE
             
             //print_r($controls);
             $keys = array_keys($controls);
-            $xsl = ereg_replace("</body>", $controls[$keys[0]] . "\n</body>", $xsl);
+            $xsl = str_replace('</body>', $controls[$keys[0]] . "\n</body>", $xsl);
         } else {
             $xsl = $this->CleanXSL($xsl);
         }
@@ -683,11 +683,11 @@ class DATA extends CORE
          * Add some more information to the template
          * /
 
-        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = ereg_replace("<xsl:param name=\"adminmode\" select=\"0\" />", "<xsl:param name=\"adminmode\" select=\"1\" />", $xsl);
+        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = preg_replace('/' . preg_quote('<xsl:param name="adminmode" select="0" />', '/') . '/', '<xsl:param name="adminmode" select="1" />', $xsl);
         $_FOR_MORE = "<xsl:param name=\"lang\" select=\"" . $CURRENTLANGUAGE . "\" />\n";
         foreach ($_GET AS $key => $value) if ($value) $_FOR_MORE .= "<xsl:param name=\"get$key\" select=\"'" . $value . "'\" />\n";
 
-        $xsl = ereg_replace("<!--MORE-->", $_FOR_MORE, $xsl);
+        $xsl = preg_replace('/' . preg_quote('<!--MORE-->', '/') . '/', $_FOR_MORE, $xsl);
         */
         
         /**
