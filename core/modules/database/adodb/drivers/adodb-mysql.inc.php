@@ -460,6 +460,7 @@ class ADODB_mysql extends ADOConnection {
 
 		if (!mysqli_real_connect($this->_connectionID, $argHostname, $argUsername, $argPassword,
 								$argDatabasename, $port, $socket, $this->clientFlags)) {
+			mysqli_close($this->_connectionID);
 			$this->_connectionID = false;
 			return false;
 		}
@@ -480,6 +481,7 @@ class ADODB_mysql extends ADOConnection {
 
 		if (!mysqli_real_connect($this->_connectionID, 'p:'.$argHostname, $argUsername, $argPassword,
 								$argDatabasename, $port, $socket, $this->clientFlags)) {
+			mysqli_close($this->_connectionID);
 			$this->_connectionID = false;
 			return false;
 		}
