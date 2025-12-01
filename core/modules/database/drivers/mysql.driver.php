@@ -24,8 +24,13 @@ function SQL_addlimit (&$SQL, $limit, $offset) {
 }
 
 function escape_sql ($sql){
-    //return $sql;
-    return mysqli_escape_string($sql);
+    global $DB;
+    // Use mysqli_real_escape_string with connection for proper escaping
+    if (isset($DB) && isset($DB->conn) && isset($DB->conn->_connectionID) && $DB->conn->_connectionID) {
+        return mysqli_real_escape_string($DB->conn->_connectionID, $sql);
+    }
+    // Fallback to basic escaping if no connection is available
+    return addslashes($sql);
 }
 
 ?>
