@@ -674,7 +674,7 @@ class DATA extends CORE
             
             //print_r($controls);
             $keys = array_keys($controls);
-            $xsl = preg_replace('/' . preg_quote('</body>', '/') . '/', $controls[$keys[0]] . "\n</body>", $xsl);
+            $xsl = str_replace('</body>', $controls[$keys[0]] . "\n</body>", $xsl);
         } else {
             $xsl = $this->CleanXSL($xsl);
         }
