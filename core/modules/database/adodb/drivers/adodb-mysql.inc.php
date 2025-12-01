@@ -611,8 +611,7 @@ class ADODB_mysql extends ADOConnection {
 	{
 
 		if ($this->_logsql) return $this->_errorMsg;
-		if (empty($this->_connectionID)) $this->_errorMsg = @mysqli_error();
-		else $this->_errorMsg = @mysqli_error($this->_connectionID);
+		$this->_errorMsg = @mysqli_error($this->_connectionID);
 		return $this->_errorMsg;
 	}
 
@@ -620,8 +619,7 @@ class ADODB_mysql extends ADOConnection {
 	function ErrorNo()
 	{
 		if ($this->_logsql) return $this->_errorCode;
-		if (empty($this->_connectionID))  return @mysqli_errno();
-		else return @mysqli_errno($this->_connectionID);
+		return @mysqli_errno($this->_connectionID);
 	}
 
 	// returns true or false
