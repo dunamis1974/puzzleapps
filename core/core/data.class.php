@@ -665,7 +665,7 @@ class DATA extends CORE
                     "controls" => $OBJ["controls"], "zone" => "{@zone}", "odd" => $KEY, "hide" => $OBJ["hide"], "cat" => "@id", "parent" => "{@parentid}", "edit" => "object"
                 ));
                 $keys = array_keys($controls);
-                $xsl = preg_replace('/' . preg_quote($keys[0], '/') . '/', $controls[$keys[0]], $xsl);
+                $xsl = str_replace($keys[0], $controls[$keys[0]], $xsl);
             }
             
             $controls = $this->doControls("body", array(
