@@ -14,13 +14,13 @@
 </center>
 
 
-<?
+<?php
 
 function writeDBdata () {
     global $error;
     $_DBCONF = "../config/conf.d/database.conf.php";
     if ($fp = fopen($_DBCONF, "w")) {
-        $_DATA .= "<?\n\n";
+        $_DATA .= "<?php\n\n";
         $_DATA .= "\$DB_DRIVER = \"" . $_POST["driver"] . "\";\n";
         if ($_POST["host"]) $_DATA .= "\$DB_HOST = \"" . $_POST["host"] . "\";\n";
         if ($_POST["database"]) $_DATA .= "\$DB_DATABASE = \"" . $_POST["database"] . "\";\n";
