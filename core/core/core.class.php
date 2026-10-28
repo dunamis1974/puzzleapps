@@ -267,7 +267,7 @@ class CORE extends PERMISSIONS
                 $this->_w,
             ));
             $oid = $DB->lastId();
-            if ($NEWPLATFORMID) {
+            if (!$PLATFORMID || $NEWPLATFORMID) {
                 $platformColumn = $DB->quoteIdentifier("_platform", "column");
                 $DB->execute("UPDATE global SET $platformColumn = ? WHERE id = ?", array($oid, $oid));
             }
@@ -1604,14 +1604,13 @@ class CORE extends PERMISSIONS
      */
     function buildFilter($tbl, &$params = array())
     {
-        global $CURRENTUSER;
-        if (is_object($CURRENTUSER) && $CURRENTUSER->isSuperUser()) {
-            return "";
-        }
+        global $CURRENTUSER, $DB;
         if (!in_array($tbl, array("global", "glb"), true)) {
             throw new DatabaseException("The permissions filter table alias is not allowed.");
         }
-        global $DB;
+        if (is_object($CURRENTUSER) && $CURRENTUSER->isSuperUser()) {
+            return "";
+        }
         $owner = $DB->quoteIdentifier("_owner", "column");
         $write = $DB->quoteIdentifier("_w", "column");
         $group = $DB->quoteIdentifier("_group", "column");
@@ -1622,7 +1621,10 @@ class CORE extends PERMISSIONS
             $params[] = $CURRENTUSER->id;
         }
         $conditions[] = "$tbl.$write > 0";
-        foreach ($CURRENTUSER->_permissions["_groups"] as $groupId) {
+        $groups = isset($CURRENTUSER->_permissions["_groups"]) && is_array($CURRENTUSER->_permissions["_groups"])
+            ? $CURRENTUSER->_permissions["_groups"]
+            : array();
+        foreach ($groups as $groupId) {
             $conditions[] = "($tbl.$group = ? AND $tbl.$read > 0)";
             $params[] = $groupId;
         }
