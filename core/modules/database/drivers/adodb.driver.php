@@ -14,6 +14,14 @@ require_once $this->MODULEDIR . 'adodb/adodb.inc.php';
  * @access public 
  */
 class DATABASE {
+    public $conn;
+    public $end_time;
+    public $start_time;
+    public $sqldebug;
+    public $sqlNo;
+    public $total_time;
+    public $waste;
+
     /**
      * DATABASE::DATABASE()
      * 

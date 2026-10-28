@@ -9,6 +9,7 @@
 
 class PLATFORM extends CORE {
 	public $_CLASS = __CLASS__;
+    public $_loaded;
 	
 	/**
 	 * PLATFORM class constructor

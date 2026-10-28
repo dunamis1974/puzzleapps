@@ -31,8 +31,6 @@ function SQL_addlimit (&$SQL, $limit, $offset) {
     $sql = $sql . " LIMIT $offset, $limit";
 }
 
-function escape_sql ($sql){
-    return sqlite_escape_string($sql);
-}
+
 
 ?>

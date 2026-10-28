@@ -23,7 +23,5 @@ function SQL_addlimit (&$SQL, $limit, $offset) {
     $sql = $sql . " LIMIT $limit OFFSET $offset";
 }
 
-function escape_sql ($sql){
-    return pg_escape_string($sql);
-}
+
 ?>

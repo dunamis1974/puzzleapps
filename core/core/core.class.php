@@ -12,6 +12,48 @@ class CORE extends PERMISSIONS
 {
 
     public $_CLASS = __CLASS__;
+    public $_arrayData;
+    public $_date;
+    public $_dtd;
+    public $_g;
+    public $_group;
+    public $_hidden;
+    public $_module;
+    public $_o;
+    public $_object;
+    public $_objectname;
+    public $_owner;
+    public $_parent;
+    public $_platform;
+    public $_w;
+    public $_workflow;
+    public $_xslt;
+    public $_zone;
+    public $data;
+    public $id;
+
+    // DTD-defined fields are stored here rather than as undeclared properties.
+    public $_dynamicData = array();
+
+    function __get($name)
+    {
+        return array_key_exists($name, $this->_dynamicData) ? $this->_dynamicData[$name] : null;
+    }
+
+    function __set($name, $value)
+    {
+        $this->_dynamicData[$name] = $value;
+    }
+
+    function __isset($name)
+    {
+        return isset($this->_dynamicData[$name]);
+    }
+
+    function __unset($name)
+    {
+        unset($this->_dynamicData[$name]);
+    }
 
     /**
      * CORE class constructor
@@ -1127,7 +1169,19 @@ class CORE extends PERMISSIONS
      */
     function _populate_data($data)
     {
-        $data = (array)$data;
+        if ($data instanceof CORE) {
+            $properties = get_object_vars($data);
+            $dynamicData = $properties["_dynamicData"];
+            unset($properties["_dynamicData"]);
+            foreach ($properties as $key => $value) {
+                if ($value === null) {
+                    unset($properties[$key]);
+                }
+            }
+            $data = array_merge($properties, $dynamicData);
+        } else {
+            $data = (array)$data;
+        }
         // $_val = array_values($data);
         $_key = array_keys($data);
         $_end = count($_key);

@@ -14,6 +14,8 @@ class XML {
     var $x2a_depth = 1;
     var $indentstring = "    ";
     var $x2a_element_count;
+    var $parser;
+    var $tag_count;
 
     var $a2x_xml_string;
     var $a2x_depth;

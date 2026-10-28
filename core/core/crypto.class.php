@@ -8,6 +8,8 @@
  */
 
 class DOCRYPT {
+    public $key;
+
     /**
      * DOCRYPT::DOCRYPT()
      * 

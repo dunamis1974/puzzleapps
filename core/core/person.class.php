@@ -9,6 +9,10 @@
 
 class PERSON extends CORE {
 	public  $_CLASS = __CLASS__;
+    public $access;
+    public $group;
+    public $_loggedin;
+    public $_permissions;
 	
 	/**
 	 * PERSON class constructor

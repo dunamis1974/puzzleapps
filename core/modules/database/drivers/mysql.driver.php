@@ -23,9 +23,6 @@ function SQL_addlimit (&$SQL, $limit, $offset) {
     $sql = $sql . " LIMIT $offset, $limit";
 }
 
-function escape_sql ($sql){
-    //return $sql;
-    return mysql_escape_string($sql);
-}
+
 
 ?>
