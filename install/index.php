@@ -1,4 +1,4 @@
-<?
+<?php
 $step = ($_GET["s"])?$_GET["s"]:1;
 $failedImg = "<img src=\"images/fix.png\" />";
 $okImg = "<img src=\"images/ok.png\" />";
@@ -26,13 +26,13 @@ Step <?= $step; ?> of 6
 <form action="index.php?s=<?= ($step + 1); ?>" method="POST">
 <table><tr><td>
 <br />
-<?
+<?php
 
 include("./steps/step_{$step}.php");
 
 ?>
 </td></tr></table>
-<?
+<?php
 if ($error == true) {
     $add_button = "disabled=\"true\"";
     echo "<center><img src=\"./images/messagebox_critical.png\" hspace=\"4\" vspace=\"4\" align=\"middle\"> Fix above errors before continue!</center>";

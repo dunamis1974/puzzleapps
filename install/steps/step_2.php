@@ -14,7 +14,7 @@
 </tr>
 <tr>
     <td class="item" valign="top" align="right">Select database</td>
-    <td align="left"><?
+    <td align="left"><?php
         if (function_exists( 'mysql_connect' )) echo "<input type=\"radio\" name=\"driver\" value=\"mysql\" checked /> MySql<br />";
         if (function_exists( 'pg_connect' )) echo "<input type=\"radio\" name=\"driver\" value=\"pgsql\" /> PostgreSql<br />";
         if (function_exists( 'sqlite_open' )) echo "<input type=\"radio\" name=\"driver\" value=\"sqlite\" /> SQLite<br />";

@@ -4,23 +4,23 @@
 </tr>
 <tr>
     <td class="item">PHP Version >= 5.0</td>
-    <td align="left"><? echo phpversion() < '5.0' ? '<b class="error">'.$failedImg.' ('.phpversion().'): Puzzle Apps will not work. Please upgrade!</b>' : '<b class="ok">'.$okImg.'</b><span class="item"> ('.phpversion().')</span>';?></td>
+    <td align="left"><?php echo phpversion() < '5.0' ? '<b class="error">'.$failedImg.' ('.phpversion().'): Puzzle Apps will not work. Please upgrade!</b>' : '<b class="ok">'.$okImg.'</b><span class="item"> ('.phpversion().')</span>';?></td>
 </tr>
 <tr>
     <td class="item"><li>Server API</li></td>
-    <td align="left"><? echo (php_sapi_name() != "cgi") ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.php_sapi_name().')</span>' : '<b class="error">'.$failedImg.' CGI mode is likely to have problems</b>';?></td>
+    <td align="left"><?php echo (php_sapi_name() != "cgi") ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.php_sapi_name().')</span>' : '<b class="error">'.$failedImg.' CGI mode is likely to have problems</b>';?></td>
 </tr>
 <tr>
     <td class="item"><li>XSL Support (PHP5)</li></td>
-    <td align="left"><? echo extension_loaded('xsl') ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b>';?></td>
+    <td align="left"><?php echo extension_loaded('xsl') ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b>';?></td>
 </tr>
 <tr>
     <td class="item"><li>Zlib compression Support</li></td>
-    <td align="left"><? echo extension_loaded('zlib') ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b>You will not be able to download Templates/Images/etc.';?></td>
+    <td align="left"><?php echo extension_loaded('zlib') ? '<b class="ok">'.$okImg.'</b>' : '<b class="error">'.$failedImg.'</b>You will not be able to download Templates/Images/etc.';?></td>
 </tr>
 <tr>
     <td class="item"><li>File Uploads</li></td>
-    <td align="left"><? echo get_cfg_var('file_uploads') ? '<b class="ok">'.$okImg.'</b><span class="item"> (Max File Upload Size: '. ini_get('upload_max_filesize') .')</span>' : '<b class="error">'.$failedImg.'</b><span class="error"> Upload functionality will not be available</span>';?></td>
+    <td align="left"><?php echo get_cfg_var('file_uploads') ? '<b class="ok">'.$okImg.'</b><span class="item"> (Max File Upload Size: '. ini_get('upload_max_filesize') .')</span>' : '<b class="error">'.$failedImg.'</b><span class="error"> Upload functionality will not be available</span>';?></td>
 </tr>
 
 <tr>
@@ -40,15 +40,15 @@
 </tr>
 <tr>
     <td class="item"><li>MySQL Support</li></td>
-    <td align="left"><? echo function_exists( 'mysql_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.mysql_get_client_info().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
+    <td align="left"><?php echo function_exists( 'mysql_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.mysql_get_client_info().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
 </tr>
 <tr>
     <td class="item"><li>PostgreSQL Support</li></td>
-    <td align="left"><? echo function_exists( 'pg_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"></span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
+    <td align="left"><?php echo function_exists( 'pg_connect' ) ? '<b class="ok">'.$okImg.'</b><span class="item"></span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
 </tr>
 <tr>
     <td class="item"><li>SQLite Support</li></td>
-    <td align="left"><? echo function_exists( 'sqlite_open' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.sqlite_libversion().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
+    <td align="left"><?php echo function_exists( 'sqlite_open' ) ? '<b class="ok">'.$okImg.'</b><span class="item"> ('.sqlite_libversion().')</span>' : '<span class="error">'.$failedImg.' Not available</span>';?></td>
 </tr>
 
 <tr>
@@ -87,16 +87,16 @@
 </tr>
 <tr>
     <td class="item">Operating System?</td>
-    <td align="left"><? echo '<b class="ok">'.$okImg.'</b><span class="item"> ('.php_uname().')</span>'; ?></td>
+    <td align="left"><?php echo '<b class="ok">'.$okImg.'</b><span class="item"> ('.php_uname().')</span>'; ?></td>
 </tr>
 <tr>
     <td class="item">Web Server?</td>
-    <td align="left"><? echo '<b class="ok">'.$okImg.'</b><span class="item"> ('.$_SERVER['SERVER_SOFTWARE'].')</span>'; ?></td>
+    <td align="left"><?php echo '<b class="ok">'.$okImg.'</b><span class="item"> ('.$_SERVER['SERVER_SOFTWARE'].')</span>'; ?></td>
 </tr>
 </table>
 <br />
 
-<?
+<?php
 
 if (phpversion() < '5') $error = true;
 if (!php_sapi_name() == "cgi") $error = true;
