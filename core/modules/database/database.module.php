@@ -6,7 +6,15 @@ global
     $DB_USERNAME,
     $DB_PASSWORD,
     $DB_DATABASE,
+    $PDO_DATABASE,
     $RUNNINGNDIR;
+
+if (is_array($PDO_DATABASE)) {
+    include_once($this->MODULEDIR . "DatabaseException.php");
+    $this->LoadDriver("pdodb");
+    $GLOBALS["DB"] = new DATABASE($PDO_DATABASE);
+    return;
+}
 
 if (!$DB_DRIVER) $DB_DRIVER = "mysql";
 
