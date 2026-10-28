@@ -1,0 +1,92 @@
+x-app-environment: &app-environment
+  DB_DRIVER: pgsql
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_NAME: '${POSTGRES_DB:?Set POSTGRES_DB in .env}'
+  DB_USER: '${POSTGRES_USER:?Set POSTGRES_USER in .env}'
+  DB_PASSWORD: '${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}'
+
+x-app-build: &app-build
+  context: .
+  dockerfile: Dockerfile
+
+x-nginx-build: &nginx-build
+  context: .
+  dockerfile: docker/nginx.Dockerfile
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB:?Set POSTGRES_DB in .env}'
+      POSTGRES_USER: '${POSTGRES_USER:?Set POSTGRES_USER in .env}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}'
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - private
+
+  app:
+    profiles: [publish]
+    build: *app-build
+    environment: *app-environment
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      private:
+        aliases:
+          - app
+
+  nginx:
+    profiles: [publish]
+    build: *nginx-build
+    ports:
+      - '${HTTP_PORT:-8080}:80'
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - private
+
+  app-dev:
+    profiles: [dev]
+    build: *app-build
+    environment: *app-environment
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      private:
+        aliases:
+          - app
+
+  nginx-dev:
+    profiles: [dev]
+    build: *nginx-build
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - '${HTTP_PORT:-8080}:80'
+    depends_on:
+      - app-dev
+    restart: unless-stopped
+    networks:
+      - private
+
+volumes:
+  pgdata:
+
+networks:
+  private:
+    driver: bridge
