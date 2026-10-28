@@ -11,10 +11,12 @@
  * @access public 
  */
 
+include_once(dirname(__DIR__) . "/dialects/dialects.php");
+
 class DATABASE {
     
-    private $fetchMode = PDO::FETCH_OBJ;
     public $conn;
+    private $dialect;
     public $start_time;
     public $end_time;
     public $waste = 0;
@@ -50,8 +52,26 @@ class DATABASE {
         } catch (PDOException $e) {
             throw new DatabaseException("Unable to connect to the {$driver} database.", 0, $e);
         }
+        $dialects = array("mysql" => "MysqlDialect", "sqlite" => "SqliteDialect", "pgsql" => "PgsqlDialect");
+        $this->dialect = new $dialects[$driver]();
         $this->_debug_sql("Initiate DB connection!", "DATABASE");
     } 
+
+    /**
+     * Appends engine-specific paging. Arguments are forwarded unchanged so the
+     * dialect can reject anything that is not a non-negative int.
+     */
+    function paginate($sql, $limit, $offset) {
+        return $this->dialect->paginate($sql, $limit, $offset);
+    }
+
+    function assertIdentifier($name, $kind) {
+        $this->dialect->assertIdentifier($name, $kind);
+    }
+
+    function quoteIdentifier($name, $kind) {
+        return $this->dialect->quoteIdentifier($name, $kind);
+    }
 
     /**
      * Builds the PDO DSN from discrete fields. Credentials are never part of the DSN.
@@ -244,24 +264,6 @@ class DATABASE {
         return ($id === false || $id === null || $id === "") ? null : (string)$id;
     }
 
-
-    /**
-     * DATABASE::limitQuery()
-     * 
-     * @param  $sql 
-     * @param  $opt 
-     * @param  $opt2 
-     * @return array $data
-     * @access publis
-     */
-    function limitQuery($sql, $opt, $opt2) {
-        $this->start_time = getmicrotime();
-        $sql = $sql .  " LIMIT $opt2 OFFSET $opt";
-        $query = $this->conn->query($sql);
-        $data = $query->fetchAll($this->fetchMode);
-        $this->_debug_sql($sql, "limitQuery");
-        return $data;
-    } 
 
     /**
      * DATABASE::_debug_sql()
