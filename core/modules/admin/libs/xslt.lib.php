@@ -157,7 +157,7 @@ function __get_xslt ($params) {
         if ($dir = @opendir($css_dir)) {
             echo "<option value=\"\"" . (($value == "")?" selected":"") . "></option>";
             while (($file = readdir($dir)) !== false) {
-                if ((substr($file, -3) == "css") && (eregi("template_", $file))) {
+                if ((substr($file, -3) == "css") && (stripos($file, "template_") !== false)) {
                     echo "<option value=\"$file\"" . (($value == "$file")?" selected":"") . ">$file</option>";
                 } 
             } 

@@ -175,7 +175,7 @@ function DownloadZIP ($FOLDER, $NAME="files.zip") {
  * @return string $ERR_
  */
 function BuildErrorMsg ($msg) {
-    $_msg = ereg_replace("\n", "<li>", $msg);
+    $_msg = str_replace("\n", "<li>", $msg);
     $ERR_ .= "<div class=\"block_error_\">
     <table>
     <tr>
@@ -194,7 +194,7 @@ function BuildErrorMsg ($msg) {
  * @return string $NOTE_
  */
 function BuildNoteMsg ($msg) {
-    //$_msg = ereg_replace("\n", "<li>", $msg);
+    // BuildNoteMsg() does not replace message content.
     $NOTE_ .= "<div class=\"block_note_\"><span class=\"note__\">" . $msg . "</span></div><p />";
     
     return $NOTE_;
@@ -357,7 +357,7 @@ function isUpdatableComponents () {
 
 
 function mime_icon ($case) {
-    if (ereg("image", $case)) {
+    if (strpos($case, "image") !== false) {
         $case = "image";
     } 
     switch ($case) {

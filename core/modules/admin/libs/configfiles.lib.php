@@ -129,7 +129,7 @@ function __get_configuration ($params) {
         if ($dir = @opendir($configuration_dir)) {
             echo "<option value=\"\"" . (($value == "")?" selected":"") . "></option>";
             while (($file = readdir($dir)) !== false) {
-                if ((substr($file, -3) == "configuration") && (eregi("template_", $file))) {
+                if ((substr($file, -3) == "configuration") && (stripos($file, "template_") !== false)) {
                     echo "<option value=\"$file\"" . (($value == "$file")?" selected":"") . ">$file</option>";
                 } 
             } 
