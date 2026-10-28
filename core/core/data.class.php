@@ -12,6 +12,11 @@ class DATA extends CORE
 {
 
     public $_CLASS = __CLASS__;
+    public $BRANCH;
+    public $CURRENTOBJECT;
+    public $MXSLT;
+    public $OLDBRANCH;
+    public $XSLT;
 
     /**
      * Get Data by Zones
@@ -312,10 +317,10 @@ class DATA extends CORE
                 $lines = file($C["url"]);
                 $end = count($lines);
                 for($i = 0; $i < $end; $i++) {
-                    if (! eregi("<\?xml", $lines[$i]))
+                    if (! preg_match('~<\\?xml~i', $lines[$i]))
                         $XML .= $lines[$i];
                 }
-                $XML = utf8_encode($XML);
+                $XML = mb_convert_encoding($XML, "UTF-8", "ISO-8859-1");
                 return $XML;
             }
         }
@@ -637,7 +642,7 @@ class DATA extends CORE
                 ));
                 foreach ($controls as $KEY => $ROW) {
                     $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $xsl = str_replace($replace, $ROW, $xsl);
                 }
             }
             
@@ -654,7 +659,7 @@ class DATA extends CORE
                 
                 foreach ($controls as $KEY => $ROW) {
                     $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $xsl = str_replace($replace, $ROW, $xsl);
                 }
             }
             
@@ -663,7 +668,7 @@ class DATA extends CORE
                     "controls" => $OBJ["controls"], "zone" => "{@zone}", "odd" => $KEY, "hide" => $OBJ["hide"], "cat" => "@id", "parent" => "{@parentid}", "edit" => "object"
                 ));
                 $keys = array_keys($controls);
-                $xsl = ereg_replace($keys[0], $controls[$keys[0]], $xsl);
+                $xsl = str_replace($keys[0], $controls[$keys[0]], $xsl);
             }
             
             $controls = $this->doControls("body", array(
@@ -672,7 +677,7 @@ class DATA extends CORE
             
             //print_r($controls);
             $keys = array_keys($controls);
-            $xsl = ereg_replace("</body>", $controls[$keys[0]] . "\n</body>", $xsl);
+            $xsl = str_replace("</body>", $controls[$keys[0]] . "\n</body>", $xsl);
         } else {
             $xsl = $this->CleanXSL($xsl);
         }
@@ -681,11 +686,11 @@ class DATA extends CORE
          * Add some more information to the template
          * /
 
-        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = ereg_replace("<xsl:param name=\"adminmode\" select=\"0\" />", "<xsl:param name=\"adminmode\" select=\"1\" />", $xsl);
+        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = str_replace("<xsl:param name=\"adminmode\" select=\"0\" />", "<xsl:param name=\"adminmode\" select=\"1\" />", $xsl);
         $_FOR_MORE = "<xsl:param name=\"lang\" select=\"" . $CURRENTLANGUAGE . "\" />\n";
         foreach ($_GET AS $key => $value) if ($value) $_FOR_MORE .= "<xsl:param name=\"get$key\" select=\"'" . $value . "'\" />\n";
 
-        $xsl = ereg_replace("<!--MORE-->", $_FOR_MORE, $xsl);
+        $xsl = str_replace("<!--MORE-->", $_FOR_MORE, $xsl);
         */
         
         /**
@@ -702,7 +707,6 @@ class DATA extends CORE
         
         $GLOBALS["time_prep_end"] = getmicrotime();
         
-        //$xml = utf8_encode($xml);
         
 
         $HTML = $this->XSLAL($xml, $xsl);
@@ -798,7 +802,7 @@ class DATA extends CORE
                 "%xsl", "%xml"
             );
             $cmd = str_replace($strings, $files, $GLOBALS["_XSLTCOMMAND"]);
-            $HTML = `$cmd`;
+            $HTML = shell_exec($cmd);
             //exec("sabcmd $_xsl $_xml", $resultArray);
             //reset($resultArray);
             //$HTML = implode("\n", $resultArray);
