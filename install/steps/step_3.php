@@ -1,63 +1,111 @@
+<?php
+?>
 <table align="center" width="500" cellspacing="0" cellpadding="3" class="">
-<tr>
-    <td class="item">Basic tables are imported</td>
-    <td align="left"><?= ((importXML2SQL())?$okImg:$failedImg); ?></td>
-</tr>
-<tr>
-    <td class="item">Databse configuration is saved</td>
-    <td align="left"><?= ((writeDBdata())?$okImg:$failedImg); ?></td>
-</tr>
-</table>
+<tr><td class="title" colspan="2">Create database schema</td></tr>
+<tr><td class="item" colspan="2">
+    Database settings are validated, saved as a PDO configuration, and used to create the tables and indexes from the canonical schema.
+</td></tr>
+<tr><td class="item" colspan="2">
+<?php
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
+    try {
+        $databaseConfig = installerValidateDatabaseSettings($_POST);
+        require_once $COREROOT . "modules/database/DatabaseException.php";
+        require_once $COREROOT . "modules/database/drivers/pdodb.driver.php";
+        require_once __DIR__ . "/../lib/schema.php";
 
-<center>
-<br />Click next to continue!<br />
-</center>
-
-
-<?
-
-function writeDBdata () {
-    global $error;
-    $_DBCONF = "../config/conf.d/database.conf.php";
-    if ($fp = fopen($_DBCONF, "w")) {
-        $_DATA .= "<?\n\n";
-        $_DATA .= "\$DB_DRIVER = \"" . $_POST["driver"] . "\";\n";
-        if ($_POST["host"]) $_DATA .= "\$DB_HOST = \"" . $_POST["host"] . "\";\n";
-        if ($_POST["database"]) $_DATA .= "\$DB_DATABASE = \"" . $_POST["database"] . "\";\n";
-        if ($_POST["dbuser"]) $_DATA .= "\$DB_USERNAME = \"" . $_POST["dbuser"] . "\";\n";
-        if ($_POST["dbpass"]) $_DATA .= "\$DB_PASSWORD = \"" . $_POST["dbpass"] . "\";\n";
-        
-        $_DATA .= "\n?>";
-        fwrite($fp, $_DATA);
-        fclose ($fp);
-        return true;
+        $database = new DATABASE($databaseConfig);
+        installerCreateSchema($database, $databaseConfig["driver"], $COREROOT . "sql/structure.xml");
+        installerWriteDatabaseConfig($databaseConfig);
+        $PDO_DATABASE = $databaseConfig;
+        $GLOBALS["DB"] = $database;
+        echo '<b class="ok">' . $okImg . '</b> Schema created and PDO configuration saved.';
+    } catch (InvalidArgumentException $exception) {
+        $error = true;
+        echo '<span class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, "UTF-8") . '</span>';
+    } catch (Throwable $exception) {
+        $error = true;
+        echo '<span class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, "UTF-8") . '</span>';
     }
+} else {
     $error = true;
-    return false;
+    echo '<span class="error">Submit the database settings from Step 2 to continue.</span>';
+}
+?>
+</td></tr>
+</table>
+<?php
+function installerValidateDatabaseSettings(array $input) {
+    foreach (array("driver", "host", "port", "database", "user", "password", "sqlite_path", "charset") as $field) {
+        if (array_key_exists($field, $input) && !is_string($input[$field])) {
+            throw new InvalidArgumentException("Database settings must be text values.");
+        }
+    }
+    $drivers = array("mysql", "sqlite", "pgsql");
+    $driver = isset($input["driver"]) ? $input["driver"] : "";
+    if (!in_array($driver, $drivers, true)) {
+        throw new InvalidArgumentException("Select a supported database driver.");
+    }
+    if (!extension_loaded("PDO") || !in_array($driver, PDO::getAvailableDrivers(), true)) {
+        throw new InvalidArgumentException("The selected PDO driver is not available in this PHP installation.");
+    }
+
+    $config = array(
+        "driver" => $driver,
+        "host" => isset($input["host"]) ? trim($input["host"]) : "",
+        "port" => "",
+        "database" => isset($input["database"]) ? trim($input["database"]) : "",
+        "user" => isset($input["user"]) ? $input["user"] : "",
+        "password" => isset($input["password"]) ? $input["password"] : "",
+        "sqlite_path" => isset($input["sqlite_path"]) ? trim($input["sqlite_path"]) : "",
+        "charset" => isset($input["charset"]) ? trim($input["charset"]) : "",
+    );
+
+    if ($driver === "sqlite") {
+        if ($config["sqlite_path"] === "") {
+            throw new InvalidArgumentException("Provide a SQLite database path or :memory:.");
+        }
+        if ($config["charset"] === "") {
+            $config["charset"] = "UTF8";
+        }
+        if (!preg_match('/^[A-Za-z0-9_-]+$/', $config["charset"])) {
+            throw new InvalidArgumentException("Character set may contain only letters, numbers, underscores, and hyphens.");
+        }
+        return $config;
+    }
+
+    foreach (array("host" => $config["host"], "database" => $config["database"]) as $field => $value) {
+        if ($value === "") {
+            throw new InvalidArgumentException("Provide both a database host and database name.");
+        }
+        if (strpbrk($value, ";=") !== false) {
+            throw new InvalidArgumentException("Host and database name cannot contain semicolons or equals signs.");
+        }
+    }
+    $defaultPort = $driver === "mysql" ? 3306 : 5432;
+    $port = isset($input["port"]) ? trim($input["port"]) : "";
+    if ($port === "") {
+        $port = (string)$defaultPort;
+    }
+    if (!preg_match('/^[0-9]+$/D', $port) || (int)$port < 1 || (int)$port > 65535 || (string)(int)$port !== $port) {
+        throw new InvalidArgumentException("Port must be an integer between 1 and 65535.");
+    }
+    $config["port"] = (int)$port;
+    if ($config["charset"] === "") {
+        $config["charset"] = $driver === "mysql" ? "utf8mb4" : "UTF8";
+    }
+    if (!preg_match('/^[A-Za-z0-9_-]+$/', $config["charset"])) {
+        throw new InvalidArgumentException("Character set may contain only letters, numbers, underscores, and hyphens.");
+    }
+    return $config;
 }
 
-function importXML2SQL () {
-    global
-        $COREROOT,
-        $RUNNINGNDIR;
-    
-    require($COREROOT . "modules/database/adodb/adodb-xmlschema.inc.php");
-    
-    $driver = $_POST["driver"];
-    $host = $_POST["host"];
-    $dbuser = $_POST["dbuser"];
-    $dbpass = $_POST["dbpass"];
-    $database = $_POST["database"];
-    
-    if ($driver == "sqlite") $host = $RUNNINGNDIR . $database;
-    
-    $db = ADONewConnection($driver);
-    $db->Connect($host, $dbuser, $dbpass, $database);
-    $schema = new adoSchema($db);
-    $sql = $schema->ParseSchema($COREROOT . "sql/structure.xml");
-    if ($schema->ExecuteSchema()) return true;
-    $error = true;
-    return false;
+function installerWriteDatabaseConfig(array $config) {
+    $target = dirname(__DIR__, 2) . "/core/config/conf.d/database.conf.php";
+    $contents = "<?php\n\n\$PDO_DATABASE = " . var_export($config, true) . ";\n";
+    $written = file_put_contents($target, $contents, LOCK_EX);
+    if ($written === false || $written !== strlen($contents)) {
+        throw new RuntimeException("Unable to write the database configuration.");
+    }
 }
-
 ?>

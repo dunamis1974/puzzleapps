@@ -3,18 +3,20 @@
 global $DTD;
 
 if (($_GET["togroup"] == "true") && ($_POST)) {
-    /**
-     * First remove user from all groups
-     */
-    $sql = "DELETE FROM users_in_groups WHERE ".TQT."userid".TQT." = '" . $_GET["id"] . "'";
-    $DB->query($sql);
+    $groups = isset($_POST["group"]) ? (array) $_POST["group"] : array();
+    $DB->begin();
+    try {
+        $sql = "DELETE FROM users_in_groups WHERE userid = ?";
+        $DB->execute($sql, array($_GET["id"]));
 
-    /**
-     * Now add user to new groups
-     */
-    for ($i = 0; $i < count($_POST["group"]); $i++) {
-        $sql = "INSERT INTO users_in_groups (".TQT."userid".TQT.", ".TQT."_group".TQT.") VALUES ('" . $_GET["id"] . "', '" . $_POST["group"][$i] . "')";
-        $DB->query($sql);
+        foreach ($groups as $groupId) {
+            $sql = "INSERT INTO users_in_groups (userid, _group) VALUES (?, ?)";
+            $DB->execute($sql, array($_GET["id"], $groupId));
+        }
+        $DB->commit();
+    } catch (Throwable $e) {
+        $DB->rollback();
+        throw $e;
     } 
 
     /**
@@ -38,7 +40,7 @@ if ($_GET["togroup"] == "true") {
     <form action=\"" . $_SERVER["REQUEST_URI"] . "\" method=\"POST\" enctype=\"multipart/form-data\">\n
     <select name=\"group[]\" multiple size=\"10\"  style=\"width: 200px;\">";
     for ($i = 0; $i < count($_GROUPS); $i++) {
-        $_BODY .= "<option value=\"" . $_GROUPS[$i]->id . "\">" . $_GROUPS[$i]->groupname . "</option>\n";
+        $_BODY .= "<option value=\"" . $_GROUPS[$i]["id"] . "\">" . $_GROUPS[$i]["groupname"] . "</option>\n";
     }
     $_BODY .= "
     </select>

@@ -1,5 +1,17 @@
-<?
-$step = ($_GET["s"])?$_GET["s"]:1;
+<?php
+if (PHP_VERSION_ID < 80500 || !extension_loaded("pdo")) {
+    http_response_code(500);
+    echo "This application requires PHP 8.5 or later and the PDO extension.";
+    exit;
+}
+
+$requestedStep = isset($_GET["s"]) && is_string($_GET["s"]) && ctype_digit($_GET["s"])
+    ? (int)$_GET["s"]
+    : 1;
+$knownSteps = array(1, 2, 3, 4, 5, 6);
+$step = in_array($requestedStep, $knownSteps, true) ? $requestedStep : 1;
+$error = false;
+$add_button = "";
 $failedImg = "<img src=\"images/fix.png\" />";
 $okImg = "<img src=\"images/ok.png\" />";
 
@@ -26,13 +38,13 @@ Step <?= $step; ?> of 6
 <form action="index.php?s=<?= ($step + 1); ?>" method="POST">
 <table><tr><td>
 <br />
-<?
+<?php
 
 include("./steps/step_{$step}.php");
 
 ?>
 </td></tr></table>
-<?
+<?php
 if ($error == true) {
     $add_button = "disabled=\"true\"";
     echo "<center><img src=\"./images/messagebox_critical.png\" hspace=\"4\" vspace=\"4\" align=\"middle\"> Fix above errors before continue!</center>";

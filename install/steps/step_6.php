@@ -12,7 +12,7 @@
 </form>
 <form action="../admin" method="GET">
 
-<?
+<?php
 function createSuperUser() {
     global $error, $UFV;
 

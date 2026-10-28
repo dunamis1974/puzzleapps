@@ -12,6 +12,11 @@ class DATA extends CORE
 {
 
     public $_CLASS = __CLASS__;
+    public $BRANCH;
+    public $CURRENTOBJECT;
+    public $MXSLT;
+    public $OLDBRANCH;
+    public $XSLT;
 
     /**
      * Get Data by Zones
@@ -312,10 +317,10 @@ class DATA extends CORE
                 $lines = file($C["url"]);
                 $end = count($lines);
                 for($i = 0; $i < $end; $i++) {
-                    if (! eregi("<\?xml", $lines[$i]))
+                    if (! preg_match('~<\\?xml~i', $lines[$i]))
                         $XML .= $lines[$i];
                 }
-                $XML = utf8_encode($XML);
+                $XML = mb_convert_encoding($XML, "UTF-8", "ISO-8859-1");
                 return $XML;
             }
         }
@@ -435,27 +440,26 @@ class DATA extends CORE
         FROM
             global g, data d, relations r
         WHERE
-            r.parentid = '$id' AND
+            r.parentid = ? AND
             g.id = r.targetid AND
             d.gid = g.id AND
-            d.langid = '$CURRENTLANGUAGE'
-        ORDER BY r.`order`
-        ";
-        $data = $DB->getAll($sql);
+            d.langid = ?
+        ORDER BY r." . $DB->quoteIdentifier("_order", "column");
+        $data = $DB->fetchAll($sql, array($id, $CURRENTLANGUAGE));
         $end = count($data);
         for($i = 0; $i < $end; $i++) {
             if ($usedef && $i == 0)
-                $selected = $data[$i]->id;
-            if ((in_array($data[$i]->id, $_TREE)) || ($data[$i]->id == $selected))
+                $selected = $data[$i]["id"];
+            if ((in_array($data[$i]["id"], $_TREE)) || ($data[$i]["id"] == $selected))
                 $add = ' tree="true"'; else
                 $add = null;
             
-            $_tag = $DTD->get_object_name($data[$i]->_object);
-            $XML .= "<$_tag date='" . $data[$i]->_date . "' parentid='" . $id . "' zone='" . $data[$i]->_zone . "' id='" . $data[$i]->id . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>\n";
-            $XML .= $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8") . "\n";
+            $_tag = $DTD->get_object_name($data[$i]["_object"]);
+            $XML .= "<$_tag date='" . $data[$i]["_date"] . "' parentid='" . $id . "' zone='" . $data[$i]["_zone"] . "' id='" . $data[$i]["id"] . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>\n";
+            $XML .= $this->html_entity_decode($data[$i]["data"], ENT_QUOTES, "UTF-8") . "\n";
             $XML .= "</$_tag>\n";
-            if (($data[$i]->id == $selected) && (count($_OBJECTSCOTAIN[$_tag]) > 0)) {
-                $XML .= $this->GetData($data[$i]->id);
+            if (($data[$i]["id"] == $selected) && (count($_OBJECTSCOTAIN[$_tag]) > 0)) {
+                $XML .= $this->GetData($data[$i]["id"]);
             }
         }
         return $XML;
@@ -497,27 +501,26 @@ class DATA extends CORE
         FROM
             global g, data d, relations r
         WHERE
-            r.parentid = '$id' AND
+            r.parentid = ? AND
             g.id = r.targetid AND
             d.gid = g.id AND
-            d.langid = '$CURRENTLANGUAGE'
-        ORDER BY r.`order`
-        ";
-        $data = $DB->getAll($sql);
+            d.langid = ?
+        ORDER BY r." . $DB->quoteIdentifier("_order", "column");
+        $data = $DB->fetchAll($sql, array($id, $CURRENTLANGUAGE));
         $end = count($data);
         for($i = 0; $i < $end; $i++) {
             if ($usedef && $i == 0)
-                $selected = $data[$i]->id;
-            if ((in_array($data[$i]->id, $_TREE)) || ($data[$i]->id == $selected))
+                $selected = $data[$i]["id"];
+            if ((in_array($data[$i]["id"], $_TREE)) || ($data[$i]["id"] == $selected))
                 $add = ' tree="true"'; else
                 $add = null;
             
-            $_tag = $DTD->get_object_name($data[$i]->_object);
-            $XML .= "<$_tag date='" . $data[$i]->_date . "' parentid='" . $id . "' zone='" . $data[$i]->_zone . "' id='" . $data[$i]->id . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>";
-            $XML .= $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8");
+            $_tag = $DTD->get_object_name($data[$i]["_object"]);
+            $XML .= "<$_tag date='" . $data[$i]["_date"] . "' parentid='" . $id . "' zone='" . $data[$i]["_zone"] . "' id='" . $data[$i]["id"] . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>";
+            $XML .= $this->html_entity_decode($data[$i]["data"], ENT_QUOTES, "UTF-8");
             $XML .= "</$_tag>\n";
             if ((count($_OBJECTSCOTAIN[$_tag]) > 0)) {
-                $XML .= $this->GetData($data[$i]->id);
+                $XML .= $this->GetData($data[$i]["id"]);
             }
         }
         return $XML;
@@ -639,7 +642,7 @@ class DATA extends CORE
                 ));
                 foreach ($controls as $KEY => $ROW) {
                     $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $xsl = str_replace($replace, $ROW, $xsl);
                 }
             }
             
@@ -656,7 +659,7 @@ class DATA extends CORE
                 
                 foreach ($controls as $KEY => $ROW) {
                     $replace = $KEY;
-                    $xsl = ereg_replace($replace, $ROW, $xsl);
+                    $xsl = str_replace($replace, $ROW, $xsl);
                 }
             }
             
@@ -665,7 +668,7 @@ class DATA extends CORE
                     "controls" => $OBJ["controls"], "zone" => "{@zone}", "odd" => $KEY, "hide" => $OBJ["hide"], "cat" => "@id", "parent" => "{@parentid}", "edit" => "object"
                 ));
                 $keys = array_keys($controls);
-                $xsl = ereg_replace($keys[0], $controls[$keys[0]], $xsl);
+                $xsl = str_replace($keys[0], $controls[$keys[0]], $xsl);
             }
             
             $controls = $this->doControls("body", array(
@@ -674,7 +677,7 @@ class DATA extends CORE
             
             //print_r($controls);
             $keys = array_keys($controls);
-            $xsl = ereg_replace("</body>", $controls[$keys[0]] . "\n</body>", $xsl);
+            $xsl = str_replace("</body>", $controls[$keys[0]] . "\n</body>", $xsl);
         } else {
             $xsl = $this->CleanXSL($xsl);
         }
@@ -683,11 +686,11 @@ class DATA extends CORE
          * Add some more information to the template
          * /
 
-        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = ereg_replace("<xsl:param name=\"adminmode\" select=\"0\" />", "<xsl:param name=\"adminmode\" select=\"1\" />", $xsl);
+        if ($CURRENTUSER->isAllowed("edit") || ($CURRENTUSER->isAllowed("delete")) || ($CURRENTUSER->isAllowed("move"))) $xsl = str_replace("<xsl:param name=\"adminmode\" select=\"0\" />", "<xsl:param name=\"adminmode\" select=\"1\" />", $xsl);
         $_FOR_MORE = "<xsl:param name=\"lang\" select=\"" . $CURRENTLANGUAGE . "\" />\n";
         foreach ($_GET AS $key => $value) if ($value) $_FOR_MORE .= "<xsl:param name=\"get$key\" select=\"'" . $value . "'\" />\n";
 
-        $xsl = ereg_replace("<!--MORE-->", $_FOR_MORE, $xsl);
+        $xsl = str_replace("<!--MORE-->", $_FOR_MORE, $xsl);
         */
         
         /**
@@ -704,7 +707,6 @@ class DATA extends CORE
         
         $GLOBALS["time_prep_end"] = getmicrotime();
         
-        //$xml = utf8_encode($xml);
         
 
         $HTML = $this->XSLAL($xml, $xsl);
@@ -800,7 +802,7 @@ class DATA extends CORE
                 "%xsl", "%xml"
             );
             $cmd = str_replace($strings, $files, $GLOBALS["_XSLTCOMMAND"]);
-            $HTML = `$cmd`;
+            $HTML = shell_exec($cmd);
             //exec("sabcmd $_xsl $_xml", $resultArray);
             //reset($resultArray);
             //$HTML = implode("\n", $resultArray);
@@ -1013,7 +1015,7 @@ class DATA extends CORE
             $id = $cat; else if ($_GET["id"])
             $id = $_GET["id"];
         
-        if ($id{0} == "@") {
+        if ($id[0] == "@") {
             $titleid = "<xsl:value-of select=\"" . $id . "\" />";
             $id = "{" . $id . "}";
         } else {

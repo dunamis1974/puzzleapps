@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * This loads current platform configurations
  * They can be in XML or in PHP arrays

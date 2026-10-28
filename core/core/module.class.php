@@ -10,6 +10,8 @@
  *
  */
 class Modules {
+    public $MODULEDIR;
+
 	/**
 	 * Modules::__construct()
 	 * 

@@ -23,7 +23,7 @@
 <?= $TRANSLATE->Go($doFORM->start("person")); ?>
 </table>
 
-<?
+<?php
 
 function createPlatform () {
     global $UFV, $PLATFORMID, $error;
@@ -44,7 +44,7 @@ function saveConfPlatform () {
     $VALIDATED = $UFV->validate($_POST, "platform");
     if ((!$PLATFORMNAME && $VALIDATED["name"] != "") || ($PLATFORMNAME != $VALIDATED["name"])) {
         if ((!$UFV->hasErrors()) && ($fp = fopen($_PLCONF, "w"))) {
-            $_DATA .= "<?\n\n";
+            $_DATA .= "<?php\n\n";
             $_DATA .= "\$PLATFORMNAME = \"" . $VALIDATED["name"] . "\";\n";
 
             $_DATA .= "\n?>";

@@ -9,6 +9,7 @@
 
 class PLATFORM extends CORE {
 	public $_CLASS = __CLASS__;
+    public $_loaded;
 	
 	/**
 	 * PLATFORM class constructor
@@ -52,6 +53,7 @@ class PLATFORM extends CORE {
 		//$O->_load_dtd();
 		
 
+		$data = null;
 		$sql = "
           SELECT
               g.id,
@@ -61,24 +63,23 @@ class PLATFORM extends CORE {
               g._w,
               p.name,
               p.descrption
-          FROM " . TQT . "global" . TQT . " g, " . TQT . "platform" . TQT . " p
+          FROM global g, platform p
           WHERE
-            (p.name = '$PLATFORMNAME') and
-            (g.id = p.gid) and
-            (g._platform = g.id)
+            p.name = ? and
+            g.id = p.gid and
+            g._platform = g.id
             ";
 		if ($PLATFORMNAME)
-			$data = $DB->getRow ( $sql );
+			$data = $DB->fetchRow ( $sql, array ( $PLATFORMNAME ) );
 		
-		if (is_object ( $data )) {
-			$data = SQL_fixNames ( $data );
-			$O->id = $data->id;
-			$O->name = $data->name;
-			$O->descrption = $data->descrption;
-			$O->_group = $data->_group;
-			$O->_o = $data->_o;
-			$O->_g = $data->_g;
-			$O->_w = $data->_w;
+		if ($data !== null) {
+			$O->id = $data ["id"];
+			$O->name = $data ["name"];
+			$O->descrption = $data ["descrption"];
+			$O->_group = $data ["_group"];
+			$O->_o = $data ["_o"];
+			$O->_g = $data ["_g"];
+			$O->_w = $data ["_w"];
 		}
 		
 		if (! $O->id && ! $_DOINSTALL) {
@@ -110,7 +111,7 @@ class PLATFORM extends CORE {
 			$data = PERMISSIONS::GetGroup ( $_GET ["select"] );
 			if (count ( $data ) > 0) {
 				PERMISSIONS::changeGroup ( $O->id, $_GET ["select"] );
-				$_BODY .= BuildErrorMsg ( "##Object assigned to group## '" . $data [0]->groupname . "'" );
+				$_BODY .= BuildErrorMsg ( "##Object assigned to group## '" . $data [0] ["groupname"] . "'" );
 			} else {
 				$_BODY .= BuildErrorMsg ( "##You can't assign object to this group!##" );
 			}
@@ -129,11 +130,11 @@ class PLATFORM extends CORE {
 			for($i = 0; $i < $end; $i ++) {
 				$_BODY .= "
                 <tr onMouseOver=\"this.style.backgroundColor='#FFDEAD'\" onMouseOut=\"this.style.backgroundColor=''\">
-                    <td>[ " . $data [$i]->id . " ]</td>
-                    <td>" . $data [$i]->groupname . "</td>
-                    <td>" . nl2br ( $data [$i]->note ) . "</td>
+                    <td>[ " . $data [$i] ["id"] . " ]</td>
+                    <td>" . $data [$i] ["groupname"] . "</td>
+                    <td>" . nl2br ( $data [$i] ["note"] ) . "</td>
                     <td align=\"center\">
-                        " . (($data [$i]->id != $O->_group) ? "<a href=\"" . BuildLinkGet () . "&select=" . $data [$i]->id . "\"><img src=\"" . $SYSTEMIMAGES . "16x16/group_select.png\" border=0 width=\"16\" height=\"16\" title=\"##select default group##\" /></a>" : "<img src=\"" . $SYSTEMIMAGES . "16x16/group_selected.png\" border=0 width=\"16\" height=\"16\" title=\"##default group##\" />") . "
+                        " . (($data [$i] ["id"] != $O->_group) ? "<a href=\"" . BuildLinkGet () . "&select=" . $data [$i] ["id"] . "\"><img src=\"" . $SYSTEMIMAGES . "16x16/group_select.png\" border=0 width=\"16\" height=\"16\" title=\"##select default group##\" /></a>" : "<img src=\"" . $SYSTEMIMAGES . "16x16/group_selected.png\" border=0 width=\"16\" height=\"16\" title=\"##default group##\" />") . "
                     </td>
                 </tr>";
 			}
@@ -152,8 +153,14 @@ class PLATFORM extends CORE {
 		$ODD = "platform";
 		$O = new PLATFORM ( $ODD, $data );
 		$O->insert ();
-		$O->updatePlatform ();
 		return true;
+	}
+
+	function _insert_data($val, $oid) {
+		parent::_insert_data($val, $oid);
+		if ($val === null) {
+			$this->updatePlatform();
+		}
 	}
 	
 	/**
@@ -162,11 +169,11 @@ class PLATFORM extends CORE {
 	function updatePlatform() {
 		global $DB;
 		if ($this->id) {
-			$sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_platform" . TQT . " = '" . $this->id . "' WHERE " . TQT . "id" . TQT . " = '" . $this->id . "';";
-			$DB->query ( $sql );
+			$sql = "UPDATE global SET _platform = ? WHERE id = ?";
+			$DB->execute ( $sql, array ( $this->id, $this->id ) );
 			
-			$sql = "INSERT INTO " . TQT . "platform" . TQT . " (" . TQT . "gid" . TQT . ", " . TQT . "name" . TQT . ", " . TQT . "descrption" . TQT . ") VALUES ('" . $this->id . "', '" . escape_sql ( $this->_arrayData ["name"] ) . "', '" . escape_sql ( $this->_arrayData ["descrption"] ) . "');";
-			$DB->query ( $sql );
+			$sql = "INSERT INTO platform (gid, name, descrption) VALUES (?, ?, ?)";
+			$DB->execute ( $sql, array ( $this->id, $this->_arrayData ["name"], $this->_arrayData ["descrption"] ) );
 		}
 	}
 	
@@ -176,8 +183,8 @@ class PLATFORM extends CORE {
 	function updateDescription($data) {
 		global $DB;
 		if ($this->id) {
-			$sql = "UPDATE " . TQT . "platform" . TQT . " SET " . TQT . "descrption" . TQT . " = '" . escape_sql ( $data ) . "' WHERE " . TQT . "gid" . TQT . " = '" . $this->id . "';";
-			$DB->query ( $sql );
+			$sql = "UPDATE platform SET descrption = ? WHERE gid = ?";
+			$DB->execute ( $sql, array ( $data, $this->id ) );
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 $_is_loaded = true;
 
 // Using XML dtds

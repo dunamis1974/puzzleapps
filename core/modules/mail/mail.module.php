@@ -20,6 +20,10 @@ class SendMail {
     var $AttmFiles;
     var $Encoding = "UTF-8";
     var $Priority;
+    var $OB;
+    var $IB;
+    var $Msg;
+    var $headers;
 
     /**
      * SendMail::doSendMail()

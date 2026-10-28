@@ -12,6 +12,48 @@ class CORE extends PERMISSIONS
 {
 
     public $_CLASS = __CLASS__;
+    public $_arrayData;
+    public $_date;
+    public $_dtd;
+    public $_g;
+    public $_group;
+    public $_hidden;
+    public $_module;
+    public $_o;
+    public $_object;
+    public $_objectname;
+    public $_owner;
+    public $_parent;
+    public $_platform;
+    public $_w;
+    public $_workflow;
+    public $_xslt;
+    public $_zone;
+    public $data;
+    public $id;
+
+    // DTD-defined fields are stored here rather than as undeclared properties.
+    public $_dynamicData = array();
+
+    function __get($name)
+    {
+        return array_key_exists($name, $this->_dynamicData) ? $this->_dynamicData[$name] : null;
+    }
+
+    function __set($name, $value)
+    {
+        $this->_dynamicData[$name] = $value;
+    }
+
+    function __isset($name)
+    {
+        return isset($this->_dynamicData[$name]);
+    }
+
+    function __unset($name)
+    {
+        unset($this->_dynamicData[$name]);
+    }
 
     /**
      * CORE class constructor
@@ -101,7 +143,7 @@ class CORE extends PERMISSIONS
         $key = array_keys($val);
         $end = count($key);
         for($i = 0; $i < $end; $i++) {
-            if ($key[$i]{0} == "_") {
+            if ($key[$i][0] == "_") {
                 $this->$key[$i] = $val[$key[$i]];
             }
         }
@@ -138,10 +180,14 @@ class CORE extends PERMISSIONS
     function _load_main($param)
     {
         global $DTD, $DB, $PLATFORMID;
-        $sql = "SELECT * FROM global WHERE id = '$param'";
-        if ($PLATFORMID)
-            $sql .= " AND " . TQT . "_platform" . TQT . " = '" . $PLATFORMID . "'";
-        $data = $DB->getRow($sql);
+        $sql = "SELECT * FROM global WHERE id = ?";
+        $params = array($param);
+        if ($PLATFORMID) {
+            $platform = $DB->quoteIdentifier("_platform", "column");
+            $sql .= " AND $platform = ?";
+            $params[] = $PLATFORMID;
+        }
+        $data = $DB->fetchRow($sql, $params);
         $this->_populate_data($data);
         $this->_objectname = $DTD->get_object_name($this->_object);
     }
@@ -156,35 +202,23 @@ class CORE extends PERMISSIONS
     function _load_data()
     {
         global $DB, $DTD, $DEFAULTLANGUAGE, $CURRENTLANGUAGE;
-        
-        $add = null;
-        
-        $sql = "SELECT * FROM data WHERE gid = '" . $this->id . "'";
-        
-        $data = $DB->getAll($sql);
-        $end = count($data);
-        
+        $rows = $DB->fetchAll("SELECT * FROM data WHERE gid = ?", array($this->id));
         $_tag = $this->_objectname;
-        
-        for($i = 0; $i < $end; $i++) {
+        foreach ($rows as $row) {
             if (strtoupper($this->_CLASS) == "DATA") {
-                $XML = $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8");
-                $XML .= $this->_object_data();
+                $xml = $this->html_entity_decode($row["data"]);
+                $xml .= $this->_object_data();
             } else {
-                $XML = "<$_tag parentid='" . $this->_parent . "' zone='" . $this->_zone . "' id='" . $this->id . "'$add>\n";
-                $XML .= $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8");
-                $XML .= $this->_object_data();
-                $XML .= "</$_tag>\n";
+                $xml = "<$_tag parentid='" . $this->_parent . "' zone='" . $this->_zone . "' id='" . $this->id . "'>\n";
+                $xml .= $this->html_entity_decode($row["data"]);
+                $xml .= $this->_object_data();
+                $xml .= "</$_tag>\n";
             }
-            $name = "data_" . $data[$i]->langid;
-            $this->$name = $XML;
-            
+            $name = "data_" . $row["langid"];
+            $this->$name = $xml;
             $is_ml = $DTD->is_object_multilingual($this->_object);
-            
-            if (($is_ml) && ($data[$i]->langid == $CURRENTLANGUAGE)) {
-                $this->data = $XML;
-            } else if ((! $is_ml) && ($data[$i]->langid == $DEFAULTLANGUAGE)) {
-                $this->data = $XML;
+            if (($is_ml && $row["langid"] == $CURRENTLANGUAGE) || (!$is_ml && $row["langid"] == $DEFAULTLANGUAGE)) {
+                $this->data = $xml;
             }
         }
     }
@@ -197,18 +231,18 @@ class CORE extends PERMISSIONS
     function _object_data()
     {
         global $DB;
-        
+        $xml = "";
         if (strtoupper($this->_CLASS) == "PERSON") {
-            $sql = "SELECT * FROM " . TQT . "users" . TQT . " WHERE " . TQT . "gid" . TQT . " = '" . $this->id . "'";
-            $data = $DB->getAll($sql);
-            $XML .= "<_username>" . $data[0]->username . "</_username>\n";
-            $XML .= "<_password>" . $data[0]->password . "</_password>\n";
-            $XML .= "<_group>" . $data[0]->group . "</_group>\n";
+            $row = $DB->fetchRow("SELECT * FROM users WHERE gid = ?", array($this->id));
+            if ($row !== null) {
+                $xml .= "<_username>" . $row["username"] . "</_username>\n";
+                $xml .= "<_password>" . $row["password"] . "</_password>\n";
+                $xml .= "<_group>" . $row["_group"] . "</_group>\n";
+            }
         }
-        $XML .= "<_module>" . $this->_module . "</_module>\n";
-        $XML .= "<_xslt>" . $this->_xslt . "</_xslt>\n";
-        //if ($this->_w == 0) $XML .= "<_hidden>1</_hidden>\n";
-        return $XML;
+        $xml .= "<_module>" . $this->_module . "</_module>\n";
+        $xml .= "<_xslt>" . $this->_xslt . "</_xslt>\n";
+        return $xml;
     }
 
     /**
@@ -241,56 +275,64 @@ class CORE extends PERMISSIONS
      */
     function insert()
     {
-        global $PLATFORMID, $NEWPLATFORMID, $CURRENTPLATFORM, $CURRENTUSER, $DB;
-        // if we have $val varable set we insert $val data else we insert current object
-        $val = $this;
-        $val = (array)$val;
-        
-        if ($this->_objectname != '')
+        global $PLATFORMID, $NEWPLATFORMID, $CURRENTUSER, $CURRENTPLATFORM, $DB;
+        $val = (array)$this;
+        if ($this->_objectname != '') {
             $val["_object"] = $this->_objectname;
-        if (! $PLATFORMID)
-            $_PLATFORMID = "'" . (getLastID("global") + 1) . "'";
-        else
-            $_PLATFORMID = "'" . $PLATFORMID . "'";
-        
-        $this->_w = ($this->_w)?$this->_w:4;
-        $this->_g = ($this->_g)?$this->_g:6;
-        $this->_o = ($this->_o)?$this->_o:6;
-        $this->_w = (! $this->_hidden)?$this->_w:0;
-        $zone = (($this->_zone)?"'" . $this->_zone . "'":"NULL");
-        $_workflow = (($this->_workflow)?$this->_workflow:0);
-        $this->_group = (! $this->_group)?$CURRENTPLATFORM->_group:$this->_group;
-        
-        // insert in main elements in "ids" table
-        $sql = "
-            INSERT INTO " . TQT . "global" . TQT . " (" . TQT . "_owner" . TQT . ", " . TQT . "_object" . TQT . ", " . TQT . "_date" . TQT . ", " . TQT . "_zone" . TQT . ", " . TQT . "_platform" . TQT . ", " . TQT . "_workflow" . TQT . ", " . TQT . "_module" . TQT . ", " . TQT . "_xslt" . TQT . ", " . TQT . "_group" . TQT . ", " . TQT . "_o" . TQT . ", " . TQT . "_g" . TQT . ", " . TQT . "_w" . TQT . ")
-            	VALUES
-            ('" . (($CURRENTUSER->id)?$CURRENTUSER->id:0) . "', '" . $this->_object . "', '" . time() . "', " . $zone . ", " . $_PLATFORMID . ", '" . (($_workflow)?$_workflow:0) . "', '" . $this->_module . "', '" . $this->_xslt . "', '" . (($this->_group)?$this->_group:0) . "', '" . $this->_o . "', '" . $this->_g . "', '" . $this->_w . "')";
-        
-        $DB->query($sql);
-        // take id from last insert
-        $oid = getLastID("global");
-        
-        // new platform is created
-        if ($NEWPLATFORMID)
-            $PLATFORMID = $oid;
-        
-        $this->id = $oid;
-        // now to insert elements
-        $this->_insert_data(null, $oid);
-        if (strtoupper($this->_objectname) == "PERSON") {
-            $O = new PERSON($oid);
-            $O->_update_person();
-            // load new object
-            $O = new PERSON($oid);
-        } else {
-            // load new object
-            $O = $this->load($oid);
         }
-        
-        $this->_assgin_object($O);
-        
-        return;
+        $this->_w = $this->_w ? $this->_w : 4;
+        $this->_g = $this->_g ? $this->_g : 6;
+        $this->_o = $this->_o ? $this->_o : 6;
+        $this->_w = !$this->_hidden ? $this->_w : 0;
+        $workflow = $this->_workflow ? $this->_workflow : 0;
+        $this->_group = !$this->_group ? $CURRENTPLATFORM->_group : $this->_group;
+        $columns = array("_owner", "_object", "_date", "_zone", "_platform", "_workflow", "_module", "_xslt", "_group", "_o", "_g", "_w");
+        $quoted = array();
+        foreach ($columns as $column) {
+            $quoted[] = $DB->quoteIdentifier($column, "column");
+        }
+        $sql = "INSERT INTO global (" . implode(", ", $quoted) . ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $DB->begin();
+        try {
+            $DB->execute($sql, array(
+                $CURRENTUSER->id ? $CURRENTUSER->id : 0,
+                $this->_object,
+                time(),
+                $this->_zone ? $this->_zone : null,
+                $PLATFORMID ? $PLATFORMID : 0,
+                $workflow,
+                $this->_module === null ? "" : $this->_module,
+                $this->_xslt === null ? "" : $this->_xslt,
+                $this->_group ? $this->_group : 0,
+                $this->_o,
+                $this->_g,
+                $this->_w,
+            ));
+            $oid = $DB->lastId();
+            if (!$PLATFORMID || $NEWPLATFORMID) {
+                $platformColumn = $DB->quoteIdentifier("_platform", "column");
+                $DB->execute("UPDATE global SET $platformColumn = ? WHERE id = ?", array($oid, $oid));
+            }
+            $this->id = $oid;
+            $this->_insert_data(null, $oid);
+            if (strtoupper($this->_objectname) == "PERSON") {
+                $person = new PERSON($oid);
+                $person->_update_person();
+            }
+            $DB->commit();
+            if ($NEWPLATFORMID) {
+                $PLATFORMID = $oid;
+            }
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
+        }
+        if (strtoupper($this->_objectname) == "PERSON") {
+            $object = new PERSON($oid);
+        } else {
+            $object = $this->load($oid);
+        }
+        $this->_assgin_object($object);
     }
 
     /**
@@ -304,32 +346,21 @@ class CORE extends PERMISSIONS
     function _insert_data($val, $oid)
     {
         global $EDITLANGUAGE, $DEFAULTLANGUAGE, $DB, $DTD;
-        
         if (!$DTD->odd_multilang($this->_objectname)) {
-                $EDITLANGUAGE = $DEFAULTLANGUAGE;
+            $EDITLANGUAGE = $DEFAULTLANGUAGE;
         }
-        
-        if (! $val) {
+        if (!$val) {
             $_DATA = $this->data;
-            if ($this->_CLASS == "person")
+            if ($this->_CLASS == "person") {
                 $this->_update_person();
+            }
         } else {
             $_DATA = $val->data;
-            if ($val->_CLASS == "person")
+            if ($val->_CLASS == "person") {
                 $this->_update_person($val);
+            }
         }
-        
-        $sql = "
-        INSERT INTO data
-            (gid, langid, data)
-        VALUES
-            ('" . $oid . "', '" . $EDITLANGUAGE . "', '" . escape_sql($_DATA) . "')";
-        
-        $DB->query($sql);
-        
-        /**
-         * Now lets insert data in index tables
-         */
+        $DB->execute("INSERT INTO data (gid, langid, data) VALUES (?, ?, ?)", array($oid, $EDITLANGUAGE, $_DATA === null ? "" : $_DATA));
         $this->_feed_index($oid);
     }
 
@@ -344,30 +375,33 @@ class CORE extends PERMISSIONS
     function _feed_index($oid = NULL, $_DATA = NULL, $_DTD = NULL)
     {
         global $EDITLANGUAGE, $DB;
-        
-        if (! $_DATA)
+        if (!$_DATA) {
             $_DATA = $this->_arrayData;
-        if (! $_DTD)
+        }
+        if (!$_DTD) {
             $_DTD = $this->_dtd;
-        if (! $oid)
+        }
+        if (!$oid) {
             $oid = $this->id;
-        
-        if ($_DTD)
+        }
+        if ($_DTD) {
             foreach ($_DTD as $ELM) {
-                if ((trim($_DATA[$ELM["element_name"]]) != '') && (trim($_DATA[$ELM["element_name"]]) != "<br />")) {
-                    if ($ELM["data"][2]["data"] == "number")
-                        $TBL = "elm_number"; elseif ($ELM["data"][2]["data"] == "date")
-                        $TBL = "elm_date"; else
-                        $TBL = "elm_text";
-                    
-                    $sql = "
-                INSERT INTO $TBL
-                    (gid, elm, data, lang)
-                VALUES
-                    ('" . $oid . "', '" . $ELM["element_name"] . "', '" . escape_sql($_DATA[$ELM["element_name"]]) . "', '" . $EDITLANGUAGE . "')";
-                    $DB->query($sql);
+                $value = isset($_DATA[$ELM["element_name"]]) ? $_DATA[$ELM["element_name"]] : null;
+                if (trim((string)$value) === '' || trim((string)$value) === "<br />") {
+                    continue;
                 }
+                $type = $ELM["data"][2]["data"];
+                if ($type == "number") {
+                    $tableName = "elm_number";
+                } elseif ($type == "date") {
+                    $tableName = "elm_date";
+                } else {
+                    $tableName = "elm_text";
+                }
+                $table = $DB->quoteIdentifier($tableName, "table");
+                $DB->execute("INSERT INTO $table (gid, elm, data, lang) VALUES (?, ?, ?, ?)", array($oid, $ELM["element_name"], $value, $EDITLANGUAGE));
             }
+        }
     }
 
     /**
@@ -382,6 +416,7 @@ class CORE extends PERMISSIONS
      */
     function update($val = false)
     {
+        global $DB;
         if ($val) {
             $id = $val["id"];
             $data = $val;
@@ -389,14 +424,20 @@ class CORE extends PERMISSIONS
             $id = $this->id;
             $data = $this;
         }
-        
         FILES::_update_file($id, $data);
-        $this->_update_object($data);
-        $this->_delete_data($id);
-        $this->_insert_data($data, $id);
-        if (strtoupper($this->_objectname) == "PERSON") {
-            $O = new PERSON($id);
-            $O->_update_person();
+        $DB->begin();
+        try {
+            $this->_update_object($data);
+            $this->_delete_data($id);
+            $this->_insert_data($data, $id);
+            if (strtoupper($this->_objectname) == "PERSON") {
+                $person = new PERSON($id);
+                $person->_update_person();
+            }
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
         }
     }
 
@@ -410,18 +451,18 @@ class CORE extends PERMISSIONS
     function _update_object($val)
     {
         global $DB;
-        
-        if (! is_array($val))
+        if (!is_array($val)) {
             settype($val, "array");
-        
+        }
         $now = time();
-        
-        $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . $now . "', " . TQT . "_workflow" . TQT . " = '" . $val["_workflow"] . "', " . TQT . "_module" . TQT . " = '" . $val["_module"] . "', " . TQT . "_xslt" . TQT . " = '" . $val["_xslt"] . "', " . TQT . "_group" . TQT . " = '" . $val["_group"] . "' WHERE " . TQT . "id" . TQT . "='" . $val["id"] . "'";
-        $DB->query($sql);
-        
+        $date = $DB->quoteIdentifier("_date", "column");
+        $workflow = $DB->quoteIdentifier("_workflow", "column");
+        $module = $DB->quoteIdentifier("_module", "column");
+        $xslt = $DB->quoteIdentifier("_xslt", "column");
+        $group = $DB->quoteIdentifier("_group", "column");
+        $DB->execute("UPDATE global SET $date = ?, $workflow = ?, $module = ?, $xslt = ?, $group = ? WHERE id = ?", array($now, $val["_workflow"] === null ? "" : $val["_workflow"], $val["_module"] === null ? "" : $val["_module"], $val["_xslt"] === null ? "" : $val["_xslt"], $val["_group"] === null ? "" : $val["_group"], $val["id"]));
         $this->_update_parent($val["id"], $now);
         $this->_execute_after_hooks($val["id"], "update");
-
     }
     
 	/**
@@ -437,15 +478,10 @@ class CORE extends PERMISSIONS
     function _update_parent($id, $now)
     {
         global $DB;
-        
-        $sql = "SELECT parentid FROM relations WHERE targetid = '$id' AND relationtype IS NULL";
-        $parents = $DB->GetAll($sql);
-        
-        foreach ($parents AS $parent) {
-            $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . $now . "'
-            			WHERE
-        			" . TQT . "id" . TQT . "='" . $parent->parentid . "'";
-            $DB->query($sql);
+        $parents = $DB->fetchAll("SELECT parentid FROM relations WHERE targetid = ? AND relationtype IS NULL", array($id));
+        $date = $DB->quoteIdentifier("_date", "column");
+        foreach ($parents as $parent) {
+            $DB->execute("UPDATE global SET $date = ? WHERE id = ?", array($now, $parent["parentid"]));
         }
     }
     
@@ -481,27 +517,36 @@ class CORE extends PERMISSIONS
      */
     function delete($_id = null)
     {
-        if (! $_id)
-            $id = $this->id; else if (is_object($_id)) {
+        global $DB;
+        if (!$_id) {
+            $id = $this->id;
+        } elseif (is_object($_id)) {
             $id = $_id->id;
         } else {
             $id = $_id;
         }
-        
-        if (! $id)
+        if (!$id) {
             return false;
-        
-        if ($this->candelete($id)) {
+        }
+        if (!$this->candelete($id)) {
+            return true;
+        }
+        $DB->begin();
+        try {
             $this->_update_parent($id, time());
             $this->_execute_after_hooks($id, "delete");
             FILES::delete_files($id);
             $this->_delete_ids($id);
             $this->_delete_data($id, 1);
             $this->_delete_relations($id);
-            if (strtoupper($this->_objectname) == "PERSON")
+            if (strtoupper($this->_objectname) == "PERSON") {
                 $this->_delete_user();
+            }
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
         }
-        
         return true;
     }
 
@@ -515,8 +560,7 @@ class CORE extends PERMISSIONS
     function _delete_ids($id = false)
     {
         global $DB;
-        $sql = "DELETE FROM global WHERE id = '$id'";
-        $DB->query($sql);
+        $DB->execute("DELETE FROM global WHERE id = ?", array($id));
     }
 
     /**
@@ -530,22 +574,18 @@ class CORE extends PERMISSIONS
     function _delete_data($id = false, $all = false)
     {
         global $EDITLANGUAGE, $DEFAULTLANGUAGE, $DB, $DTD;
-        
         if (!$DTD->odd_multilang($this->_objectname)) {
-                $EDITLANGUAGE = $DEFAULTLANGUAGE;
+            $EDITLANGUAGE = $DEFAULTLANGUAGE;
         }
-        
-        if (! $id)
+        if (!$id) {
             return false;
-        
-        $sql = "DELETE FROM data WHERE gid = '$id'";
-        if ($all == false) {
-            $sql .= " AND langid='$EDITLANGUAGE'";
         }
-        $DB->query($sql);
-        
+        if ($all == false) {
+            $DB->execute("DELETE FROM data WHERE gid = ? AND langid = ?", array($id, $EDITLANGUAGE));
+        } else {
+            $DB->execute("DELETE FROM data WHERE gid = ?", array($id));
+        }
         $this->_clean_index($id, $all);
-        
         return true;
     }
 
@@ -560,18 +600,17 @@ class CORE extends PERMISSIONS
     function _clean_index($oid = NULL, $all = false)
     {
         global $EDITLANGUAGE, $DB;
-        
-        if (! $oid)
+        if (!$oid) {
             $oid = $this->id;
-        if ($all == false)
-            $lang = " AND lang='$EDITLANGUAGE'";
-        
-        $sql = "DELETE FROM elm_text WHERE gid = '$oid'" . $lang . ";";
-        $DB->query($sql);
-        $sql = "DELETE FROM elm_date WHERE gid = '$oid'" . $lang . ";";
-        $DB->query($sql);
-        $sql = "DELETE FROM elm_number WHERE gid = '$oid'" . $lang . ";";
-        $DB->query($sql);
+        }
+        foreach (array("elm_text", "elm_date", "elm_number") as $tableName) {
+            $table = $DB->quoteIdentifier($tableName, "table");
+            if ($all == false) {
+                $DB->execute("DELETE FROM $table WHERE gid = ? AND lang = ?", array($oid, $EDITLANGUAGE));
+            } else {
+                $DB->execute("DELETE FROM $table WHERE gid = ?", array($oid));
+            }
+        }
     }
 
     /**
@@ -584,8 +623,7 @@ class CORE extends PERMISSIONS
     function _delete_relations($id = false)
     {
         global $DB;
-        $sql = "DELETE FROM relations WHERE targetid = '$id'";
-        $DB->query($sql);
+        $DB->execute("DELETE FROM relations WHERE targetid = ?", array($id));
     }
 
     /**
@@ -598,19 +636,11 @@ class CORE extends PERMISSIONS
     function candelete($id = false)
     {
         global $DB;
-        // To be fixed
-        // return true;
-        if (! $id)
+        if (!$id) {
             $id = $this->id;
-        
-        $sql = "SELECT * FROM relations WHERE parentid='$id'";
-        SQL_addlimit($sql, 1, 0);
-        
-        $data = $DB->getAll($sql);
-        if (count($data) > 0)
-            return false;
-        
-        return true;
+        }
+        $sql = $DB->paginate("SELECT * FROM relations WHERE parentid = ?", 1, 0);
+        return count($DB->fetchAll($sql, array($id))) === 0;
     }
 
     /**
@@ -692,44 +722,31 @@ class CORE extends PERMISSIONS
     function _get_relations($zone = null, $relation = null)
     {
         global $PLATFORMID, $DB;
-        
-        if ($this->id != '') {
-            $pid = $this->id;
-        } else {
-            $pid = $PLATFORMID;
+
+        $pid = $this->id != '' ? $this->id : $PLATFORMID;
+        $params = array($pid);
+        $where = $relation ? "rel.relationtype = ?" : "rel.relationtype IS NULL";
+        if ($relation) {
+            $params[] = $relation;
         }
-        
-        $_more_sql = $this->buildFilter("glb");
-        
         if ($zone) {
-            $sql = "
-            SELECT glb.* FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb
-            WHERE
-              rel.parentid = '$pid' and
-              rel.relationtype" . (($relation)?" = '$relation'":" is NULL") . " and
-              rel.targetid=glb.id and
-              glb._zone='$zone'
-              $_more_sql
-            ORDER BY rel." . OQT . "_order" . OQT . " ASC";
-        } else {
-            $sql = "
-            SELECT glb.* FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb
-            WHERE
-              relationtype" . (($relation)?" = '$relation'":" is NULL") . " and
-              parentid='" . $pid . "' and
-              glb.id = rel.targetid
-              $_more_sql
-            ORDER BY " . OQT . "_order" . OQT . " ASC";
+            $params[] = $zone;
         }
-        
-        $_data = $DB->getAll($sql);
-        
-        $end = count($_data);
-        for($i = 0; $i < $end; $i++) {
-            $names = SQL_fixNames($_data[$i]);
-            $data[] = $this->load($names);
+        $filterParams = array();
+        $filter = $this->buildFilter("glb", $filterParams);
+        $params = array_merge($params, $filterParams);
+        $order = $DB->quoteIdentifier("_order", "column");
+        $sql = "SELECT glb.* FROM relations rel, global glb WHERE rel.parentid = ? AND $where AND rel.targetid = glb.id";
+        if ($zone) {
+            $sql .= " AND glb._zone = ?";
         }
-        return $data;
+        $sql .= $filter . " ORDER BY rel.$order ASC";
+        $rows = $DB->fetchAll($sql, $params);
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
+        }
+        return $result;
     }
 
     /**
@@ -741,26 +758,13 @@ class CORE extends PERMISSIONS
     function getParent()
     {
         global $DB, $CURRENTPLATFORM;
-        
-        $sql = "
-          SELECT rel.parentid FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb
-          WHERE
-            rel.targetid='" . $this->id . "' and
-            rel.relationtype is NULL and
-            rel.targetid=glb.id and
-            glb._platform='" . $CURRENTPLATFORM->id . "'
-          ";
-        
-        $_data = $DB->getAll($sql);
-        if (count($_data) > 0) {
-            $data_ = SQL_fixNames($_data[0]);
-            $data = $this->load($data_->parentid);
+
+        $sql = "SELECT rel.parentid FROM relations rel, global glb WHERE rel.targetid = ? AND rel.relationtype IS NULL AND rel.targetid = glb.id AND glb._platform = ?";
+        $row = $DB->fetchRow($sql, array($this->id, $CURRENTPLATFORM->id));
+        if ($row !== null) {
+            $data = $this->load($row["parentid"]);
         }
-        
-        if (! is_object($data))
-            return $CURRENTPLATFORM;
-            
-        return $data;
+        return is_object($data) ? $data : $CURRENTPLATFORM;
     }
 
     /**
@@ -811,19 +815,22 @@ class CORE extends PERMISSIONS
      */
     function addChild($_id, $zone)
     {
-        if (is_object($_id)) {
-            $id = $_id->id;
-        } else {
-            $id = $_id;
-        }
-        if ($this->_add_relation($id, $zone)) {
+        global $DB;
+        $id = is_object($_id) ? $_id->id : $_id;
+        $DB->begin();
+        try {
+            if (!$this->_add_relation($id, $zone, null, false)) {
+                $DB->rollback();
+                return false;
+            }
             $this->_update_parent($id, time());
-            $this->_execute_after_hooks($id, "addchild");
-            
-            return true;
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
         }
-        
-        return false;
+        $this->_execute_after_hooks($id, "addchild");
+        return true;
     }
 
     /**
@@ -855,31 +862,37 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access private
      */
-    function _add_relation($id, $zone, $rel = null)
+    function _add_relation($id, $zone, $rel = null, $transaction = true)
     {
         global $ADDOBJECTONTOP, $DB;
-        
-        if ($rel) {
-            if ($ADDOBJECTONTOP == true) {
-                $order = '0';
-            } else {
-                $order = $this->_get_last_order($zone, $rel);
-            }
-            $relation = "'$rel'";
-            $relation = $relation;
-        } else {
-            if ($ADDOBJECTONTOP == true)
-                $order = '0'; else
-                $order = $this->_get_last_order($zone);
-            $relation = "NULL";
+        if ($transaction) {
+            $DB->begin();
         }
-        $sql = "INSERT INTO relations (" . TQT . "parentid" . TQT . " , " . TQT . "targetid" . TQT . " , " . TQT . "relationtype" . TQT . ", " . TQT . "_order" . TQT . ") VALUES ('" . $this->id . "', '$id', $relation, $order);";
-        $done = $DB->query($sql);
-        $this->_reorder_children($zone, $rel);
-        if ($done)
-            return true;
-        
-        return false;
+        try {
+            if ($rel) {
+                $order = $ADDOBJECTONTOP == true ? 0 : $this->_get_last_order($zone, $rel);
+            } else {
+                $order = $ADDOBJECTONTOP == true ? 0 : $this->_get_last_order($zone);
+            }
+            $relationOrder = $DB->quoteIdentifier("_order", "column");
+            if ($rel) {
+                $sql = "INSERT INTO relations (parentid, targetid, relationtype, $relationOrder) VALUES (?, ?, ?, ?)";
+                $done = $DB->execute($sql, array($this->id, $id, $rel, $order));
+            } else {
+                $sql = "INSERT INTO relations (parentid, targetid, relationtype, $relationOrder) VALUES (?, ?, NULL, ?)";
+                $done = $DB->execute($sql, array($this->id, $id, $order));
+            }
+            $this->_reorder_children($zone, $rel);
+            if ($transaction) {
+                $DB->commit();
+            }
+            return $done > 0;
+        } catch (DatabaseException $e) {
+            if ($transaction) {
+                $DB->rollback();
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -892,13 +905,18 @@ class CORE extends PERMISSIONS
      */
     function sortChildren($zone, $rel = false)
     {
-        global $_ZONESSORT;
-        
-        if (! empty($_ZONESSORT[$zone]))
+        global $_ZONESSORT, $DB;
+        if (!empty($_ZONESSORT[$zone])) {
             return false;
-        
-        $this->_reorder_children($zone, $rel, true);
-        
+        }
+        $DB->begin();
+        try {
+            $this->_reorder_children($zone, $rel, true);
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
+        }
         return true;
     }
 
@@ -912,45 +930,36 @@ class CORE extends PERMISSIONS
     function _reorder_children($zone, $rel, $abc = false)
     {
         global $DB, $_ZONESSORT;
-        
-        if (! empty($_ZONESSORT[$zone]))
+        if (!empty($_ZONESSORT[$zone])) {
             $abc = true;
-        
-        if ($rel)
-            $relation = "and relationtype = '$rel'"; else
-            $relation = "and relationtype is NULL";
-        
-        if ($abc) {
-            $sql = "SELECT rel.* FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb, " . TQT . "data" . TQT . " d
-                  WHERE
-                      glb._zone = '" . $zone . "' and
-                      rel.targetid = glb.id and
-                      rel.parentid = '" . $this->id . "' and
-                      d.gid = rel.targetid
-                      $relation
-                  ORDER BY d." . OQT . "data" . OQT . " ASC";
-        } else {
-            $sql = "SELECT rel.* FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb
-                  WHERE
-                      glb._zone = '" . $zone . "' and
-                      rel.targetid = glb.id and
-                      rel.parentid = '" . $this->id . "'
-                      $relation
-                  ORDER BY rel." . OQT . "_order" . OQT . " ASC";
         }
-        $_data = $DB->getAll($sql);
-        
-        $end = count($_data);
-        $sql = null;
-        for($i = 0; $i < $end; $i++) {
-            $_data[$i] = SQL_fixNames($_data[$i]);
-            $sql = "
-            UPDATE " . TQT . "relations" . TQT . " SET " . TQT . "_order" . TQT . " = '" . ($i + 1) . "'
-            WHERE
-            " . TQT . "targetid" . TQT . "='" . $_data[$i]->targetid . "' and
-            " . TQT . "parentid" . TQT . "='" . $_data[$i]->parentid . "'
-            $relation;";
-            $DB->query($sql);
+        $params = array($zone, $this->id);
+        $where = "";
+        if ($rel) {
+            $where = " AND rel.relationtype = ?";
+            $params[] = $rel;
+        } else {
+            $where = " AND rel.relationtype IS NULL";
+        }
+        $sql = "SELECT rel.targetid, rel.parentid FROM relations rel, global glb";
+        if ($abc) {
+            $sql .= ", data d";
+        }
+        $sql .= " WHERE glb._zone = ? AND rel.targetid = glb.id AND rel.parentid = ?$where";
+        if ($abc) {
+            $sql .= " AND d.gid = rel.targetid ORDER BY d.data ASC";
+        } else {
+            $order = $DB->quoteIdentifier("_order", "column");
+            $sql .= " ORDER BY rel.$order ASC";
+        }
+        $rows = $DB->fetchAll($sql, $params);
+        $relationOrder = $DB->quoteIdentifier("_order", "column");
+        foreach ($rows as $index => $row) {
+            if ($rel) {
+                $DB->execute("UPDATE relations SET $relationOrder = ? WHERE targetid = ? AND parentid = ? AND relationtype = ?", array($index + 1, $row["targetid"], $row["parentid"], $rel));
+            } else {
+                $DB->execute("UPDATE relations SET $relationOrder = ? WHERE targetid = ? AND parentid = ? AND relationtype IS NULL", array($index + 1, $row["targetid"], $row["parentid"]));
+            }
         }
         return true;
     }
@@ -965,26 +974,16 @@ class CORE extends PERMISSIONS
     function _get_last_order($zone, $rel = null)
     {
         global $DB;
-        
-        if ($rel)
-            $relation = "and relationtype = '$rel'"; else
-            $relation = "and relationtype is NULL";
-        
-        $sql = "
-          SELECT rel._order as " . TQT . "last" . TQT . "
-            FROM " . TQT . "relations" . TQT . " rel, " . TQT . "global" . TQT . " glb
-              WHERE
-              glb._zone = '" . $zone . "' and
-              rel.targetid = glb.id and
-              rel.parentid = '" . $this->id . "'
-              $relation
-            ORDER BY rel." . OQT . "_order" . OQT . " DESC";
-        
-        SQL_addlimit($sql, 1, 0);
-        
-        $_data = $DB->getRow($sql);
-        $last = $_data->last + 1;
-        return $last;
+        $params = array($zone, $this->id);
+        $where = "rel.relationtype IS NULL";
+        if ($rel) {
+            $where = "rel.relationtype = ?";
+            $params[] = $rel;
+        }
+        $order = $DB->quoteIdentifier("_order", "column");
+        $sql = $DB->paginate("SELECT rel.$order FROM relations rel, global glb WHERE glb._zone = ? AND rel.targetid = glb.id AND rel.parentid = ? AND $where ORDER BY rel.$order DESC", 1, 0);
+        $last = $DB->fetchValue($sql, $params);
+        return $last === null ? 1 : $last + 1;
     }
 
     /**
@@ -996,13 +995,17 @@ class CORE extends PERMISSIONS
      */
     function removeChild($_id)
     {
-        if (is_object($_id)) {
-            $id = $_id->id;
-        } else {
-            $id = $_id;
+        global $DB;
+        $id = is_object($_id) ? $_id->id : $_id;
+        $DB->begin();
+        try {
+            $this->_delete_relation($id);
+            $this->_update_parent($id, time());
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
         }
-        $this->_delete_relation($id);
-        $this->_update_parent($id, time());
         $this->_execute_after_hooks($id, "removechild");
     }
 
@@ -1035,10 +1038,11 @@ class CORE extends PERMISSIONS
     function _delete_relation($id, $relation = false)
     {
         global $DB;
-        $pid = $this->id;
-        $sql = "DELETE FROM relations WHERE targetid = '$pid' and parentid = '$id' and relationtype" . (($relation)?" = '$relation'":" is NULL") . "";
-        $DB->query($sql);
-        
+        if ($relation) {
+            $DB->execute("DELETE FROM relations WHERE targetid = ? AND parentid = ? AND relationtype = ?", array($this->id, $id, $relation));
+        } else {
+            $DB->execute("DELETE FROM relations WHERE targetid = ? AND parentid = ? AND relationtype IS NULL", array($this->id, $id));
+        }
         return true;
     }
 
@@ -1052,28 +1056,26 @@ class CORE extends PERMISSIONS
      */
     function changeParent($parent, $newparent)
     {
-        if (is_object($parent)) {
-            $id = $parent->id;
-        } else {
-            $id = $parent;
-        }
-        $this->_update_parent($this->id, time());
-        $this->_delete_relation($id);
-        if (is_object($newparent)) {
-            $PO = $newparent;
-        } else {
-            $PO = new CORE($newparent);
-        }
-        
-        $result = $PO->_add_relation($this->id);
-        
-        if ($result) {
+        global $DB;
+        $id = is_object($parent) ? $parent->id : $parent;
+        $PO = is_object($newparent) ? $newparent : new CORE($newparent);
+        $DB->begin();
+        try {
             $this->_update_parent($this->id, time());
-            $this->_execute_after_hooks($this->id, "changeparent");
-            return true;
+            $this->_delete_relation($id);
+            $result = $PO->_add_relation($this->id, null, null, false);
+            if (!$result) {
+                $DB->rollback();
+                return false;
+            }
+            $this->_update_parent($this->id, time());
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
         }
-        
-        return false;
+        $this->_execute_after_hooks($this->id, "changeparent");
+        return true;
     }
 
     /**
@@ -1086,10 +1088,9 @@ class CORE extends PERMISSIONS
     function changeZone($zone)
     {
         global $DB;
-        
-        $sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_date" . TQT . " = '" . time() . "', " . TQT . "_zone" . TQT . " = '" . $zone . "' WHERE " . TQT . "id" . TQT . "='" . $this->id . "'";
-        $DB->query($sql);
-        
+        $date = $DB->quoteIdentifier("_date", "column");
+        $zoneColumn = $DB->quoteIdentifier("_zone", "column");
+        $DB->execute("UPDATE global SET $date = ?, $zoneColumn = ? WHERE id = ?", array(time(), $zone === null ? "" : $zone, $this->id));
         return true;
     }
 
@@ -1104,48 +1105,58 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function changeOrder($objectid, $direction, $relationtype = null, $zone)
+    function changeOrder($objectid, $direction, $relationtype = null, $zone = null)
     {
         global $DB;
-        if (! $direction)
+        if (!$direction) {
             return false;
-        $sql = "
-          SELECT relations.*
-            FROM " . TQT . "global" . TQT . " glb , " . TQT . "relations" . TQT . "
-              WHERE
-                relations.parentid = '" . $this->id . "' AND
-                " . (($zone)?"glb._zone = '" . $zone . "' AND":"") . "
-                " . (($relationtype)?"relations.relationtype = '" . $relationtype . "' AND":"") . "
-                glb.id = relations.targetid
-                ORDER BY relations." . OQT . "_order" . OQT . " ASC";
-        
-        $objects = $DB->getAll($sql);
-        
-        $end = count($objects);
-        for($i = 0; $i < $end; $i++) {
-            $objects[$i] = SQL_fixNames($objects[$i]);
-            if ($objects[$i]->targetid == $objectid)
-                break;
         }
-        
-        if (! is_object($objects[$i + $direction]))
+        $params = array($this->id);
+        $where = "";
+        if ($zone) {
+            $where .= " AND glb._zone = ?";
+            $params[] = $zone;
+        }
+        if ($relationtype) {
+            $where .= " AND relations.relationtype = ?";
+            $params[] = $relationtype;
+        } else {
+            $where .= " AND relations.relationtype IS NULL";
+        }
+        $order = $DB->quoteIdentifier("_order", "column");
+        $sql = "SELECT relations.targetid, relations.parentid, relations.$order FROM global glb, relations WHERE relations.parentid = ?$where AND glb.id = relations.targetid ORDER BY relations.$order ASC";
+        $objects = $DB->fetchAll($sql, $params);
+        $index = null;
+        foreach ($objects as $i => $row) {
+            if ($row["targetid"] == $objectid) {
+                $index = $i;
+                break;
+            }
+        }
+        $adjacentIndex = $index === null ? null : $index + $direction;
+        if ($adjacentIndex === null || !isset($objects[$index], $objects[$adjacentIndex])) {
             return false;
-        
-        if ($relationtype)
-            $relationtypesql = " and relationtype='$relationtype'";
-        else
-            $relationtypesql = " and relationtype is NULL";
-        
-        $sql = "UPDATE relations SET " . TQT . "_order" . TQT . "='" . $objects[$i + $direction]->_order . "' WHERE parentid='" . $this->id . "' and targetid='" . $objects[$i]->targetid . "'$relationtypesql";
-        $DB->query($sql);
-        
-        $sql = "UPDATE relations SET " . TQT . "_order" . TQT . "='" . $objects[$i]->_order . "' WHERE parentid='" . $this->id . "' and targetid='" . $objects[$i + $direction]->targetid . "'$relationtypesql";
-        $DB->query($sql);
-        
-        $this->_reorder_children($zone, $relationtype);
-        
-        $this->_update_parent($objectid, time());
-        
+        }
+        $current = $objects[$index];
+        $adjacent = $objects[$adjacentIndex];
+        $DB->begin();
+        try {
+            if ($relationtype) {
+                $sql = "UPDATE relations SET $order = ? WHERE parentid = ? AND targetid = ? AND relationtype = ?";
+                $DB->execute($sql, array($adjacent["_order"], $this->id, $current["targetid"], $relationtype));
+                $DB->execute($sql, array($current["_order"], $this->id, $adjacent["targetid"], $relationtype));
+            } else {
+                $sql = "UPDATE relations SET $order = ? WHERE parentid = ? AND targetid = ? AND relationtype IS NULL";
+                $DB->execute($sql, array($adjacent["_order"], $this->id, $current["targetid"]));
+                $DB->execute($sql, array($current["_order"], $this->id, $adjacent["targetid"]));
+            }
+            $this->_reorder_children($zone, $relationtype);
+            $this->_update_parent($objectid, time());
+            $DB->commit();
+        } catch (DatabaseException $e) {
+            $DB->rollback();
+            throw $e;
+        }
         return true;
     }
 
@@ -1158,7 +1169,19 @@ class CORE extends PERMISSIONS
      */
     function _populate_data($data)
     {
-        $data = (array)$data;
+        if ($data instanceof CORE) {
+            $properties = get_object_vars($data);
+            $dynamicData = $properties["_dynamicData"];
+            unset($properties["_dynamicData"]);
+            foreach ($properties as $key => $value) {
+                if ($value === null) {
+                    unset($properties[$key]);
+                }
+            }
+            $data = array_merge($properties, $dynamicData);
+        } else {
+            $data = (array)$data;
+        }
         // $_val = array_values($data);
         $_key = array_keys($data);
         $_end = count($_key);
@@ -1184,7 +1207,7 @@ class CORE extends PERMISSIONS
         for($i = 0; $i < $_end; $i++) {
             $key_ = trim($_key[$i]);
             $data_ = trim($data[$key_]);
-            if ($data_ && ($key_{0} != "_") && ($key_ != "id")) {
+            if ($data_ && ($key_[0] != "_") && ($key_ != "id")) {
                 $XML .= "<" . $key_ . "><![CDATA[" . $data_ . $xend_ . "]]></" . $key_ . ">\n";
             }
             unset($key_, $data_);
@@ -1221,9 +1244,7 @@ class CORE extends PERMISSIONS
     function _delete_user()
     {
         global $DB;
-        // Delete old values
-        $sql = "DELETE FROM " . TQT . "users" . TQT . " WHERE " . TQT . "gid" . TQT . " = '" . $this->id . "'";
-        $DB->query($sql);
+        $DB->execute("DELETE FROM users WHERE gid = ?", array($this->id));
     }
 
     /**
@@ -1235,12 +1256,8 @@ class CORE extends PERMISSIONS
     function getListOfReferencingObjects()
     {
         global $DB;
-        $sql = "SELECT rel.targetid AS id FROM relations rel WHERE rel.parentid = '" . $this->id . "'";
-        
-        $data = $DB->getAll($sql);
-        
-        $result = $this->_load_from_array($data);
-        return $result;
+        $rows = $DB->fetchAll("SELECT rel.targetid AS id FROM relations rel WHERE rel.parentid = ?", array($this->id));
+        return $this->_load_from_array($rows);
     }
 
     /**
@@ -1254,19 +1271,10 @@ class CORE extends PERMISSIONS
     function getByTypeAndOwner($type, $owner)
     {
         global $DB, $DTD, $PLATFORMID;
-        
         $typeid = $DTD->get_object_id($type);
-        
-        $sql = "
-            SELECT * FROM global
-            WHERE
-            " . TQT . "_owner" . TQT . " = '$owner' and
-            " . TQT . "_platform" . TQT . "='$PLATFORMID' and
-            " . TQT . "_object" . TQT . " = '$typeid'";
-        
-        $data = $DB->getAll($sql);
-        $result = $this->_load_from_array($data);
-        return $result;
+        $sql = "SELECT * FROM global WHERE _owner = ? AND _platform = ? AND _object = ?";
+        $rows = $DB->fetchAll($sql, array($owner, $PLATFORMID, $typeid));
+        return $this->_load_from_array($rows);
     }
 
     /**
@@ -1279,24 +1287,12 @@ class CORE extends PERMISSIONS
     function getAllOfType($type)
     {
         global $DB, $DTD, $PLATFORMID;
-        
-        $_more_sql = $this->buildFilter(TQT . "global" . TQT);
-        
-        if (is_numeric($type))
-            $typeid = $type;
-        
         $typeid = $DTD->get_object_id($type);
-        
-        $sql = "
-          SELECT * FROM " . TQT . "global" . TQT . "
-          WHERE
-            " . TQT . "_object" . TQT . " = '$typeid' and
-            " . TQT . "_platform" . TQT . "='$PLATFORMID' $_more_sql";
-        
-        $data = $DB->getAll($sql);
-        // return $data;
-        $result = $this->_load_from_array($data);
-        return $result;
+        $filterParams = array();
+        $filter = $this->buildFilter("global", $filterParams);
+        $sql = "SELECT * FROM global WHERE _object = ? AND _platform = ?" . $filter;
+        $rows = $DB->fetchAll($sql, array_merge(array($typeid, $PLATFORMID), $filterParams));
+        return $this->_load_from_array($rows);
     }
 
     /**
@@ -1318,42 +1314,25 @@ class CORE extends PERMISSIONS
         $this->_object = $DTD->get_object_id($_DTD);
         $this->_load_dtd(true);
         $field_ = explode(":", $this->_dtd[$typeid]["data"][2]["data"]);
-        if ($field_[0] == "number") {
-            $field = "number";
-        } else if ($this->_dtd[$typeid]["field"] == "date") {
-            $field = "number";
-        } else {
-            $field = "text";
-        }
-        $sql = "
-          SELECT DISTINCT (" . TQT . "global" . TQT . ".id), " . TQT . "global" . TQT . ".* FROM " . TQT . "global" . TQT . ", " . TQT . "elm_" . $field . "" . TQT . ", " . TQT . "data" . TQT . "
-          WHERE
-            (" . TQT . "global" . TQT . "._object='" . $this->_object . "')
-            and (" . TQT . "global" . TQT . "._zone='" . $zone . "')
-            and (" . TQT . "global" . TQT . ".id = " . TQT . "elm_" . $field . "" . TQT . ".gid)
-            and (" . TQT . "elm_" . $field . "" . TQT . ".elm = '$type')
-            and (" . TQT . "elm_" . $field . "" . TQT . ".data = '$param')
-            and (" . TQT . "data" . TQT . "." . TQT . "langid" . TQT . " = '{$CURRENTLANGUAGE}' and " . TQT . "global" . TQT . ".id = " . TQT . "data" . TQT . "." . TQT . "gid" . TQT . ")
-        ";
-        
+        $field = ($field_[0] == "number" || $this->_dtd[$typeid]["field"] == "date") ? "number" : "text";
+        $table = $DB->quoteIdentifier("elm_" . $field, "table");
+        $params = array($this->_object, $zone, $type, $param, $CURRENTLANGUAGE);
+        $filter = "";
         if ($PLATFORMID) {
-            $sql .= "\n and (" . TQT . "global" . TQT . "._platform='$PLATFORMID')";
-            $sql .= $this->buildFilter("global");
+            $filterParams = array();
+            $filter = " AND global._platform = ?" . $this->buildFilter("global", $filterParams);
+            $params[] = $PLATFORMID;
+            $params = array_merge($params, $filterParams);
         }
-        $sql .= ";";
-        //die($sql);
-        $data = $DB->getAll($sql);
-        
-        if ($load == false) {
-            $result = $data;
-        } else {
-            $end = count($data);
-            for($i = 0; $i < $end; $i++) {
-                $data[$i] = SQL_fixNames($data[$i]);
-                $result[$i] = $this->load($data[$i]);
-            }
+        $sql = "SELECT DISTINCT global.* FROM global, $table, data WHERE global._object = ? AND global._zone = ? AND global.id = $table.gid AND $table.elm = ? AND $table.data = ? AND data.langid = ? AND global.id = data.gid$filter";
+        $rows = $DB->fetchAll($sql, $params);
+        if (!$load) {
+            return $rows;
         }
-        // $this->dump($result);
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
+        }
         return $result;
     }
 
@@ -1369,32 +1348,17 @@ class CORE extends PERMISSIONS
     function getChildrenByType($_DTD, $load = true)
     {
         global $DB, $DTD, $PLATFORMID;
-        
-        $pid = $this->id;
-        $_more_sql = $this->buildFilter("glb");
-        $_object = $DTD->get_object_id($_DTD);
-        
-        $sql = "
-          SELECT glb.* FROM " . TQT . "global" . TQT . " glb, relations
-          WHERE
-            glb._platform = '$PLATFORMID' and
-            relations.parentid = '$pid' and
-            relations.relationtype is NULL and
-            glb.id = relations.targetid and
-            (glb._object='" . $_object . "')
-            $_more_sql;
-        ";
-        
-        $data = $DB->getAll($sql);
-        
-        if ($load == false) {
-            $result = $data;
-        } else {
-            $end = count($data);
-            for($i = 0; $i < $end; $i++) {
-                $data[$i] = SQL_fixNames($data[$i]);
-                $result[$i] = $this->load($data[$i]);
-            }
+        $params = array($PLATFORMID, $this->id, $DTD->get_object_id($_DTD));
+        $filterParams = array();
+        $filter = $this->buildFilter("glb", $filterParams);
+        $sql = "SELECT glb.* FROM global glb, relations WHERE glb._platform = ? AND relations.parentid = ? AND relations.relationtype IS NULL AND glb.id = relations.targetid AND glb._object = ?" . $filter;
+        $rows = $DB->fetchAll($sql, array_merge($params, $filterParams));
+        if (!$load) {
+            return $rows;
+        }
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
         }
         return $result;
     }
@@ -1413,48 +1377,25 @@ class CORE extends PERMISSIONS
     function getChildrenByTypeAndParam($_DTD, $type, $param, $load = true)
     {
         global $DB, $DTD, $PLATFORMID;
-        
         $pid = $this->id;
         $typeid = $DTD->get_field_id($_DTD, $type);
-        $_more_sql = $this->buildFilter("glb");
         $this->_objectname = $_DTD;
         $this->_object = $DTD->get_object_id($_DTD);
-        $this->_load_dtd(true); //true
+        $this->_load_dtd(true);
         $field_ = explode(":", $this->_dtd[$typeid]["data"][2]["data"]);
-        if ($field_[0] == "number") {
-            $field = "number";
-        } else if ($this->_dtd[$typeid]["field"] == "date") {
-            $field = "number";
-        } else {
-            $field = "text";
+        $field = ($field_[0] == "number" || $this->_dtd[$typeid]["field"] == "date") ? "number" : "text";
+        $table = $DB->quoteIdentifier("elm_" . $field, "table");
+        $order = $DB->quoteIdentifier("_order", "column");
+        $filterParams = array();
+        $filter = $this->buildFilter("glb", $filterParams);
+        $sql = "SELECT DISTINCT glb.* FROM global glb, $table, relations WHERE glb._platform = ? AND relations.parentid = ? AND relations.relationtype IS NULL AND glb.id = relations.targetid AND glb._object = ? AND glb.id = $table.gid AND $table.elm = ? AND $table.data = ?" . $filter . " ORDER BY relations.$order ASC";
+        $rows = $DB->fetchAll($sql, array_merge(array($PLATFORMID, $pid, $this->_object, $type, $param), $filterParams));
+        if (!$load) {
+            return $rows;
         }
-        
-        // I should find another way to do this query
-        // and not using DISTINCT
-        $sql = "
-          SELECT DISTINCT glb.* FROM " . TQT . "global" . TQT . " glb, elm_" . $field . ", relations
-          WHERE
-            glb._platform = '$PLATFORMID' and
-            relations.parentid = '$pid' and
-            relations.relationtype is NULL and
-            glb.id = relations.targetid and
-            (glb._object='" . $this->_object . "') and
-            (glb.id = elm_" . $field . ".gid) and
-            (elm_" . $field . ".elm = '$type') and
-            (elm_" . $field . ".data = '$param')
-            $_more_sql
-            ORDER BY relations." . OQT . "_order" . OQT . " ASC;
-        ";
-        //die($sql);
-        $data = $DB->getAll($sql);
-        if ($load == false) {
-            $result = $data;
-        } else {
-            $end = count($data);
-            for($i = 0; $i < $end; $i++) {
-                $data[$i] = SQL_fixNames($data[$i]);
-                $result[$i] = $this->load($data[$i]);
-            }
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
         }
         return $result;
     }
@@ -1472,24 +1413,16 @@ class CORE extends PERMISSIONS
     function getByExactValue($type, $param, $load = true)
     {
         global $DB, $PLATFORMID;
-        
-        $_more_sql = $this->buildFilter(TQT . "global" . TQT);
-        
-        $sql = "SELECT " . TQT . "global" . TQT . ".* FROM " . TQT . "global" . TQT . ", " . TQT . "elm_text" . TQT . "
-          WHERE
-            (" . TQT . "global" . TQT . ".id = " . TQT . "elm_text" . TQT . ".gid)
-            AND (" . TQT . "elm_text" . TQT . ".elm = '$type' AND " . TQT . "elm_text" . TQT . ".data = '$param')
-            AND (" . TQT . "global" . TQT . "._platform='$PLATFORMID')
-            $_more_sql";
-        $data = $DB->getAll($sql);
-        if ($load == false) {
-            $result = $data;
-        } else {
-            $end = count($data);
-            for($i = 0; $i < $end; $i++) {
-                $data[$i] = SQL_fixNames($data[$i]);
-                $result[$i] = $this->load($data[$i]);
-            }
+        $filterParams = array();
+        $filter = $this->buildFilter("global", $filterParams);
+        $sql = "SELECT global.* FROM global, elm_text WHERE global.id = elm_text.gid AND elm_text.elm = ? AND elm_text.data = ? AND global._platform = ?" . $filter;
+        $rows = $DB->fetchAll($sql, array_merge(array($type, $param, $PLATFORMID), $filterParams));
+        if (!$load) {
+            return $rows;
+        }
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
         }
         return $result;
     }
@@ -1512,39 +1445,24 @@ class CORE extends PERMISSIONS
         $this->_object = $DTD->get_object_id($this->_objectname);
         $this->_load_dtd(true);
         $field_ = explode(":", $this->_dtd[$typeid]["data"][2]["data"]);
-        
-        $_more_sql = $this->buildFilter(TQT . "global" . TQT);
-        
-        if ($field_[0] == "number") {
-            $field = "number";
-        } else if ($this->_dtd[$typeid]["field"] == "date") {
-            $field = "number";
-        } else {
-            $field = "text";
-        }
-        $sql = "
-          SELECT " . TQT . "global" . TQT . ".* FROM " . TQT . "global" . TQT . ", elm_" . $field . "
-          WHERE
-            (global.id = elm_" . $field . ".gid)
-            and (" . TQT . "global" . TQT . "._object='" . $this->_object . "')
-            and (" . TQT . "elm_" . $field . "" . TQT . ".elm = '$type')
-            and (" . TQT . "elm_" . $field . "" . TQT . ".data = '$param') ";
-        
+        $field = ($field_[0] == "number" || $this->_dtd[$typeid]["field"] == "date") ? "number" : "text";
+        $table = $DB->quoteIdentifier("elm_" . $field, "table");
+        $filterParams = array();
+        $filter = "";
+        $params = array($this->_object, $type, $param);
         if ($PLATFORMID) {
-            $sql .= "\n and (" . TQT . "global" . TQT . "._platform='$PLATFORMID')";
-            $sql .= $_more_sql;
+            $filter = " AND global._platform = ?" . $this->buildFilter("global", $filterParams);
+            $params[] = $PLATFORMID;
+            $params = array_merge($params, $filterParams);
         }
-        $sql .= " ORDER BY " . TQT . "global" . TQT . "." . TQT . "id" . TQT . " DESC;";
-        
-        $data = $DB->getAll($sql);
-        if ($load == false) {
-            $result = $data;
-        } else {
-            $end = count($data);
-            for($i = 0; $i < $end; $i++) {
-                $data[$i] = SQL_fixNames($data[$i]);
-                $result[$i] = $this->load($data[$i]);
-            }
+        $sql = "SELECT global.* FROM global, $table WHERE global.id = $table.gid AND global._object = ? AND $table.elm = ? AND $table.data = ?$filter ORDER BY global.id DESC";
+        $rows = $DB->fetchAll($sql, $params);
+        if (!$load) {
+            return $rows;
+        }
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = $this->load($row);
         }
         return $result;
     }
@@ -1559,22 +1477,15 @@ class CORE extends PERMISSIONS
     function SelectByGlobalParam($param, $value)
     {
         global $DB, $PLATFORMID;
-        
-        if (! $param || ! $value)
+        if (!$param || !$value) {
             return null;
-        
-        $_more_sql = $this->buildFilter(TQT . "global" . TQT);
-        
-        $sql = "
-          SELECT * FROM global
-          WHERE
-            $param = '$value' and
-            _platform = '$PLATFORMID' $_more_sql";
-        
-        $data = $DB->getAll($sql);
-        // return $data;
-        $result = $this->_load_from_array($data);
-        return $result;
+        }
+        $column = $DB->quoteIdentifier($param, "column");
+        $filterParams = array();
+        $filter = $this->buildFilter("global", $filterParams);
+        $sql = "SELECT * FROM global WHERE $column = ? AND _platform = ?" . $filter;
+        $rows = $DB->fetchAll($sql, array_merge(array($value, $PLATFORMID), $filterParams));
+        return $this->_load_from_array($rows);
     }
 
     /**
@@ -1588,28 +1499,25 @@ class CORE extends PERMISSIONS
     function getTree($startid = null, $relationtype = 0)
     {
         global $CURRENTPLATFORM, $DB;
-        if (! $startid)
+        if (!$startid) {
             $startid = $this->id;
-        
-        if ($relationtype) {
-            $relsql = " rel.relationtype='" . $relationtype . "' ";
-        } else {
-            $relsql = " rel.relationtype is NULL ";
         }
-        $result = array(
-            
-        );
+        $result = array();
         $nowid = $startid;
-        $stillgoing = true;
-        while ($nowid != $CURRENTPLATFORM->id && $stillgoing) {
+        while ($nowid != $CURRENTPLATFORM->id && $nowid) {
             $result[] = $nowid;
-            $sql = "select rel.parentid from relations rel where rel.targetid=" . $nowid . " AND " . $relsql . " ORDER BY rel." . OQT . "_order" . OQT . " ASC";
-            $nowid = $DB->GetOne($sql);
-            if (! $nowid) {
-                $stillgoing = false;
+            $params = array($nowid);
+            $where = "";
+            if ($relationtype) {
+                $where = " AND rel.relationtype = ?";
+                $params[] = $relationtype;
+            } else {
+                $where = " AND rel.relationtype IS NULL";
             }
+            $order = $DB->quoteIdentifier("_order", "column");
+            $sql = "SELECT rel.parentid FROM relations rel WHERE rel.targetid = ?$where ORDER BY rel.$order ASC";
+            $nowid = $DB->fetchValue($sql, $params);
         }
-        
         return $result;
     }
 
@@ -1623,22 +1531,16 @@ class CORE extends PERMISSIONS
     function getFullTree($startid = null)
     {
         global $CURRENTPLATFORM, $DB;
-        if (! $startid)
+        if (!$startid) {
             $startid = $this->id;
-        $result = array(
-            
-        );
+        }
+        $result = array();
         $nowid = $startid;
-        $stillgoing = true;
-        while ($nowid != $CURRENTPLATFORM->id && $stillgoing) {
+        while ($nowid != $CURRENTPLATFORM->id && $nowid) {
             $result[] = $nowid;
-            
-            $sql = "select rel.parentid from relations rel where rel.targetid=" . $nowid . " ORDER BY rel." . OQT . "_order" . OQT . " ASC";
-            
-            $nowid = $DB->GetOne($sql);
-            
-            if (! $nowid)
-                $stillgoing = false;
+            $order = $DB->quoteIdentifier("_order", "column");
+            $sql = "SELECT rel.parentid FROM relations rel WHERE rel.targetid = ? ORDER BY rel.$order ASC";
+            $nowid = $DB->fetchValue($sql, array($nowid));
         }
         return $result;
     }
@@ -1754,24 +1656,33 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function buildFilter($tbl)
+    function buildFilter($tbl, &$params = array())
     {
-        global $CURRENTUSER;
-        if (is_object($CURRENTUSER) && $CURRENTUSER->isSuperUser())
-            return null;
-        if ($CURRENTUSER->_loggedin === true)
-            $_more .= "$tbl._owner = '" . $CURRENTUSER->id . "'";
-        $_more .= ((trim($_more) != '')?" or ":"") . "($tbl._w > '0')";
-        
-        $end = count($CURRENTUSER->_permissions["_groups"]);
-        for($i = 0; $i < $end; $i++) {
-            $_more .= ((trim($_more) != '')?" or ":"") . "(($tbl._group = '" . $CURRENTUSER->_permissions["_groups"][$i] . "') and ($tbl._g > '0'))";
+        global $CURRENTUSER, $DB;
+        if (!in_array($tbl, array("global", "glb"), true)) {
+            throw new DatabaseException("The permissions filter table alias is not allowed.");
         }
-        
-        if (trim($_more) != '')
-            $_more = " and (" . $_more . ")";
-        
-        return $_more;
+        if (is_object($CURRENTUSER) && $CURRENTUSER->isSuperUser()) {
+            return "";
+        }
+        $owner = $DB->quoteIdentifier("_owner", "column");
+        $write = $DB->quoteIdentifier("_w", "column");
+        $group = $DB->quoteIdentifier("_group", "column");
+        $read = $DB->quoteIdentifier("_g", "column");
+        $conditions = array();
+        if ($CURRENTUSER->_loggedin === true) {
+            $conditions[] = "$tbl.$owner = ?";
+            $params[] = $CURRENTUSER->id;
+        }
+        $conditions[] = "$tbl.$write > 0";
+        $groups = isset($CURRENTUSER->_permissions["_groups"]) && is_array($CURRENTUSER->_permissions["_groups"])
+            ? $CURRENTUSER->_permissions["_groups"]
+            : array();
+        foreach ($groups as $groupId) {
+            $conditions[] = "($tbl.$group = ? AND $tbl.$read > 0)";
+            $params[] = $groupId;
+        }
+        return " AND (" . implode(" OR ", $conditions) . ")";
     }
 
     function html_entity_decode($val)

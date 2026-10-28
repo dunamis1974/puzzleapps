@@ -9,6 +9,12 @@
  */
 class ODDs
 {
+    public $DTD;
+    public $DTDN;
+    public $XML;
+    public $dtdList;
+    public $dtdlist;
+
 
     /**
      * ODDs::ODDs()

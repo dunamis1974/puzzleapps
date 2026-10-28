@@ -74,7 +74,7 @@ function __get_img ($params) {
             } else {
                 $name = $_FILES['template']['name'];
             } 
-            if (($name) && (!ereg('[A-Za-z0-9-]', $name))) {
+            if (($name) && (!preg_match('/[A-Za-z0-9-]/', $name))) {
                 $msg = "##Please enter corect Image name!##";
                 $error = true;
             } 
@@ -129,7 +129,7 @@ function __get_img ($params) {
         if ($dir = @opendir($img_dir)) {
             echo "<option value=\"\"" . (($value == "")?" selected":"") . "></option>";
             while (($file = readdir($dir)) !== false) {
-                if ((substr($file, -3) == "css") && (eregi("template_", $file))) {
+                if ((substr($file, -3) == "css") && (stripos($file, "template_") !== false)) {
                     echo "<option value=\"$file\"" . (($value == "$file")?" selected":"") . ">$file</option>";
                 } 
             } 

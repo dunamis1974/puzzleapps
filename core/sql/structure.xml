@@ -116,7 +116,7 @@
     <field name="userid" type="I"><NOTNULL/></field>
     <field name="_group" type="I"><NOTNULL/></field>
     <index name="UIGIndex">
-      <col>user</col>
+      <col>userid</col>
       <col>_group</col>
     </index>
   </table>

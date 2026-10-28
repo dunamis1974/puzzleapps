@@ -31,6 +31,12 @@ class FormBuilder
     public $ADVANCEDADD = false;
     
     public $MULTILANG = true;
+    public $_arr;
+    public $arr_;
+    public $htmlarea;
+    public $mandatory;
+    public $style;
+    public $values;
 
     /**
      * FormBuilder::start()
@@ -170,7 +176,7 @@ class FormBuilder
         $this->Required($i);
         $field = $this->parseField($this->DTD[$i]["data"]);
         
-        if (ereg("cmsimage", $field["validate"]))
+        if (strpos($field["validate"], "cmsimage") !== false)
             $this->values[$this->DTD[$i]["element_name"]] = substr($this->values[$this->DTD[$i]["element_name"]], 0, strpos($this->values[$this->DTD[$i]["element_name"]], "."));
         
         $this->_FORM .= "<div class=\"formrow\">\n";
@@ -654,7 +660,7 @@ class FormBuilder
         $this->_FORM .= "<div class=\"formrow " . $this->rowStyle() . "\" id=\"f_{$this->DTD[$i]["element_name"]}\">\n";
         
         if ($field["quiz"]) {
-            $titles = split(":", $field["formfield"]);
+            $titles = explode(":", $field["formfield"]);
             if ($titles[2]) {
                 $this->_FORM .= "<div class=\"col1form {$this->mandatory}\">{$description}##" . $titles[0] . "##</div>\n";
             } else {
