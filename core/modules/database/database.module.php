@@ -1,37 +1,10 @@
 <?php
-global
-    $DB_DBAL,
-    $DB_DRIVER,
-    $DB_HOST,
-    $DB_USERNAME,
-    $DB_PASSWORD,
-    $DB_DATABASE,
-    $PDO_DATABASE,
-    $RUNNINGNDIR;
+global $PDO_DATABASE;
 
-if (is_array($PDO_DATABASE)) {
+if (!is_array($PDO_DATABASE)) {
     include_once($this->MODULEDIR . "DatabaseException.php");
-    $this->LoadDriver("pdodb");
-    $GLOBALS["DB"] = new DATABASE($PDO_DATABASE);
-    return;
+    throw new DatabaseException('Database is not configured. Set $PDO_DATABASE in core/config/conf.d/database.conf.php or run the installer.');
 }
 
-if (!$DB_DRIVER) $DB_DRIVER = "mysql";
-
-if (!$DB_HOST) return;
-
-$this->LoadDriver($DB_DBAL);
-$this->LoadDriver($DB_DRIVER);
-
-if ($DB_DRIVER == "sqlite") {
-    $path = urlencode($RUNNINGNDIR . $DB_HOST); //urlencode
-    $dsn = "$DB_DRIVER://$path";
-} else if ($DB_DBAL == "pdodb") {
-	$dsn = "{$DB_DRIVER}:host={$DB_HOST};port=5432;dbname={$DB_DATABASE};user={$DB_USERNAME};password={$DB_PASSWORD}";
-} else {
-    $dsn = "$DB_DRIVER://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_DATABASE";
-}
-// $GLOBALS["DB"] = DB::connect($dsn);
-$GLOBALS["DB"] = new DATABASE($dsn);
-
-$GLOBALS["DB"]->setFetchMode(DB_FETCHMODE_OBJECT);
+$this->LoadDriver("pdodb");
+$GLOBALS["DB"] = new DATABASE($PDO_DATABASE);
