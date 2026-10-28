@@ -7,19 +7,35 @@
 </td></tr>
 <tr><td class="item" colspan="2">
 <?php
-if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
+require_once $COREROOT . "modules/database/DatabaseException.php";
+require_once $COREROOT . "modules/database/DatabaseEnv.php";
+$environmentConfig = null;
+$environmentFailure = null;
+try {
+    $environmentConfig = databaseConfigFromEnvironment();
+} catch (DatabaseException $exception) {
+    $environmentFailure = $exception;
+}
+$isPost = isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] === "POST";
+if ($isPost || $environmentConfig !== null || $environmentFailure !== null) {
     try {
-        $databaseConfig = installerValidateDatabaseSettings($_POST);
-        require_once $COREROOT . "modules/database/DatabaseException.php";
+        if ($environmentFailure !== null) {
+            throw $environmentFailure;
+        }
+        $databaseConfig = $environmentConfig !== null ? $environmentConfig : installerValidateDatabaseSettings($_POST);
         require_once $COREROOT . "modules/database/drivers/pdodb.driver.php";
         require_once __DIR__ . "/../lib/schema.php";
 
         $database = new DATABASE($databaseConfig);
         installerCreateSchema($database, $databaseConfig["driver"], $COREROOT . "sql/structure.xml");
-        installerWriteDatabaseConfig($databaseConfig);
+        if ($environmentConfig === null) {
+            installerWriteDatabaseConfig($databaseConfig);
+        }
         $PDO_DATABASE = $databaseConfig;
         $GLOBALS["DB"] = $database;
-        echo '<b class="ok">' . $okImg . '</b> Schema created and PDO configuration saved.';
+        echo '<b class="ok">' . $okImg . '</b> ' . ($environmentConfig !== null
+            ? 'Schema created using the environment configuration.'
+            : 'Schema created and PDO configuration saved.');
     } catch (InvalidArgumentException $exception) {
         $error = true;
         echo '<span class="error">' . htmlspecialchars($exception->getMessage(), ENT_QUOTES, "UTF-8") . '</span>';
