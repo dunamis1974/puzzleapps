@@ -1,4 +1,12 @@
 <?php
+require_once $COREROOT . "modules/database/DatabaseEnv.php";
+$environmentConfig = null;
+$environmentError = null;
+try {
+    $environmentConfig = databaseConfigFromEnvironment();
+} catch (DatabaseException $exception) {
+    $environmentError = $exception->getMessage();
+}
 $availableDrivers = extension_loaded("PDO") ? PDO::getAvailableDrivers() : array();
 $supportedDrivers = array_values(array_intersect(array("mysql", "sqlite", "pgsql"), $availableDrivers));
 ?>
@@ -6,6 +14,25 @@ $supportedDrivers = array_values(array_intersect(array("mysql", "sqlite", "pgsql
 <tr>
     <td class="title" colspan="2">Write database configuration</td>
 </tr>
+<?php if ($environmentError !== null): $error = true; ?>
+<tr>
+    <td class="item" colspan="2"><span class="error"><?= htmlspecialchars($environmentError, ENT_QUOTES, "UTF-8"); ?></span></td>
+</tr>
+<?php elseif ($environmentConfig !== null): ?>
+<tr>
+    <td class="item" colspan="2">
+        The database is configured through DB_* environment variables. Continue to the next step to create the schema.<br />
+        Driver: <?= htmlspecialchars($environmentConfig["driver"], ENT_QUOTES, "UTF-8"); ?><br />
+        <?php if ($environmentConfig["driver"] === "sqlite"): ?>
+        Database: <?= htmlspecialchars($environmentConfig["sqlite_path"], ENT_QUOTES, "UTF-8"); ?>
+        <?php else: ?>
+        Host: <?= htmlspecialchars($environmentConfig["host"], ENT_QUOTES, "UTF-8"); ?><br />
+        Port: <?= htmlspecialchars((string)$environmentConfig["port"], ENT_QUOTES, "UTF-8"); ?><br />
+        Database: <?= htmlspecialchars($environmentConfig["database"], ENT_QUOTES, "UTF-8"); ?>
+        <?php endif; ?>
+    </td>
+</tr>
+<?php else: ?>
 <tr>
     <td class="item" colspan="2">
         Select a PDO database driver available in this PHP installation and enter its connection settings.<br />
@@ -31,4 +58,5 @@ $supportedDrivers = array_values(array_intersect(array("mysql", "sqlite", "pgsql
 <tr><td align="right" class="item">Database password</td><td><input type="password" name="password" /></td></tr>
 <tr><td align="right" class="item">SQLite path</td><td><input type="text" name="sqlite_path" /></td></tr>
 <tr><td align="right" class="item">Character set</td><td><input type="text" name="charset" value="" placeholder="Driver default" /></td></tr>
+<?php endif; ?>
 </table>
