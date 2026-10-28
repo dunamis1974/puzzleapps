@@ -123,38 +123,6 @@ class DATABASE {
     }
 
     /**
-     * DATABASE::getAll()
-     * 
-     * @param  $sql 
-     * @return array $data
-     * @access publis
-     */
-    function getAll($sql, array $params = array()) {
-        return $this->fetchAll($sql, $params);
-    } 
-
-    /**
-     * Temporary alias for fetchRow().
-     */
-    function getRow($sql, array $params = array()) {
-        return $this->fetchRow($sql, $params);
-    } 
-
-    /**
-     * Temporary alias for execute().
-     */
-    function query($sql, array $params = array()) {
-        return $this->execute($sql, $params);
-    } 
-
-    /**
-     * Temporary alias for fetchValue().
-     */
-    function GetOne($sql, array $params = array()) {
-        return $this->fetchValue($sql, $params);
-    } 
-
-    /**
      * Prepares and runs a statement with bound values.
      *
      * @param string $sql
