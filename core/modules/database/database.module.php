@@ -35,15 +35,3 @@ if ($DB_DRIVER == "sqlite") {
 $GLOBALS["DB"] = new DATABASE($dsn);
 
 $GLOBALS["DB"]->setFetchMode(DB_FETCHMODE_OBJECT);
-
-/**
- * getLastID()
- * 
- * @param  $table 
- * @param string $id 
- * @return number $lastID
- */
-function getLastID($table, $id = "id") {
-    return $GLOBALS["DB"]->GetOne("SELECT MAX($id) FROM $table");
-} 
-
