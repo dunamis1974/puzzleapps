@@ -28,25 +28,23 @@ class PERMISSIONS {
 		 * Load default permissions
 		 */
 		
-		$sql = "SELECT g.* FROM " . TQT . "groups" . TQT . " g, " . TQT . "global" . TQT . " glb WHERE glb.id = '$user' and g.id = glb._group;";
-		$_permissions = $DB->getRow ( $sql );
+		$sql = "SELECT g.* FROM groups g, global glb WHERE glb.id = ? and g.id = glb._group;";
+		$_permissions = $DB->fetchRow ( $sql, array ( $user ) );
 		
 		if ($_permissions) {
-			$_permissions = SQL_fixNames ( $_permissions );
-			$permissions = unserialize ( $_permissions->permissions );
-			$_groups [] = $_permissions->id;
-			$_groupnames [] = $_permissions->groupname;
+			$permissions = unserialize ( $_permissions ["permissions"] );
+			$_groups [] = $_permissions ["id"];
+			$_groupnames [] = $_permissions ["groupname"];
 		}
 		
-		$sql = "SELECT g.* FROM " . TQT . "groups" . TQT . " g, " . TQT . "users_in_groups" . TQT . " u WHERE u." . TQT . "userid" . TQT . " = '" . $user . "' and g." . TQT . "id" . TQT . " = u." . TQT . "_group" . TQT . "";
-		$data = $DB->getAll ( $sql );
+		$sql = "SELECT g.* FROM groups g, users_in_groups u WHERE u.userid = ? and g.id = u._group";
+		$data = $DB->fetchAll ( $sql, array ( $user ) );
 		$end = count ( $data );
 		for($i = 0; $i < $end; $i ++) {
-			$data [$i] = SQL_fixNames ( $data [$i] );
-			$_groups [] = $data [$i]->id;
-			$_groupnames [] = $data [$i]->groupname;
-			if (trim ( $data [$i]->permissions ) != "") {
-				$permissions_ = unserialize ( $data [$i]->permissions );
+			$_groups [] = $data [$i] ["id"];
+			$_groupnames [] = $data [$i] ["groupname"];
+			if (trim ( (string) $data [$i] ["permissions"] ) != "") {
+				$permissions_ = unserialize ( $data [$i] ["permissions"] );
 				$permissions = array_merge ( ( array ) $permissions, ( array ) $permissions_ );
 			}
 		}
@@ -67,8 +65,8 @@ class PERMISSIONS {
 	function changeGroup($id, $grp) {
 		global $DB;
 		if ($id && $grp) {
-			$sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_group" . TQT . " = '" . $grp . "' WHERE " . TQT . "id" . TQT . "='" . $id . "'";
-			$DB->query ( $sql );
+			$sql = "UPDATE global SET _group = ? WHERE id = ?";
+			$DB->execute ( $sql, array ( $grp, $id ) );
 		}
 	}
 	
@@ -84,8 +82,8 @@ class PERMISSIONS {
 	function changeOwner($id, $usr) {
 		global $DB;
 		if ($id && $usr) {
-			$sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_owner" . TQT . " = '" . $usr . "' WHERE " . TQT . "id" . TQT . "='" . $id . "'";
-			$DB->query ( $sql );
+			$sql = "UPDATE global SET _owner = ? WHERE id = ?";
+			$DB->execute ( $sql, array ( $usr, $id ) );
 		}
 	}
 	
@@ -101,8 +99,8 @@ class PERMISSIONS {
 	function changePermissions($id, $prm) {
 		global $DB;
 		if ($id) {
-			$sql = "UPDATE " . TQT . "global" . TQT . " SET " . TQT . "_o" . TQT . " = '" . $prm ["_o"] . "', " . TQT . "_g" . TQT . " = '" . $prm ["_g"] . "', " . TQT . "_w" . TQT . " = '" . $prm ["_w"] . "' WHERE " . TQT . "id" . TQT . "='" . $id . "'";
-			$DB->query ( $sql );
+			$sql = "UPDATE global SET _o = ?, _g = ?, _w = ? WHERE id = ?";
+			$DB->execute ( $sql, array ( $prm ["_o"], $prm ["_g"], $prm ["_w"], $id ) );
 		}
 	}
 	
@@ -114,8 +112,8 @@ class PERMISSIONS {
 	function GetGroups() {
 		global $DB, $CURRENTPLATFORM;
 		
-		$sql = "SELECT * FROM " . TQT . "groups" . TQT . " WHERE " . TQT . "platform" . TQT . " = '" . $CURRENTPLATFORM->id . "' ORDER BY " . TQT . "groupname" . TQT . "";
-		$data = $DB->getAll ( $sql );
+		$sql = "SELECT * FROM groups WHERE platform = ? ORDER BY groupname";
+		$data = $DB->fetchAll ( $sql, array ( $CURRENTPLATFORM->id ) );
 		
 		return $data;
 	}
@@ -132,8 +130,8 @@ class PERMISSIONS {
 		if (! $id)
 			$id = $this->_group;
 		
-		$sql = "SELECT * FROM " . TQT . "groups" . TQT . " WHERE " . TQT . "platform" . TQT . " = '" . $CURRENTPLATFORM->id . "' and " . TQT . "id" . TQT . " = '$id'";
-		$data = $DB->getAll ( $sql );
+		$sql = "SELECT * FROM groups WHERE platform = ? and id = ?";
+		$data = $DB->fetchAll ( $sql, array ( $CURRENTPLATFORM->id, $id ) );
 		
 		return $data;
 	}
@@ -147,12 +145,11 @@ class PERMISSIONS {
 	function GetUserGroups($user) {
 		global $DB;
 		
-		$sql = "SELECT g.* FROM " . TQT . "groups" . TQT . " g, " . TQT . "users_in_groups" . TQT . " u WHERE u." . TQT . "userid" . TQT . " = '" . $user . "' and g." . TQT . "id" . TQT . " = u." . TQT . "_group" . TQT . "";
-		$data = $DB->getAll ( $sql );
+		$sql = "SELECT g.* FROM groups g, users_in_groups u WHERE u.userid = ? and g.id = u._group";
+		$data = $DB->fetchAll ( $sql, array ( $user ) );
 		$end = count ( $data );
 		for($i = 0; $i < $end; $i ++) {
-			$data [$i] = SQL_fixNames ( $data [$i] );
-			$groups .= $data [$i]->groupname;
+			$groups .= $data [$i] ["groupname"];
 			if ($i < ($end - 1))
 				$groups .= ", ";
 		}
@@ -169,12 +166,8 @@ class PERMISSIONS {
 	function _GetUserGroups() {
 		global $DB;
 		
-		$sql = "SELECT g.* FROM " . TQT . "groups" . TQT . " g, " . TQT . "users_in_groups" . TQT . " u WHERE u." . TQT . "userid" . TQT . " = '" . $this->id . "' and g." . TQT . "id" . TQT . " = u." . TQT . "_group" . TQT . "";
-		$data = $DB->getAll ( $sql );
-		$end = count ( $data );
-		for($i = 0; $i < $end; $i ++) {
-			$data [$i] = SQL_fixNames ( $data [$i] );
-		}
+		$sql = "SELECT g.* FROM groups g, users_in_groups u WHERE u.userid = ? and g.id = u._group";
+		$data = $DB->fetchAll ( $sql, array ( $this->id ) );
 		return $data;
 	}
 	
@@ -207,7 +200,7 @@ class PERMISSIONS {
 			$data = PERMISSIONS::GetGroup ( $_GET ["select"] );
 			if (count ( $data ) > 0) {
 				PERMISSIONS::changeGroup ( $O->id, $_GET ["select"] );
-				$_BODY .= BuildErrorMsg ( "##Object assigned to group## '" . $data [0]->groupname . "'" );
+				$_BODY .= BuildErrorMsg ( "##Object assigned to group## '" . $data [0] ["groupname"] . "'" );
 			} else {
 				$_BODY .= BuildErrorMsg ( "##You can't assign object to this group!##" );
 			}
@@ -228,13 +221,13 @@ class PERMISSIONS {
 			$_BODY .= "<select name=\"_group\">\n";
 			if ($end > 0)
 				for($i = 0; $i < $end; $i ++) {
-					$_BODY .= "<option value=\"" . $data [$i]->id . "\"" . (($data [$i]->id == $O->_group) ? " selected=\"true\"" : "") . ">" . $data [$i]->groupname . "</option>\n";
+					$_BODY .= "<option value=\"" . $data [$i] ["id"] . "\"" . (($data [$i] ["id"] == $O->_group) ? " selected=\"true\"" : "") . ">" . $data [$i] ["groupname"] . "</option>\n";
 				}
 			$_BODY .= "\n</select>";
 		} else {
 			//$grp = $O->GetGroup();
 			$grp = $CURRENTUSER->_GetUserGroups ();
-			$_BODY .= ": <i>" . $grp [0]->groupname . "</i>\n<input type=\"hidden\" name=\"_group\" value=\"" . $grp [0]->id . "\"><br />";
+			$_BODY .= ": <i>" . $grp [0] ["groupname"] . "</i>\n<input type=\"hidden\" name=\"_group\" value=\"" . $grp [0] ["id"] . "\"><br />";
 		}
 		$_BODY .= "</span></div>";
 		return $_BODY;

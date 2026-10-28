@@ -106,24 +106,22 @@ class PERSON extends CORE {
         if ($GLOBALS["_CAPTCHA"]) {
             
         }
-        $sql = "SELECT g.*, u.* FROM " . TQT . "global" . TQT . " g, " . TQT . "users" . TQT . " u
+        $sql = "SELECT g.*, u.* FROM global g, users u
                   WHERE
-                    (u." . TQT . "username" . TQT . " = '$uname') and
-                    (u." . TQT . "password" . TQT . " = '" . $newPassword . "') and
-                    (g." . TQT . "id" . TQT . " = u." . TQT . "gid" . TQT . ") and
-                    ((g." . TQT . "_platform" . TQT . " = '" . $PLATFORMID . "') or
-                    (u." . TQT . "_group" . TQT . " = '-1'))";
+                    u.username = ? and
+                    u.password = ? and
+                    g.id = u.gid and
+                    (g._platform = ? or u._group = '-1')";
 	
-        $data_ = $DB->getRow($sql);
-        $data = SQL_fixNames($data_);
-        if ($data->id) {
+        $data = $DB->fetchRow($sql, array($uname, $newPassword, $PLATFORMID));
+        if ($data !== null && $data["id"]) {
             $p = new PERSON ( );
             $p->_objectname = "person";
             
-            $p->id = $data->id;
-            $p->username = $data->username;
-            $p->password = $data->password;
-            $p->group = $data->_group;
+            $p->id = $data["id"];
+            $p->username = $data["username"];
+            $p->password = $data["password"];
+            $p->group = $data["_group"];
             $p->_loggedin = true;
             if (strpos($_SERVER["REQUEST_URI"], 'login'))
                 $GLOBALS ["REDIRECT"] = true;
@@ -270,20 +268,22 @@ class PERSON extends CORE {
         if (! $val)
             $val = &$this;
 
-        $sql = "SELECT * FROM users WHERE gid='" . $val->id . "'";
-        $data = $DB->getRow ( $sql );
+        $sql = "SELECT * FROM users WHERE gid = ?";
+        $data = $DB->fetchRow ( $sql, array ( $val->id ) );
 
         $fromXML = $val->translate_object_data ();
-        if ($data->gid) {
+        if ($data && $data["gid"]) {
             // Do update
-            $sql = "UPDATE users SET " . TQT . "username" . TQT . " = '" . escape_sql ( $fromXML ["username"] ) . "', " . TQT . "password" . TQT . " = '" . escape_sql ( $fromXML ["password"] ) . "', " . TQT . "_group" . TQT . " = '" . (($data->_group) ? $data->_group : 0) . "' WHERE " . TQT . "gid" . TQT . " = '" . $val->id . "'";
+            $sql = "UPDATE users SET username = ?, password = ?, _group = ? WHERE gid = ?";
+            $group = ($data["_group"]) ? $data["_group"] : 0;
+            $DB->execute ( $sql, array ( $fromXML ["username"], $fromXML ["password"], $group, $val->id ) );
         } else {
             // Do insert
             //???????
             //$fromXML["_username"] . "', '" . $fromXML["_password"]
-            $sql = "INSERT INTO users (" . TQT . "gid" . TQT . ", " . TQT . "username" . TQT . ", " . TQT . "password" . TQT . ") VALUES ('" . $val->id . "', '" . escape_sql ( $fromXML ["username"] ) . "', '" . escape_sql ( $fromXML ["password"] ) . "')";
+            $sql = "INSERT INTO users (gid, username, password) VALUES (?, ?, ?)";
+            $DB->execute ( $sql, array ( $val->id, $fromXML ["username"], $fromXML ["password"] ) );
         }
-        $DB->query ( $sql );
 
         return;
 	}
@@ -301,8 +301,8 @@ class PERSON extends CORE {
         
         if (! $val)
             $val = &$this;
-        $sql = "UPDATE " . TQT . "users" . TQT . " SET " . TQT . "_group" . TQT . " = '-1' WHERE " . TQT . "gid" . TQT . " = '" . $val->id . "'";
-        $DB->query ( $sql );
+        $sql = "UPDATE users SET _group = '-1' WHERE gid = ?";
+        $DB->execute ( $sql, array ( $val->id ) );
         
         return;
 	}
