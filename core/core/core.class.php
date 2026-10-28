@@ -101,7 +101,7 @@ class CORE extends PERMISSIONS
         $key = array_keys($val);
         $end = count($key);
         for($i = 0; $i < $end; $i++) {
-            if ($key[$i]{0} == "_") {
+            if ($key[$i][0] == "_") {
                 $this->$key[$i] = $val[$key[$i]];
             }
         }
@@ -1184,7 +1184,7 @@ class CORE extends PERMISSIONS
         for($i = 0; $i < $_end; $i++) {
             $key_ = trim($_key[$i]);
             $data_ = trim($data[$key_]);
-            if ($data_ && ($key_{0} != "_") && ($key_ != "id")) {
+            if ($data_ && ($key_[0] != "_") && ($key_ != "id")) {
                 $XML .= "<" . $key_ . "><![CDATA[" . $data_ . $xend_ . "]]></" . $key_ . ">\n";
             }
             unset($key_, $data_);

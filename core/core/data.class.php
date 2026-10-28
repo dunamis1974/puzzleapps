@@ -1013,7 +1013,7 @@ class DATA extends CORE
             $id = $cat; else if ($_GET["id"])
             $id = $_GET["id"];
         
-        if ($id{0} == "@") {
+        if ($id[0] == "@") {
             $titleid = "<xsl:value-of select=\"" . $id . "\" />";
             $id = "{" . $id . "}";
         } else {
