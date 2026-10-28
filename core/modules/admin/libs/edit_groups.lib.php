@@ -15,16 +15,16 @@ global
 
 if ($_GET["add"] || $_GET["edit"]) {
     if ($_POST && (trim($_POST["groupname"]) != "" && !$_POST["groupid"])) {
-        $permissions = serialize($_POST["permissions"]);
-        $sql = "INSERT INTO groups (".TQT."platform".TQT.", ".TQT."groupname".TQT.", ".TQT."note".TQT.", ".TQT."permissions".TQT.") VALUES ('" . $CURRENTPLATFORM->id . "', '" . $_POST["groupname"] . "', '" . $_POST["note"] . "', '" . $permissions . "')";
-        $DB->query($sql);
+        $permissions = serialize(isset($_POST["permissions"]) ? $_POST["permissions"] : null);
+        $sql = "INSERT INTO groups (platform, groupname, note, permissions) VALUES (?, ?, ?, ?)";
+        $DB->execute($sql, array($CURRENTPLATFORM->id, $_POST["groupname"], $_POST["note"] ?? "", $permissions));
         echo "<script type=\"text/javascript\"> document.location.replace(\"" . BuildLinkGet() . "\"); </script>\n";
         die();
     } 
     if ($_POST && (trim($_POST["groupname"]) != "" && $_POST["groupid"])) {
-        $permissions = serialize($_POST["permissions"]);
-        $sql = "UPDATE ".TQT."groups".TQT." SET ".TQT."groupname".TQT." = '" . $_POST["groupname"] . "', ".TQT."note".TQT." = '" . $_POST["note"] . "', ".TQT."permissions".TQT." = '" . $permissions . "' WHERE ".TQT."platform".TQT." = '" . $CURRENTPLATFORM->id . "' and ".TQT."id".TQT." = '" . $_POST["groupid"] . "'";
-        $DB->query($sql);
+        $permissions = serialize(isset($_POST["permissions"]) ? $_POST["permissions"] : null);
+        $sql = "UPDATE groups SET groupname = ?, note = ?, permissions = ? WHERE platform = ? and id = ?";
+        $DB->execute($sql, array($_POST["groupname"], $_POST["note"] ?? "", $permissions, $CURRENTPLATFORM->id, $_POST["groupid"]));
         echo "<script type=\"text/javascript\"> document.location.replace(\"" . BuildLinkGet() . "\"); </script>\n";
         die();
     } 
@@ -136,8 +136,8 @@ if ($_GET["add"] || $_GET["edit"]) {
     $_BODY .= "</table></form>";
 } else if ($_GET["edit"]) {
 } else if ($_GET["delete"]) {
-    $sql = "DELETE FROM ".TQT."groups".TQT." WHERE ".TQT."platform".TQT." = '" . $CURRENTPLATFORM->id . "' AND ".TQT."id".TQT."='" . $_GET["delete"] . "'";
-    $DB->query($sql);
+    $sql = "DELETE FROM groups WHERE platform = ? AND id = ?";
+    $DB->execute($sql, array($CURRENTPLATFORM->id, $_GET["delete"]));
     echo "<script type=\"text/javascript\"> document.location.replace(\"" . $doFORM->cancel_uri($_GET, 1) . "\"); </script>\n";
     die();
 } else {
@@ -150,10 +150,10 @@ if ($_GET["add"] || $_GET["edit"]) {
     if ($end > 0) for ($i = 0; $i < $end; $i++) {
         $_BODY .= "
             <tr onMouseOver=\"this.style.backgroundColor='#FFDEAD'\" onMouseOut=\"this.style.backgroundColor=''\">
-                <td>[ " . $data[$i]->id . " ]</td>
-                <td>" . $data[$i]->groupname . "</td>
-                <td>" . nl2br($data[$i]->note) . "</td>
-                <td align=\"center\"><a href=\"" . BuildLinkGet() . "&edit=" . $data[$i]->id . "\"><img align=\"middle\" src=\"" . $SYSTEMIMAGES . "16x16/edit.png\" border=0 width=\"16\" height=\"16\" title=\"##edit##\" /></a> <a href=\"" . BuildLinkGet() . "&delete=" . $data[$i]->id . "\" onclick=\"return confirm('##Do you want to delete this group?##'); \"><img align=\"middle\" src=\"" . $SYSTEMIMAGES . "16x16/delete.png\" border=0 width=\"16\" height=\"16\" title=\"##delete##\" /></a></td>
+                <td>[ " . $data[$i]["id"] . " ]</td>
+                <td>" . $data[$i]["groupname"] . "</td>
+                <td>" . nl2br($data[$i]["note"]) . "</td>
+                <td align=\"center\"><a href=\"" . BuildLinkGet() . "&edit=" . $data[$i]["id"] . "\"><img align=\"middle\" src=\"" . $SYSTEMIMAGES . "16x16/edit.png\" border=0 width=\"16\" height=\"16\" title=\"##edit##\" /></a> <a href=\"" . BuildLinkGet() . "&delete=" . $data[$i]["id"] . "\" onclick=\"return confirm('##Do you want to delete this group?##'); \"><img align=\"middle\" src=\"" . $SYSTEMIMAGES . "16x16/delete.png\" border=0 width=\"16\" height=\"16\" title=\"##delete##\" /></a></td>
             </tr>";
     }
     $_BODY .= "\n</table>";

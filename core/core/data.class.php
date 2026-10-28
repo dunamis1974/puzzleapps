@@ -435,27 +435,26 @@ class DATA extends CORE
         FROM
             global g, data d, relations r
         WHERE
-            r.parentid = '$id' AND
+            r.parentid = ? AND
             g.id = r.targetid AND
             d.gid = g.id AND
-            d.langid = '$CURRENTLANGUAGE'
-        ORDER BY r.`order`
-        ";
-        $data = $DB->getAll($sql);
+            d.langid = ?
+        ORDER BY r." . $DB->quoteIdentifier("_order", "column");
+        $data = $DB->fetchAll($sql, array($id, $CURRENTLANGUAGE));
         $end = count($data);
         for($i = 0; $i < $end; $i++) {
             if ($usedef && $i == 0)
-                $selected = $data[$i]->id;
-            if ((in_array($data[$i]->id, $_TREE)) || ($data[$i]->id == $selected))
+                $selected = $data[$i]["id"];
+            if ((in_array($data[$i]["id"], $_TREE)) || ($data[$i]["id"] == $selected))
                 $add = ' tree="true"'; else
                 $add = null;
             
-            $_tag = $DTD->get_object_name($data[$i]->_object);
-            $XML .= "<$_tag date='" . $data[$i]->_date . "' parentid='" . $id . "' zone='" . $data[$i]->_zone . "' id='" . $data[$i]->id . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>\n";
-            $XML .= $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8") . "\n";
+            $_tag = $DTD->get_object_name($data[$i]["_object"]);
+            $XML .= "<$_tag date='" . $data[$i]["_date"] . "' parentid='" . $id . "' zone='" . $data[$i]["_zone"] . "' id='" . $data[$i]["id"] . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>\n";
+            $XML .= $this->html_entity_decode($data[$i]["data"], ENT_QUOTES, "UTF-8") . "\n";
             $XML .= "</$_tag>\n";
-            if (($data[$i]->id == $selected) && (count($_OBJECTSCOTAIN[$_tag]) > 0)) {
-                $XML .= $this->GetData($data[$i]->id);
+            if (($data[$i]["id"] == $selected) && (count($_OBJECTSCOTAIN[$_tag]) > 0)) {
+                $XML .= $this->GetData($data[$i]["id"]);
             }
         }
         return $XML;
@@ -497,27 +496,26 @@ class DATA extends CORE
         FROM
             global g, data d, relations r
         WHERE
-            r.parentid = '$id' AND
+            r.parentid = ? AND
             g.id = r.targetid AND
             d.gid = g.id AND
-            d.langid = '$CURRENTLANGUAGE'
-        ORDER BY r.`order`
-        ";
-        $data = $DB->getAll($sql);
+            d.langid = ?
+        ORDER BY r." . $DB->quoteIdentifier("_order", "column");
+        $data = $DB->fetchAll($sql, array($id, $CURRENTLANGUAGE));
         $end = count($data);
         for($i = 0; $i < $end; $i++) {
             if ($usedef && $i == 0)
-                $selected = $data[$i]->id;
-            if ((in_array($data[$i]->id, $_TREE)) || ($data[$i]->id == $selected))
+                $selected = $data[$i]["id"];
+            if ((in_array($data[$i]["id"], $_TREE)) || ($data[$i]["id"] == $selected))
                 $add = ' tree="true"'; else
                 $add = null;
             
-            $_tag = $DTD->get_object_name($data[$i]->_object);
-            $XML .= "<$_tag date='" . $data[$i]->_date . "' parentid='" . $id . "' zone='" . $data[$i]->_zone . "' id='" . $data[$i]->id . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>";
-            $XML .= $this->html_entity_decode($data[$i]->data, ENT_QUOTES, "UTF-8");
+            $_tag = $DTD->get_object_name($data[$i]["_object"]);
+            $XML .= "<$_tag date='" . $data[$i]["_date"] . "' parentid='" . $id . "' zone='" . $data[$i]["_zone"] . "' id='" . $data[$i]["id"] . "' _o='" . $O->_o . "' _g='" . $O->_g . "' _w='" . $O->_w . "'$add>";
+            $XML .= $this->html_entity_decode($data[$i]["data"], ENT_QUOTES, "UTF-8");
             $XML .= "</$_tag>\n";
             if ((count($_OBJECTSCOTAIN[$_tag]) > 0)) {
-                $XML .= $this->GetData($data[$i]->id);
+                $XML .= $this->GetData($data[$i]["id"]);
             }
         }
         return $XML;

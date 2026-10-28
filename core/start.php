@@ -20,7 +20,8 @@ if (! $__ADMIN && empty($_GET["admin"])) {
     // Get end time
     $time_end = getmicrotime();
     
-    if ($_GET["debug"] == "time") {
+    $isDebugAdmin = isset($CURRENTUSER) && is_object($CURRENTUSER) && $CURRENTUSER->isSuperUser();
+    if ($isDebugAdmin && $_GET["debug"] == "time") {
         $body_time = round($time_end - $time_body_start, 4);
         
         $total_time = round($time_end - $time_start, 4);
@@ -42,7 +43,7 @@ if (! $__ADMIN && empty($_GET["admin"])) {
         echo "Data transformed in: $transform_time s.</center>";
         echo "</div><br />";
     }
-    if ($_GET["sqldebug"] == "query") {
+    if ($isDebugAdmin && $_GET["sqldebug"] == "query") {
         echo "<div style=\"background-color:#E5E5E5; padding:5; font-size: 10px; font-family:Verdana, Arial, Helvetica, sans-serif;\">";
         echo "<br />This is the list of all sql queries executed to build current page!<br />";
         echo "____________________________________________________________________<br />";
@@ -53,7 +54,7 @@ if (! $__ADMIN && empty($_GET["admin"])) {
         echo "Total wasted time (between queries): " . $DB->waste . " s.";
         echo "</div><br />";
     }
-    if ($_DEBUG) {
+    if ($isDebugAdmin && $_DEBUG) {
         echo "<div style=\"background-color:#E5E5E5; padding:5; font-size: 10px; font-family:Verdana, Arial, Helvetica, sans-serif;\">";
         echo "<br />Requested debug:<br />";
         echo "____________________________________________________________________<br />";
