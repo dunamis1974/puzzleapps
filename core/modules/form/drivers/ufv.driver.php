@@ -275,8 +275,8 @@ class Validator
             $key_v = array_keys($this->validated);
             $val_v = array_values($this->validated);
             for($i = 0; $i < $num; $i++) {
-                global $$key_v[$i];
-                $$key_v[$i] = $val_v[$i];
+                global ${$key_v[$i]};
+                ${$key_v[$i]} = $val_v[$i];
             }
         }
     }
@@ -298,8 +298,8 @@ class Validator
         if ($num) {
             for($i = 0; $i < $num; $i++) {
                 $data_r = explode("=", $reff_data[$i]);
-                global $$data_r[0];
-                $$data_r[0] = $data_r[1];
+                global ${$data_r[0]};
+                ${$data_r[0]} = $data_r[1];
             }
         }
     }
