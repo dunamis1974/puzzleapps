@@ -109,57 +109,141 @@ class DATABASE {
      * @return array $data
      * @access publis
      */
-    function getAll($sql) {
-        $this->start_time = getmicrotime();
-        $query = $this->conn->query($sql);
-        $data = $query->fetchAll($this->fetchMode);
-        $this->_debug_sql($sql, "getAll");
-        return $data;
+    function getAll($sql, array $params = array()) {
+        return $this->fetchAll($sql, $params);
     } 
 
     /**
-     * DATABASE::getRow()
-     * 
-     * @param  $sql 
-     * @return array $data
-     * @access publis
+     * Temporary alias for fetchRow().
      */
-    function getRow($sql) {
-        $this->start_time = getmicrotime();
-        $query = $this->conn->query($sql);
-        $data = $query->fetch($this->fetchMode);
-        $this->_debug_sql($sql, "getRow");
-        return $data;
+    function getRow($sql, array $params = array()) {
+        return $this->fetchRow($sql, $params);
     } 
 
     /**
-     * DATABASE::query()
-     * 
-     * @param  $sql 
-     * @return array $data
-     * @access publis
+     * Temporary alias for execute().
      */
-    function query($sql) {
-        $this->start_time = getmicrotime();
-        $data = $this->conn->query($sql);
-        $this->_debug_sql($sql, "query");
-        return $data;
+    function query($sql, array $params = array()) {
+        return $this->execute($sql, $params);
     } 
 
     /**
-     * DATABASE::GetOne()
-     * 
-     * @param  $sql 
-     * @return array $data
-     * @access publis
+     * Temporary alias for fetchValue().
      */
-    function GetOne($sql) {
-        $this->start_time = getmicrotime();
-        $query = $this->conn->query($sql);
-        $data = $query->fetch();
-        $this->_debug_sql($sql, "GetOne");
-        return $data[0];
+    function GetOne($sql, array $params = array()) {
+        return $this->fetchValue($sql, $params);
     } 
+
+    /**
+     * Prepares and runs a statement with bound values.
+     *
+     * @param string $sql
+     * @param array $params
+     * @param string $label debug label
+     * @return PDOStatement
+     * @throws DatabaseException
+     */
+    private function _run($sql, array $params, $label) {
+        $this->start_time = getmicrotime();
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+        } catch (PDOException $e) {
+            $this->_debug_sql($sql, $label);
+            throw new DatabaseException("Database query failed.", 0, $e);
+        }
+        $this->_debug_sql($sql, $label);
+        return $stmt;
+    }
+
+    /**
+     * @return array list of associative rows
+     * @throws DatabaseException
+     */
+    function fetchAll($sql, array $params = array()) {
+        return $this->_run($sql, $params, "fetchAll")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @return array|null one associative row, or null when there is none
+     * @throws DatabaseException
+     */
+    function fetchRow($sql, array $params = array()) {
+        $row = $this->_run($sql, $params, "fetchRow")->fetch(PDO::FETCH_ASSOC);
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * @return mixed first column of the first row; null when no row or SQL NULL
+     * @throws DatabaseException
+     */
+    function fetchValue($sql, array $params = array()) {
+        $stmt = $this->_run($sql, $params, "fetchValue");
+        $row = $stmt->fetch(PDO::FETCH_NUM);
+        return $row === false ? null : $row[0];
+    }
+
+    /**
+     * @return int affected rows
+     * @throws DatabaseException
+     */
+    function execute($sql, array $params = array()) {
+        return $this->_run($sql, $params, "execute")->rowCount();
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    function begin() {
+        try {
+            $this->conn->beginTransaction();
+        } catch (PDOException $e) {
+            throw new DatabaseException("Unable to begin the database transaction.", 0, $e);
+        }
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    function commit() {
+        try {
+            $this->conn->commit();
+        } catch (PDOException $e) {
+            throw new DatabaseException("Unable to commit the database transaction.", 0, $e);
+        }
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    function rollback() {
+        try {
+            $this->conn->rollBack();
+        } catch (PDOException $e) {
+            throw new DatabaseException("Unable to roll back the database transaction.", 0, $e);
+        }
+    }
+
+    /**
+     * Generated id of the last insert on this connection.
+     * PostgreSQL uses LASTVAL() so no sequence name is needed.
+     *
+     * @return string|null
+     * @throws DatabaseException
+     */
+    function lastId(): ?string {
+        try {
+            if ($this->conn->getAttribute(PDO::ATTR_DRIVER_NAME) == "pgsql") {
+                $id = $this->conn->query("SELECT LASTVAL()")->fetchColumn();
+            } else {
+                $id = $this->conn->lastInsertId();
+            }
+        } catch (PDOException $e) {
+            throw new DatabaseException("Unable to read the last generated id.", 0, $e);
+        }
+        return ($id === false || $id === null || $id === "") ? null : (string)$id;
+    }
+
 
     /**
      * DATABASE::limitQuery()
@@ -178,17 +262,6 @@ class DATABASE {
         $this->_debug_sql($sql, "limitQuery");
         return $data;
     } 
-
-    /**
-     * DATABASE::setFetchMode()
-     * 
-     * @param  $F 
-     * @return NULL 
-     * @access publis
-     */
-    function setFetchMode ($F) {
-    	// Do nothing
-    }
 
     /**
      * DATABASE::_debug_sql()
