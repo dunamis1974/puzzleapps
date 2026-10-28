@@ -149,19 +149,17 @@ class PLATFORM extends CORE {
 	 * @return boolean
 	 */
 	function CreatePlatform($data) {
-		global $DB;
 		$ODD = "platform";
 		$O = new PLATFORM ( $ODD, $data );
-		$DB->begin ();
-		try {
-			$O->insert ();
-			$O->updatePlatform ();
-			$DB->commit ();
-		} catch (Throwable $e) {
-			$DB->rollback ();
-			throw $e;
-		}
+		$O->insert ();
 		return true;
+	}
+
+	function _insert_data($val, $oid) {
+		parent::_insert_data($val, $oid);
+		if ($val === null) {
+			$this->updatePlatform();
+		}
 	}
 	
 	/**
