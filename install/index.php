@@ -1,5 +1,11 @@
 <?php
-$step = ($_GET["s"])?$_GET["s"]:1;
+$requestedStep = isset($_GET["s"]) && is_string($_GET["s"]) && ctype_digit($_GET["s"])
+    ? (int)$_GET["s"]
+    : 1;
+$knownSteps = array(1, 2, 3, 4, 5, 6);
+$step = in_array($requestedStep, $knownSteps, true) ? $requestedStep : 1;
+$error = false;
+$add_button = "";
 $failedImg = "<img src=\"images/fix.png\" />";
 $okImg = "<img src=\"images/ok.png\" />";
 
