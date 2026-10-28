@@ -1,4 +1,4 @@
-<?
+<?php
 
 $MODULES = array(
     "my1" => array(
