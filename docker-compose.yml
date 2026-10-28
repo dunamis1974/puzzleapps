@@ -14,6 +14,20 @@ x-nginx-build: &nginx-build
   context: .
   dockerfile: docker/nginx.Dockerfile
 
+# Named volumes seed from image content on first use only.
+x-files-mount: &files-mount files:/var/www/html/files
+x-log-mount: &log-mount log:/var/www/html/log
+x-tmp-mount: &tmp-mount tmp:/var/www/html/tmp
+x-config-conf-mount: &config-conf-mount config_conf:/var/www/html/config/conf.d
+x-core-config-conf-mount: &core-config-conf-mount core_config_conf:/var/www/html/core/config/conf.d
+x-css-mount: &css-mount css:/var/www/html/css
+x-images-mount: &images-mount images:/var/www/html/images
+x-xslt-mount: &xslt-mount xslt:/var/www/html/xslt
+x-files-readonly-mount: &files-readonly-mount files:/var/www/html/files:ro
+x-css-readonly-mount: &css-readonly-mount css:/var/www/html/css:ro
+x-images-readonly-mount: &images-readonly-mount images:/var/www/html/images:ro
+x-xslt-readonly-mount: &xslt-readonly-mount xslt:/var/www/html/xslt:ro
+
 services:
   db:
     image: postgres:18
@@ -36,6 +50,15 @@ services:
     profiles: [publish]
     build: *app-build
     environment: *app-environment
+    volumes:
+      - *files-mount
+      - *log-mount
+      - *tmp-mount
+      - *config-conf-mount
+      - *core-config-conf-mount
+      - *css-mount
+      - *images-mount
+      - *xslt-mount
     depends_on:
       db:
         condition: service_healthy
@@ -48,6 +71,11 @@ services:
   nginx:
     profiles: [publish]
     build: *nginx-build
+    volumes:
+      - *files-readonly-mount
+      - *css-readonly-mount
+      - *images-readonly-mount
+      - *xslt-readonly-mount
     ports:
       - '${HTTP_PORT:-8080}:80'
     depends_on:
@@ -62,6 +90,14 @@ services:
     environment: *app-environment
     volumes:
       - ./:/var/www/html
+      - *files-mount
+      - *log-mount
+      - *tmp-mount
+      - *config-conf-mount
+      - *core-config-conf-mount
+      - *css-mount
+      - *images-mount
+      - *xslt-mount
     depends_on:
       db:
         condition: service_healthy
@@ -76,6 +112,10 @@ services:
     build: *nginx-build
     volumes:
       - ./:/var/www/html
+      - *files-readonly-mount
+      - *css-readonly-mount
+      - *images-readonly-mount
+      - *xslt-readonly-mount
     ports:
       - '${HTTP_PORT:-8080}:80'
     depends_on:
@@ -86,6 +126,14 @@ services:
 
 volumes:
   pgdata:
+  files:
+  log:
+  tmp:
+  config_conf:
+  core_config_conf:
+  css:
+  images:
+  xslt:
 
 networks:
   private:
