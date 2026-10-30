@@ -1,0 +1,4 @@
+.planning/
+.env
+.env.*
+!.env.example
