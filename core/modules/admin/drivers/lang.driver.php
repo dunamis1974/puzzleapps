@@ -27,4 +27,3 @@ function LangControls () {
     return $controls;
 } 
 
-?>

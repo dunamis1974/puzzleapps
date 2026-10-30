@@ -174,4 +174,3 @@ function installerCreateSchema($database, $driver, $schemaPath) {
         }
     }
 }
-?>

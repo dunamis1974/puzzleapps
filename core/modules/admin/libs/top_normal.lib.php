@@ -25,4 +25,3 @@ $_BODY = "
         <td valign=\"top\"><p />
 ";
 
-?>

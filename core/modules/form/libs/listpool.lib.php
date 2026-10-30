@@ -25,4 +25,3 @@ function validate_listpool ($value) {
     return 0;
 }
 
-?>

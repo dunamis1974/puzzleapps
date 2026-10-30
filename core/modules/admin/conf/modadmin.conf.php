@@ -8,4 +8,3 @@ $_ADMN_MOD = array(
     4 => "form2mail",
 );
 
-?>

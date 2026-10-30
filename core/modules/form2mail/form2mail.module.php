@@ -95,4 +95,3 @@ if ($_FREETXT) $this->_TXT = $_FREETXT;
 if ($_CAT) $this->_CAT = $_CAT;
 if ($_BODY) $this->_BODY = $_BODY;
 
-?>

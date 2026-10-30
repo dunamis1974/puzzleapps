@@ -929,4 +929,3 @@ class Securimage {
   }
 } /* class Securimage */
 
-?>

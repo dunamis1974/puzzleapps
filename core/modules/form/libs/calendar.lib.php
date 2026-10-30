@@ -87,4 +87,3 @@ function calendar ($date = -1, $type = 1, $range = "-5|+5", $name = "date", $req
     return $_BODY;
 }
 
-?>

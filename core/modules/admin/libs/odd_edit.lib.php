@@ -329,4 +329,3 @@ function ParseODDdata($DATA) {
     return $FOO;
 }
 
-?>

@@ -183,4 +183,3 @@ function __get_css ($params) {
     return;
 } 
 
-?>

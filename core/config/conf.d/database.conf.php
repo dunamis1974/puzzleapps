@@ -8,4 +8,3 @@
  */
 $PDO_DATABASE = null;
 
-?>

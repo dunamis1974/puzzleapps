@@ -1534,4 +1534,3 @@ class phpthumb_filters {
 	}
 }
 
-?>

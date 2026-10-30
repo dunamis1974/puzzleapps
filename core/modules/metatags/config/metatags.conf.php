@@ -7,4 +7,3 @@ $GLOBALS["MOD_PERMISSIONS"]["metatags"] = array(
     "link" => "Metatags Administration",
 );
 
-?>

@@ -7,4 +7,3 @@ if (PHP_VERSION_ID < 80500 || !extension_loaded("pdo")) {
 
 include_once("./core/start.php");
 
-?>

@@ -81,4 +81,3 @@ if ($__ADMIN == true || !empty($_GET["admin"])) {
     
 
 }
-?>

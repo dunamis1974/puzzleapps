@@ -2,4 +2,3 @@
 
 $_CAPTCHA = true;
 
-?>

@@ -89,4 +89,3 @@ if ($_GET["togroup"] == "true") {
     $_BODY .= "<p>+ <a href=\"javascript: popup('" . BuildLinkGet() . "&view=" . $_GET["view"] . "&do=add&odd=person', 600, 500);\">##add person##</a></p>";
 } 
 
-?>

@@ -115,4 +115,3 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
 $GLOBALS["_old_error_handler"] = set_error_handler("error_handler");
 
-?>

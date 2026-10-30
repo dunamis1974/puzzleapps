@@ -27,4 +27,3 @@ if ($_GET["doupdate"]) {
 } else {
     $_BODY .= isUpdatable() . "<br /><br />" . isUpdatableComponents();
 } 
-?>

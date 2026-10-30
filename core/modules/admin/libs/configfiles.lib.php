@@ -140,4 +140,3 @@ function __get_configuration ($params) {
     return;
 } 
 
-?>

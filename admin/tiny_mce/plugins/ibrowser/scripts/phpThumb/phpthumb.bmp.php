@@ -875,4 +875,3 @@ class phpthumb_bmp {
 
 }
 
-?>

@@ -149,4 +149,3 @@ function _meta_generate ($_METATEXT) {
     return $_METADATA;
 }
 
-?>

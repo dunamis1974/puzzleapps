@@ -1041,4 +1041,3 @@ if (!function_exists('imagesavealpha')) {
 	}
 }
 
-?>

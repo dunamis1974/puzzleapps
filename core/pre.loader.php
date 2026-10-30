@@ -9,4 +9,3 @@ if ($PRELOADMODULES) {
         $_PREMOD[$__MODULE] = $_MOD_FOO->LoadModule($__MODULE);
     }
 }
-?>

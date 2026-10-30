@@ -19,4 +19,3 @@
  */
 //$BUGZILLA_SERVER = "http://bugzilla.oscsoft.eu/";
 
-?>

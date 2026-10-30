@@ -28,4 +28,3 @@ $_SKIN = "puzzle";
 
 $_MEDIA_URL = "/media";
 
-?>

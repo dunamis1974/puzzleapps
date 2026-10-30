@@ -63,4 +63,3 @@ if ($_GET["sysimg"]) {
     die();
 }
 
-?>

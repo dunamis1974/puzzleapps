@@ -83,4 +83,3 @@
 	echo $info;
 	echo "}";
 	
-?>

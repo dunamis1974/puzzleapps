@@ -26,4 +26,3 @@ function validate_seccode ($value) {
     return 0;
 }
 
-?>

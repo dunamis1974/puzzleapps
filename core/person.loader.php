@@ -9,4 +9,3 @@ $__PERSON = new PERSON();
 
 $CURRENTUSER = $__PERSON->PERSONLOAD();
 
-?>

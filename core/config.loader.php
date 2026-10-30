@@ -13,4 +13,3 @@ if ($SUB_PLATFORM) {
 
 $SYSTEMIMAGES = "./admin/images/";
 
-?>

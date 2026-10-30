@@ -22,4 +22,3 @@ $_BODY .= $CURRENTPLATFORM->permissionsForm($CURRENTPLATFORM);
 $_BODY .= "\n</center>
 <br />";
 
-?>

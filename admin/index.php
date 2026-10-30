@@ -9,4 +9,3 @@ $__ADMIN = true;
 include_once("../core/start.php");
 
 
-?>

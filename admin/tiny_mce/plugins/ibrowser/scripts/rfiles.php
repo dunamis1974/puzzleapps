@@ -540,4 +540,3 @@ html, body {
 		if(substr($path,0,1) != '/') $path = '/' . $path;
 		return $path;
 	}
-?>

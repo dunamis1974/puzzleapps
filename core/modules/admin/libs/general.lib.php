@@ -6,4 +6,3 @@ if ($_GET["load"]) {
     $_BODY .= DoMenu("general");
 }
 
-?>

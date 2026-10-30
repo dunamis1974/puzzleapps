@@ -140,4 +140,3 @@ function __get_img ($params) {
     return;
 } 
 
-?>

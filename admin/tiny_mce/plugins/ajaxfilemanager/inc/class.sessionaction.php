@@ -90,4 +90,3 @@
 			return (isset($_SESSION[$this->fromFolderIndex])?$_SESSION[$this->fromFolderIndex]:'');
 		}
 	}
-?>

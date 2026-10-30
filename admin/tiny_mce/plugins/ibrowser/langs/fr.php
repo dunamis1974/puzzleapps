@@ -179,4 +179,3 @@
 		'cancel' 		=> 'Annuler',
 	  ),
 	)
-?>

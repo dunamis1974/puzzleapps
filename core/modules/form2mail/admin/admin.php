@@ -84,4 +84,3 @@ function _admin_form2mail () {
     return $MSG;
 }
 
-?>

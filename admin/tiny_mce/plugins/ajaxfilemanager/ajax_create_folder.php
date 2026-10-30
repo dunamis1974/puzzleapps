@@ -71,4 +71,3 @@
 	echo "error:'" . $error . "'";
 	echo $info;
 	echo "}";
-?>

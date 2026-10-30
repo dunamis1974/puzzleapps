@@ -19,4 +19,3 @@ while ($file = readdir($dh)) {
 	}
 }
 echo '</body></html>';
-?>

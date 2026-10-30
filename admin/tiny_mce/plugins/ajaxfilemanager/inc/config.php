@@ -104,4 +104,3 @@
 	define('CONFIG_URL_FILE_PASTE', 'ajax_file_paste.php');
 	
 
-?>

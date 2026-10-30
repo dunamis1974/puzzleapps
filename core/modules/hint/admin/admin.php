@@ -34,4 +34,3 @@ function _admin_hint () {
     return $BODY;
 }
 
-?>

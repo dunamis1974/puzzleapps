@@ -108,4 +108,3 @@ function __get_language_abr ($lang_id) {
     return $ABR;
 }
 
-?>

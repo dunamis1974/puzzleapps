@@ -81,4 +81,3 @@ foreach ($thumbnail_widths as $thumbnail_width) {
 
 }
 
-?>

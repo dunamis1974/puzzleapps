@@ -10,4 +10,3 @@ include_once ($COREROOT . "core/module.class.php");
 
 $_XML = Modules::LoadModule("xml");
 
-?>

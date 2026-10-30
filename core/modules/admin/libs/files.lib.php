@@ -94,4 +94,3 @@ if ($_GET["delete"]) { // Delte file if requested
     
 }
 
-?>

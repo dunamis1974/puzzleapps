@@ -393,4 +393,3 @@ function mime_icon ($case) {
     return $icon;
 } 
 
-?>

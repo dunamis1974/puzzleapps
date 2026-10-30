@@ -335,4 +335,3 @@ if ((is_object($O) && (! $O->writeAccess())) || (is_object($P) && (! $P->writeAc
     $_BODY .= "\n</form>\n";
 }
 
-?>

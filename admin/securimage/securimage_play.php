@@ -13,4 +13,3 @@ header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
 echo $img->getAudibleCode();
 exit;
 
-?>

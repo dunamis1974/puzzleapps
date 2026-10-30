@@ -470,4 +470,3 @@ function GetDTDFieldType($DTD)
     return $ELM;
 }
 
-?>

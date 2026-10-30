@@ -43,4 +43,3 @@ function gsitemap_generate () {
     return $XML;
 }
 
-?>

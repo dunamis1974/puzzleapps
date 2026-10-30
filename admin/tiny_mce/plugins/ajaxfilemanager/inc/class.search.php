@@ -181,4 +181,3 @@
 			return $this->rootFolderInfo;
 		}
 	}
-?>

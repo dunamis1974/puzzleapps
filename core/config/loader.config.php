@@ -11,4 +11,3 @@ if ($handle = opendir($CONFIGDIR)) {
     closedir($handle);
 }
 
-?>

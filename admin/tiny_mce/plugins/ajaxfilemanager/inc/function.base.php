@@ -1222,4 +1222,3 @@ function getRootPath() {
                 return $rotate;*/
             }
         }  
-?>

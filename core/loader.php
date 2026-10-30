@@ -82,4 +82,3 @@ if ($REDIRECT || $_POST["back"] || $_GET["back"]) {
     die();
 }
 
-?>

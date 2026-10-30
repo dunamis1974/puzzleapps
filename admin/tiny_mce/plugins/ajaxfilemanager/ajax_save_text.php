@@ -85,4 +85,3 @@
 		echo  "path:'" . $path . "'";
 		echo "}";
 	
-?>

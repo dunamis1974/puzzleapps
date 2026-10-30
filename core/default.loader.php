@@ -25,4 +25,3 @@ $_FORM = $_MOD_FOO->LoadModule("form");
 $_DATE = $_MOD_FOO->LoadModule("date");
 $_LANG = $_MOD_FOO->LoadModule("language");
 
-?>

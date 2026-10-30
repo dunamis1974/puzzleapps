@@ -55,4 +55,3 @@
 		echo PREVIEW_NOT_PREVIEW . "...";
 	}
 
-?>

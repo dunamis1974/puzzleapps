@@ -40,4 +40,3 @@ function hint_replace_all($spl, $txt, $hint)
     return $txt;
 }
 
-?>

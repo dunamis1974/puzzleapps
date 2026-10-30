@@ -9,4 +9,3 @@ function wrapp_puzzle_capture ($buffer) {
     $GLOBALS["WRAPPER_BODY"] .= $buffer;
 }
 
-?>

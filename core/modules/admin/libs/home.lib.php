@@ -9,4 +9,3 @@ $_BODY .= "<td width=\"40%\" valign=\"top\" align=\"right\">";
 include($THISDIR . "panels.lib.php");
 $_BODY .= "</tr></table>";
 
-?>

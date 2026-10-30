@@ -16,4 +16,3 @@ for ($i = 0; $i < count($_ZONESPERMANENT); $i++) {
 
 $_BODY .= "<pre>" . htmlentities($xml) . "</pre>";
 
-?>

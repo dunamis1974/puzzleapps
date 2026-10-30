@@ -124,4 +124,3 @@ function installerWriteDatabaseConfig(array $config) {
         throw new RuntimeException("Unable to write the database configuration.");
     }
 }
-?>

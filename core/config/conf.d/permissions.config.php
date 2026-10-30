@@ -18,4 +18,3 @@ $MAIN_PERMISSIONS = array(
     "chown" => array("link" => "Change object ownership"),
 );
 
-?>

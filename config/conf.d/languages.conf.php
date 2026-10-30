@@ -5,4 +5,3 @@ $LANGUAGES = array(
     "de",
 );
 
-?>

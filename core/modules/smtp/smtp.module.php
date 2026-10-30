@@ -622,4 +622,3 @@ class SMTP
       return $this->errors;
   }
 }
-?>

@@ -7,4 +7,3 @@ $GLOBALS["MOD_PERMISSIONS"]["form2mail"] = array(
     "link" => "Form to Mail",
 );
 
-?>

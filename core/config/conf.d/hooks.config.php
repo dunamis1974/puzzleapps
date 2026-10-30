@@ -12,4 +12,3 @@ $_HOOKS_BEFORE = array ();
 
 $_HOOKS_AFTER = array ();
 
-?>

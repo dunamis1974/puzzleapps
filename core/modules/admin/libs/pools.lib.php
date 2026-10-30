@@ -54,4 +54,3 @@ if ($_GET["view"]) {
     $_BODY .= "<p><a href=\"javascript: popup('" . BuildLinkGet() . "&view=" . $_GET["view"] . "&do=add&odd=" . $_GET["view"] . "', 600, 500);\">##Add object##</a></p>";
 }
 
-?>

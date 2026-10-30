@@ -129,4 +129,3 @@ if ($_GET["pref"] == "platform") {
 $_BODY .= "
 <br /><br />
 ";
-?>

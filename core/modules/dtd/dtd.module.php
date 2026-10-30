@@ -10,4 +10,3 @@ $this->LoadDriver($DTDDRIVER);
 
 if (!is_object($DTD)) $DTD = new ODDs;
 
-?>

@@ -11,4 +11,3 @@ $SYS_LANGUAGES = array(
     "fr" => array("id" => 8, "title" => "French", "encoding" => "UTF-8",),
 );
 
-?>

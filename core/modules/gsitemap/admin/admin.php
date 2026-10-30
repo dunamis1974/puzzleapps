@@ -109,4 +109,3 @@ function gsitemap_action ($todo) {
     return true;
 }
 
-?>

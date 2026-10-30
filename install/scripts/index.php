@@ -5,4 +5,3 @@ if (count($_GET) == 0)
 
 include_once("../core/start.php");
 
-?>

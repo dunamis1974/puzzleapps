@@ -30,4 +30,3 @@
 		$info = ',num:' . sizeof($_POST['selectedDoc']);
 	}
 	echo "{error:'" . $error .  "'\n" . $info . "}";
-?>

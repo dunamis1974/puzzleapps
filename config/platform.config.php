@@ -18,4 +18,3 @@ if (file_exists($CONFIGDIR . "loader.config.php")) include_once($CONFIGDIR . "lo
 // DONE!!! config is loaded
 if ($_is_loaded == true) $configuration_is_loaded = true;
 
-?>

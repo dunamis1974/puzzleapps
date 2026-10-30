@@ -37,4 +37,3 @@ function _admin_htmltidy () {
     return $BODY;
 }
 
-?>

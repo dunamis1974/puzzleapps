@@ -18,4 +18,3 @@ function gsitemap_hook_after ($id, $action = false) {
     return true;
 }
 
-?>

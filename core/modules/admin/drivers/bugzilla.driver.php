@@ -120,4 +120,3 @@ print $bug->getString();
 exit;
 */
 
-?>

@@ -13,4 +13,3 @@ if ($_WEBSTATLOG == true) {
     $_BODY .= "<b>##Web statistic module not activated!##</b>";
 }
 
-?>

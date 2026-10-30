@@ -107,4 +107,3 @@ function BuildJSMenu($PATH = null, $level = 1) {
     return $MENU;
 } 
 
-?>

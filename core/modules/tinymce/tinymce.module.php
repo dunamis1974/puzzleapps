@@ -66,4 +66,3 @@ $_TINYMCEINIT = "
 </script>
 ";
 
-?>

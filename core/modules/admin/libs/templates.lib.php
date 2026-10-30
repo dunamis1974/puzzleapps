@@ -4,4 +4,3 @@ if ($_GET["load"]) {
 } else {
     $_BODY .= DoMenu("templates");
 }
-?>

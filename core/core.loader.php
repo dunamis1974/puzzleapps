@@ -26,4 +26,3 @@ include_once ($COREROOT . "core/file.class.php");
 include_once ($COREROOT . "core/data.class.php");
 $DATA = new DATA();
 
-?>

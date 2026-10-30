@@ -47,4 +47,3 @@ include ($MODULEDIR . "libs/bottom.lib.php");
 
 echo $TRANSLATE->Go($_BODY);
 
-?>

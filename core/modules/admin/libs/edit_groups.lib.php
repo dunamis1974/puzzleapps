@@ -159,4 +159,3 @@ if ($_GET["add"] || $_GET["edit"]) {
     $_BODY .= "\n</table>";
     $_BODY .= "\n<p>+ <a href=\"" . BuildLinkGet() . "&add=true\">##add new group##</a></p>";
 }
-?>

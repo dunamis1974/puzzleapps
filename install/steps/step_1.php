@@ -44,4 +44,3 @@ function installerCheckResult($passed, $detail, $okImg, $failedImg) {
     }
     return '<b class="error">' . $failedImg . '</b><span class="error"> Warning: ' . $safeDetail . '</span>';
 }
-?>

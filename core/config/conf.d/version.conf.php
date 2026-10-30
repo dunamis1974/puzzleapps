@@ -1,5 +1,4 @@
 <?php
 
-$_PAS_CORE_VERSION = "3.3";
+$_PAS_CORE_VERSION = "4.0";
 
-?>

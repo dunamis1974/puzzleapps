@@ -54,4 +54,3 @@ $_OBJECTTEMPLATE = array(
 
 
 
-?>

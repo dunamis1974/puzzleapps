@@ -14,4 +14,3 @@ $COMMENTS["zone"] = "comments";
 
 
 
-?>

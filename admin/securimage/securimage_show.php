@@ -10,4 +10,3 @@ $img->image_height = 35;
 
 $img->show();
 
-?>

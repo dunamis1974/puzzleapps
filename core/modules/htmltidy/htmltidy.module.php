@@ -37,4 +37,3 @@ function filter_htmltidy ($html) {
     return $html;
 }
 
-?>

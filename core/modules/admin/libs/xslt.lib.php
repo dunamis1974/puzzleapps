@@ -168,4 +168,3 @@ function __get_xslt ($params) {
     return;
 } 
 
-?>

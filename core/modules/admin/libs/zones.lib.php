@@ -304,4 +304,3 @@ function _write_zones_conf () {
     WriteConfigFile("zones", $_ZONES_TEXT);
 }
 
-?>

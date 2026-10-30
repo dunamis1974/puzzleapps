@@ -21,4 +21,3 @@ for ($i = 0; $i < count($_ADMN_MOD); $i++) {
     if (file_exists($_MODULE_ADMIN)) include_once($_MODULE_ADMIN);
 }
 
-?>

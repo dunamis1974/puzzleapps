@@ -170,4 +170,3 @@
 		'cancel' 		=> 'Annuleren',
 	  ),	  
 	)
-?>

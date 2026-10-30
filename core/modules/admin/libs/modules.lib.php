@@ -57,4 +57,3 @@ function _ModScan () {
     
     return $_BODY;
 }
-?>

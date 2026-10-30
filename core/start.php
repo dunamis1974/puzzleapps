@@ -66,4 +66,3 @@ if (! $__ADMIN && empty($_GET["admin"])) {
 } else {
     Modules::LoadModule("admin");
 }
-?>
