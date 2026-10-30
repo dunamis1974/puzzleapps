@@ -1,1 +1,3 @@
 Content Management System developed in PHP, using XSLT as templating engine. Requires PHP 8.5 and PDO; runs on MySQL or PostgreSQL. UNIX/Linux like permissions system.
+
+For Docker deployment and installer instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
