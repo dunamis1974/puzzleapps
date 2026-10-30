@@ -524,7 +524,7 @@ class phpthumb {
 		// render thumbnail to this file only, do not cache, do not output to browser
 		//$renderfilename = $this->ResolveFilenameToAbsolute(dirname($filename)).DIRECTORY_SEPARATOR.basename($filename);
 		$renderfilename = $filename;
-		if (($filename{0} != '/') && ($filename{0} != '\\') && ($filename{1} != ':')) {
+		if (($filename[0] != '/') && ($filename[0] != '\\') && ($filename[1] != ':')) {
 			$renderfilename = $this->ResolveFilenameToAbsolute($renderfilename);
 		}
 		if (!@is_writable(dirname($renderfilename))) {
@@ -981,7 +981,7 @@ class phpthumb {
 			//$AbsoluteFilename = $filename;
 			return $filename;
 
-		} elseif ($this->iswindows && ($filename{1} == ':')) {
+		} elseif ($this->iswindows && ($filename[1] == ':')) {
 
 			// absolute pathname (Windows)
 			$AbsoluteFilename = $filename;
@@ -991,14 +991,14 @@ class phpthumb {
 			// absolute pathname (Windows)
 			$AbsoluteFilename = $filename;
 
-		} elseif ($filename{0} == '/') {
+		} elseif ($filename[0] == '/') {
 
 			if (@is_readable($filename) && !@is_readable($this->config_document_root.$filename)) {
 
 				// absolute filename (*nix)
 				$AbsoluteFilename = $filename;
 
-			} elseif ($filename{1} == '~') {
+			} elseif ($filename[1] == '~') {
 
 				// /~user/path
 				if ($ApacheLookupURIarray = phpthumb_functions::ApacheLookupURIarray($filename)) {
@@ -1113,7 +1113,7 @@ class phpthumb {
 			$which_convert = $this->ImageMagickWhichConvert();
 			$IMversion     = $this->ImageMagickVersion();
 
-			if ($which_convert && ($which_convert{0} == '/') && @file_exists($which_convert)) {
+			if ($which_convert && ($which_convert[0] == '/') && @file_exists($which_convert)) {
 
 				// `which convert` *should* return the path if "convert" exist, or nothing if it doesn't
 				// other things *may* get returned, like "sh: convert: not found" or "no convert in /usr/local/bin /usr/sbin /usr/bin /usr/ccs/bin"
@@ -1219,7 +1219,7 @@ class phpthumb {
 			// $UnAllowedParameters contains options that can only be processed in GD, not ImageMagick
 			// note: 'fltr' *may* need to be processed by GD, but we'll check that in more detail below
 			$UnAllowedParameters = array('xto', 'ar', 'bg', 'bc');
-			// 'ra' may be part of this list, if not a multiple of 90°
+			// 'ra' may be part of this list, if not a multiple of 90ï¿½
 			foreach ($UnAllowedParameters as $parameter) {
 				if (isset($this->$parameter)) {
 					$this->DebugMessage('$this->useRawIMoutput=false because "'.$parameter.'" is set', __FILE__, __LINE__);
@@ -3801,7 +3801,6 @@ exit;
 							$this->DebugMessage('gif_loadFileToGDimageResource('.$tempfilename.') completed', __FILE__, __LINE__);
 							unlink($tempfilename);
 							return $gdimg_source;
-							break;
 						} else {
 							$ErrorMessage = 'Failed to open tempfile in '.__FILE__.' on line '.__LINE__;
 							$this->DebugMessage($ErrorMessage, __FILE__, __LINE__);
