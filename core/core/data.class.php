@@ -27,7 +27,7 @@ class DATA extends CORE
      * @return 
      */
     
-    function GetZonesData($id)
+    public function GetZonesData($id)
     {
         global $_ZONES, $_ZONESEXPAND, $_ZONESDEFAULT, $_ZONESCONTAIN, $_ZONESPERMANENT, $_ZONESIGNORESELECT, $_DATA_FILTER, $PLATFORMID;
         
@@ -203,7 +203,7 @@ class DATA extends CORE
         return $XML;
     }
 
-    function PrintContainer($O, $add, $_tag)
+    public function PrintContainer($O, $add, $_tag)
     {
         global $EDITLANGUAGE;
         //echo "$O, $add, $_tag";
@@ -228,7 +228,7 @@ class DATA extends CORE
      * @param  object $Obj 
      * @return string $XML
      */
-    function Container($Obj)
+    public function Container($Obj)
     {
         
         $C = $Obj->translate_object_data();
@@ -334,7 +334,7 @@ class DATA extends CORE
      * @param  $ZONES_ 
      * @return 
      */
-    function RecurseNormalZones(&$Obj, &$ZONES)
+    public function RecurseNormalZones(&$Obj, &$ZONES)
     {
         $XML = NULL;
         foreach ($ZONES as $ZKEY => $ZONE) {
@@ -365,7 +365,7 @@ class DATA extends CORE
      * @param  $_TREE 
      * @return 
      */
-    function RecurseZone($Obj, $_TREE)
+    public function RecurseZone($Obj, $_TREE)
     {
         global $_ZONESEXPAND;
         //echo "--------------------------<br />";
@@ -416,7 +416,7 @@ class DATA extends CORE
      * @return string string $XML
      * @access public 
      */
-    function GetData($id = null, $parent = null)
+    public function GetData($id = null, $parent = null)
     {
         global $_OBJECTSCOTAIN, $PLATFORMID, $CURRENTLANGUAGE, $DTD, $DB;
         
@@ -477,7 +477,7 @@ class DATA extends CORE
      * @return string string $XML
      * @access public 
      */
-    function GetAllData($id = null, $parent = null)
+    public function GetAllData($id = null, $parent = null)
     {
         global $_OBJECTSCOTAIN, $PLATFORMID, $CURRENTLANGUAGE, $DTD, $DB;
         
@@ -534,7 +534,7 @@ class DATA extends CORE
      * 
      * @return 
      */
-    function DataColector()
+    public function DataColector()
     {
         global $CURRENTUSER, $CURRENTLANGUAGE, $CURRENTENCODING, $CURRENTPLATFORM, $PLATFORMID, $XSLTROOT, $_TEXTID, $_PREDATA, $_ZONES, $_ZONEALWAYS, $_ZONESPERMANENT, $_OBJECTTEMPLATE, $_OBJECTCONTROLS, $_GENERAL_MOD_XSLT;
         
@@ -725,7 +725,7 @@ class DATA extends CORE
      * @return string $xsl
      * @access private 
      */
-    function CleanXSL($xsl)
+    public function CleanXSL($xsl)
     {
         global $ADMIN_ADV_CONTROLS;
         
@@ -748,7 +748,7 @@ class DATA extends CORE
      * @return string $xsl
      * @access private 
      */
-    function ApplyFilters($html)
+    public function ApplyFilters($html)
     {
         global $FILTERS;
         
@@ -775,7 +775,7 @@ class DATA extends CORE
      * @return string $HTML
      * @access public 
      */
-    function XSLAL($xml, $xsl)
+    public function XSLAL($xml, $xsl)
     {
         $v = (int)phpversion();
         if ($GLOBALS["_TRANSFORM"] == "command") {
@@ -845,7 +845,7 @@ class DATA extends CORE
      * @return string $XML
      * @access private 
      */
-    function AddModule($mod, $custom = true)
+    public function AddModule($mod, $custom = true)
     {
         global $MODULES, $TRANSLATE;
         
@@ -894,7 +894,7 @@ class DATA extends CORE
      * @return string $XML
      * @access private 
      */
-    function AddPreModules()
+    public function AddPreModules()
     {
         global $TRANSLATE, $_PREMOD;
         
@@ -937,7 +937,7 @@ class DATA extends CORE
      * @return string
      * @access private 
      */
-    function doControls($ZONE, $params)
+    public function doControls($ZONE, $params)
     {
         global $ADMIN_ADV_CONTROLS, $_ZONESCONTAIN;
         
@@ -976,7 +976,7 @@ class DATA extends CORE
      * @return string
      * @access private 
      */
-    function ADVControls($params)
+    public function ADVControls($params)
     {
         //global $CURRENTUSER, $CURRENTPLATFORM, $SYSTEMIMAGES, $TRANSLATE, $_SYSINDEX;
         
@@ -1004,7 +1004,7 @@ class DATA extends CORE
      * @return string
      * @access private 
      */
-    function Controls($params)
+    public function Controls($params)
     {
         global $CURRENTUSER, $SYSTEMIMAGES, $TRANSLATE, $_SYSINDEX;
         
@@ -1131,4 +1131,3 @@ class DATA extends CORE
     }
 }
 
-?>

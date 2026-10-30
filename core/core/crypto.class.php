@@ -17,7 +17,7 @@ class DOCRYPT {
      * @param integer $level 
      * @return NULL 
      */
-    function __construct($pass, $level = 30) {
+    public function __construct($pass, $level = 30) {
         
         for($i = 0; $i < $level; $i ++)
             $mymd [$i] = md5 ( substr ( $pass, ($i % strlen ( $pass )), 1 ) );
@@ -37,7 +37,7 @@ class DOCRYPT {
      * @return text $ntext
      * @access public
      */
-    function enc($text, $method = 1) { // 1=encrypt, 0=decrypt
+    public function enc($text, $method = 1) { // 1=encrypt, 0=decrypt
         $key = $this->key;
         
         if ($method == 0) {
@@ -63,4 +63,3 @@ class DOCRYPT {
     }
 }
 
-?>

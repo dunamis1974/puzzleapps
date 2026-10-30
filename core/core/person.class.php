@@ -23,7 +23,7 @@ class PERSON extends CORE {
 	 *
 	 * @return object
 	 */
-	function __construct() {
+	public function __construct() {
         $numargs = func_num_args ();
 
         if ($numargs == 1) {
@@ -44,7 +44,7 @@ class PERSON extends CORE {
 	 * @return object
 	 * @access public
 	 */
-	function PERSONLOAD() {
+	public function PERSONLOAD() {
 		global $PLATFORMID, $RUNNINGNDIR;
 		
 		if ($_GET ["do"] == "logout") {
@@ -101,7 +101,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function PERSONLOGIN($uname, $password) {
+	public function PERSONLOGIN($uname, $password) {
         global $DTD, $DB, $PLATFORMID;
 
         $this->_objectname = "person";
@@ -142,7 +142,7 @@ class PERSON extends CORE {
 	 * @return NULL
 	 * @access public
 	 */
-	function logout() {
+	public function logout() {
         unset ($_SESSION["CURRENTUSER_SESSION"]);
         
         $_SESSION["LOGGEDOUT"] = true;
@@ -158,7 +158,7 @@ class PERSON extends CORE {
 	 * @return string
 	 * @access public
 	 */
-	function hashPassword($text) {
+	public function hashPassword($text) {
         global $_GENERAL_SEED;
         
         $CRYPT = new DOCRYPT ( $_GENERAL_SEED );
@@ -175,7 +175,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function isAllowed($permission) {
+	public function isAllowed($permission) {
         if ($this->isSuperUser ())
                 return true;
         if (is_array ( $this->_permissions ) && in_array ( $permission, $this->_permissions )) {
@@ -191,7 +191,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function testAccess() {
+	public function testAccess() {
         global $SET_ACCESS;
 
         $this->access = true;
@@ -221,7 +221,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function isSuperUser() {
+	public function isSuperUser() {
         if ($this->group == - 1) {
             return true;
         } else {
@@ -236,7 +236,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function addToGroup() {
+	public function addToGroup() {
         if ($this->group == - 1) {
             return true;
         } else {
@@ -251,7 +251,7 @@ class PERSON extends CORE {
 	 * @return boolean
 	 * @access public
 	 */
-	function setDefaultGroup() {
+	public function setDefaultGroup() {
         if ($this->group == - 1) {
             return true; 
         } else {
@@ -266,7 +266,7 @@ class PERSON extends CORE {
 	 * @return NULL
 	 * @access private
 	 */
-	function _update_person($val = null) {
+	protected function _update_person($val = null) {
         global $DB;
 
         if (! $val)
@@ -300,7 +300,7 @@ class PERSON extends CORE {
 	 * @return NULL
 	 * @access public
 	 */
-	function MakeItSU($val = null) {
+	public function MakeItSU($val = null) {
         global $DB;
         
         if (! $val)
@@ -317,7 +317,7 @@ class PERSON extends CORE {
 	 * @param $SET_TO
 	 * @return NULL
 	 */
-	function setCache($SET_TO) {
+	public function setCache($SET_TO) {
         if ($SET_TO) {
             $_SESSION ["cache"] = "on";
         } else {
@@ -334,7 +334,7 @@ class PERSON extends CORE {
 	 * @return NULL
 	 * @access private
 	 */
-	function register_userobject() {
+	public function register_userobject() {
         global $CURRENTUSER_SESSION;
         
         unset ($_SESSION["CURRENTUSER_SESSION"]);
@@ -356,7 +356,7 @@ class PERSON extends CORE {
 	 * @return NULL
 	 * @access private
 	 */
-	function login_mail() {
+	public function login_mail() {
         global $_GENERAL_EMAIL;
 
         if (! $_GENERAL_EMAIL)
@@ -375,4 +375,3 @@ class PERSON extends CORE {
 	}
 }
 
-?>

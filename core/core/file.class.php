@@ -18,7 +18,7 @@ class FILES extends CORE {
      * @return object 
      * @access constructor
      */
-    function __construct () {
+    public function __construct() {
         if (func_num_args() != 0) {
             $O = $this->load(func_get_arg(0));
             $this->_assgin_object($O);
@@ -31,7 +31,7 @@ class FILES extends CORE {
      * @return object 
      * @access public 
      */
-    function upload () {
+    public function upload () {
         global $FILEROOT, $CURRENTPLATFORM;
         
         $parent = new CORE(($_GET["parent"])?$_GET["parent"]:$CURRENTPLATFORM->id);
@@ -101,7 +101,7 @@ class FILES extends CORE {
      * @return NULL 
      * @access public 
      */
-    function remove() {
+    public function remove() {
         global $FILEROOT;
 
         $DATA = $this->translate_object_data();
@@ -118,7 +118,7 @@ class FILES extends CORE {
      * @return NULL 
      * @access public 
      */
-    function edit() {
+    public function edit() {
     }
 
     /**
@@ -128,7 +128,7 @@ class FILES extends CORE {
      * 
      * @return array 
      */
-    function listFiles() {
+    public function listFiles() {
         $result = $this->getAllOfType("file");
         
         return $result;
@@ -139,7 +139,7 @@ class FILES extends CORE {
      * 
      * @return NULL 
      */
-    function createFolder() {
+    public function createFolder() {
     }
 
     /**
@@ -147,7 +147,7 @@ class FILES extends CORE {
      * 
      * @return NULL 
      */
-    function deleteFolder() {
+    public function deleteFolder() {
     }
 
     /**
@@ -159,7 +159,7 @@ class FILES extends CORE {
      * @return text 
      * @access public 
      */
-    function imageName($id = null) {
+    public function imageName($id = null) {
         
         if (! $id)
             return null;
@@ -183,7 +183,7 @@ class FILES extends CORE {
      * @return text 
      * @access public 
      */
-    function uploadInObject($file) {
+    public function uploadInObject($file) {
         global $FILEROOT;
         
         if ($_FILES[$file]['size'] <= 0)
@@ -267,7 +267,7 @@ class FILES extends CORE {
      * @return boolean true
      * @access public 
      */
-    function delete_files($id) {
+    public function delete_files($id) {
         global $SYS_LANGUAGES, $LANGUAGES, $FILEROOT;
 
         $O = CORE::load ( $id );
@@ -298,7 +298,7 @@ class FILES extends CORE {
      * @return boolean true
      * @access private 
      */
-    function _update_file($id, $data) {
+    protected function _update_file($id, $data) {
         global $XML, $EDITLANGUAGE, $FILEROOT;
         // take data from new object
         $NEWXML = "<" . $data->_objectname . ">\n";
@@ -336,4 +336,3 @@ class FILES extends CORE {
     }
 }
 
-?>

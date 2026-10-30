@@ -35,22 +35,22 @@ class CORE extends PERMISSIONS
     // DTD-defined fields are stored here rather than as undeclared properties.
     public $_dynamicData = array();
 
-    function __get($name)
+    public function __get($name)
     {
         return array_key_exists($name, $this->_dynamicData) ? $this->_dynamicData[$name] : null;
     }
 
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $this->_dynamicData[$name] = $value;
     }
 
-    function __isset($name)
+    public function __isset($name)
     {
         return isset($this->_dynamicData[$name]);
     }
 
-    function __unset($name)
+    public function __unset($name)
     {
         unset($this->_dynamicData[$name]);
     }
@@ -64,7 +64,7 @@ class CORE extends PERMISSIONS
      *
      * @return object
      */
-    function __construct()
+    public function __construct()
     {
         $numargs = func_num_args();
         
@@ -88,7 +88,7 @@ class CORE extends PERMISSIONS
      * @return object
      * @access public
      */
-    function load(&$param, $data = null)
+    public function load(&$param, $data = null)
     {
         global $DTD;
         $NAME = $this->_CLASS;
@@ -137,7 +137,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _preloadMainValues($val)
+    protected function _preloadMainValues($val)
     {
         $val = (array)$val;
         $key = array_keys($val);
@@ -158,7 +158,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _preloadValues($val)
+    protected function _preloadValues($val)
     {
         unset($val["id"], $val["dosql"], $val["_object"]);
         $key = array_keys($this->_dtd);
@@ -177,7 +177,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _load_main($param)
+    protected function _load_main($param)
     {
         global $DTD, $DB, $PLATFORMID;
         $sql = "SELECT * FROM global WHERE id = ?";
@@ -199,7 +199,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _load_data()
+    protected function _load_data()
     {
         global $DB, $DTD, $DEFAULTLANGUAGE, $CURRENTLANGUAGE;
         $rows = $DB->fetchAll("SELECT * FROM data WHERE gid = ?", array($this->id));
@@ -228,7 +228,7 @@ class CORE extends PERMISSIONS
      *
      * @return
      */
-    function _object_data()
+    protected function _object_data()
     {
         global $DB;
         $xml = "";
@@ -253,7 +253,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _load_dtd($force = false)
+    protected function _load_dtd($force = false)
     {
         global $DTD;
         if (strtoupper($this->_CLASS) == "DATA" && ! $force) {
@@ -273,7 +273,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function insert()
+    public function insert()
     {
         global $PLATFORMID, $NEWPLATFORMID, $CURRENTUSER, $CURRENTPLATFORM, $DB;
         $val = (array)$this;
@@ -343,7 +343,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _insert_data($val, $oid)
+    protected function _insert_data($val, $oid)
     {
         global $EDITLANGUAGE, $DEFAULTLANGUAGE, $DB, $DTD;
         if (!$DTD->odd_multilang($this->_objectname)) {
@@ -372,7 +372,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _feed_index($oid = NULL, $_DATA = NULL, $_DTD = NULL)
+    protected function _feed_index($oid = NULL, $_DATA = NULL, $_DTD = NULL)
     {
         global $EDITLANGUAGE, $DB;
         if (!$_DATA) {
@@ -414,7 +414,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function update($val = false)
+    public function update($val = false)
     {
         global $DB;
         if ($val) {
@@ -448,7 +448,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _update_object($val)
+    protected function _update_object($val)
     {
         global $DB;
         if (!is_array($val)) {
@@ -475,7 +475,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _update_parent($id, $now)
+    protected function _update_parent($id, $now)
     {
         global $DB;
         $parents = $DB->fetchAll("SELECT parentid FROM relations WHERE targetid = ? AND relationtype IS NULL", array($id));
@@ -493,7 +493,7 @@ class CORE extends PERMISSIONS
      * @param $oid
      * @return unknown_type
      */
-    function _execute_after_hooks ($oid, $action = false) {
+    protected function _execute_after_hooks($oid, $action = false) {
         global $_HOOKS_AFTER;
         
         foreach ($_HOOKS_AFTER AS $HOOK) {
@@ -515,7 +515,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function delete($_id = null)
+    public function delete($_id = null)
     {
         global $DB;
         if (!$_id) {
@@ -557,7 +557,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _delete_ids($id = false)
+    protected function _delete_ids($id = false)
     {
         global $DB;
         $DB->execute("DELETE FROM global WHERE id = ?", array($id));
@@ -571,7 +571,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _delete_data($id = false, $all = false)
+    protected function _delete_data($id = false, $all = false)
     {
         global $EDITLANGUAGE, $DEFAULTLANGUAGE, $DB, $DTD;
         if (!$DTD->odd_multilang($this->_objectname)) {
@@ -597,7 +597,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _clean_index($oid = NULL, $all = false)
+    protected function _clean_index($oid = NULL, $all = false)
     {
         global $EDITLANGUAGE, $DB;
         if (!$oid) {
@@ -620,7 +620,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _delete_relations($id = false)
+    protected function _delete_relations($id = false)
     {
         global $DB;
         $DB->execute("DELETE FROM relations WHERE targetid = ?", array($id));
@@ -633,7 +633,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function candelete($id = false)
+    public function candelete($id = false)
     {
         global $DB;
         if (!$id) {
@@ -649,7 +649,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function forceDeleteWithRelations()
+    public function forceDeleteWithRelations()
     {
         return false;
     }
@@ -660,7 +660,7 @@ class CORE extends PERMISSIONS
      * @return biilean
      * @access public
      */
-    function isLoaded()
+    public function isLoaded()
     {
         if ($this->id != '') {
             return true;
@@ -675,7 +675,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function insertOrUpdate()
+    public function insertOrUpdate()
     {
         if ($this->isLoaded()) {
             $this->update();
@@ -690,7 +690,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getChildren()
+    public function getChildren()
     {
         $data = $this->_get_relations();
         return $data;
@@ -704,7 +704,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getRelations($relation = null, $zone = null)
+    public function getRelations($relation = null, $zone = null)
     {
         $data = $this->_get_relations($zone, $relation);
         
@@ -719,7 +719,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access private
      */
-    function _get_relations($zone = null, $relation = null)
+    protected function _get_relations($zone = null, $relation = null)
     {
         global $PLATFORMID, $DB;
 
@@ -755,7 +755,7 @@ class CORE extends PERMISSIONS
      * @return object
      * @access public
      */
-    function getParent()
+    public function getParent()
     {
         global $DB, $CURRENTPLATFORM;
 
@@ -774,7 +774,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getAllParents($_id)
+    public function getAllParents($_id)
     {
         if (is_object($_id)) {
             $id = $_id->id;
@@ -793,7 +793,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getParentRelations($_id, $relation = null)
+    public function getParentRelations($_id, $relation = null)
     {
         $relation = $relation;
         
@@ -813,7 +813,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function addChild($_id, $zone)
+    public function addChild($_id, $zone)
     {
         global $DB;
         $id = is_object($_id) ? $_id->id : $_id;
@@ -841,7 +841,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function addRelation($_id, $type, $zone)
+    public function addRelation($_id, $type, $zone)
     {
         if (is_object($_id)) {
             $id = $_id->id;
@@ -862,7 +862,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access private
      */
-    function _add_relation($id, $zone, $rel = null, $transaction = true)
+    protected function _add_relation($id, $zone, $rel = null, $transaction = true)
     {
         global $ADDOBJECTONTOP, $DB;
         if ($transaction) {
@@ -903,7 +903,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function sortChildren($zone, $rel = false)
+    public function sortChildren($zone, $rel = false)
     {
         global $_ZONESSORT, $DB;
         if (!empty($_ZONESSORT[$zone])) {
@@ -927,7 +927,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access private
      */
-    function _reorder_children($zone, $rel, $abc = false)
+    protected function _reorder_children($zone, $rel, $abc = false)
     {
         global $DB, $_ZONESSORT;
         if (!empty($_ZONESSORT[$zone])) {
@@ -971,7 +971,7 @@ class CORE extends PERMISSIONS
      * @return integer
      * @access private
      */
-    function _get_last_order($zone, $rel = null)
+    protected function _get_last_order($zone, $rel = null)
     {
         global $DB;
         $params = array($zone, $this->id);
@@ -993,7 +993,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function removeChild($_id)
+    public function removeChild($_id)
     {
         global $DB;
         $id = is_object($_id) ? $_id->id : $_id;
@@ -1017,7 +1017,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function removeRelation($_id, $relation = '')
+    public function removeRelation($_id, $relation = '')
     {
         if (is_object($_id)) {
             $id = $_id->id;
@@ -1035,7 +1035,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _delete_relation($id, $relation = false)
+    protected function _delete_relation($id, $relation = false)
     {
         global $DB;
         if ($relation) {
@@ -1054,7 +1054,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function changeParent($parent, $newparent)
+    public function changeParent($parent, $newparent)
     {
         global $DB;
         $id = is_object($parent) ? $parent->id : $parent;
@@ -1085,7 +1085,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function changeZone($zone)
+    public function changeZone($zone)
     {
         global $DB;
         $date = $DB->quoteIdentifier("_date", "column");
@@ -1105,7 +1105,7 @@ class CORE extends PERMISSIONS
      * @return boolean
      * @access public
      */
-    function changeOrder($objectid, $direction, $relationtype = null, $zone = null)
+    public function changeOrder($objectid, $direction, $relationtype = null, $zone = null)
     {
         global $DB;
         if (!$direction) {
@@ -1167,7 +1167,7 @@ class CORE extends PERMISSIONS
      * @return
      * @access private
      */
-    function _populate_data($data)
+    protected function _populate_data($data)
     {
         if ($data instanceof CORE) {
             $properties = get_object_vars($data);
@@ -1199,7 +1199,7 @@ class CORE extends PERMISSIONS
      * @return
      * @access private
      */
-    function _doXML_data($data)
+    protected function _doXML_data($data)
     {
         $data = (array)$data;
         $_key = array_keys($data);
@@ -1222,7 +1222,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access private
      */
-    function _load_from_array($array)
+    protected function _load_from_array($array)
     {
         if (! is_array($array))
             return null;
@@ -1241,7 +1241,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access rpivate
      */
-    function _delete_user()
+    protected function _delete_user()
     {
         global $DB;
         $DB->execute("DELETE FROM users WHERE gid = ?", array($this->id));
@@ -1253,7 +1253,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getListOfReferencingObjects()
+    public function getListOfReferencingObjects()
     {
         global $DB;
         $rows = $DB->fetchAll("SELECT rel.targetid AS id FROM relations rel WHERE rel.parentid = ?", array($this->id));
@@ -1268,7 +1268,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getByTypeAndOwner($type, $owner)
+    public function getByTypeAndOwner($type, $owner)
     {
         global $DB, $DTD, $PLATFORMID;
         $typeid = $DTD->get_object_id($type);
@@ -1284,7 +1284,7 @@ class CORE extends PERMISSIONS
      * @return array $result
      * @access public
      */
-    function getAllOfType($type)
+    public function getAllOfType($type)
     {
         global $DB, $DTD, $PLATFORMID;
         $typeid = $DTD->get_object_id($type);
@@ -1306,7 +1306,7 @@ class CORE extends PERMISSIONS
      * @return array $result
      * @access public
      */
-    function getByZoneTypeAndParam($_DTD, $zone, $type, $param, $load = true)
+    public function getByZoneTypeAndParam($_DTD, $zone, $type, $param, $load = true)
     {
         global $DB, $DTD, $PLATFORMID, $CURRENTLANGUAGE;
         $typeid = $DTD->get_field_id($_DTD, $type);
@@ -1345,7 +1345,7 @@ class CORE extends PERMISSIONS
      * @access public
      */
     
-    function getChildrenByType($_DTD, $load = true)
+    public function getChildrenByType($_DTD, $load = true)
     {
         global $DB, $DTD, $PLATFORMID;
         $params = array($PLATFORMID, $this->id, $DTD->get_object_id($_DTD));
@@ -1374,7 +1374,7 @@ class CORE extends PERMISSIONS
      * @access public
      */
     
-    function getChildrenByTypeAndParam($_DTD, $type, $param, $load = true)
+    public function getChildrenByTypeAndParam($_DTD, $type, $param, $load = true)
     {
         global $DB, $DTD, $PLATFORMID;
         $pid = $this->id;
@@ -1410,7 +1410,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getByExactValue($type, $param, $load = true)
+    public function getByExactValue($type, $param, $load = true)
     {
         global $DB, $PLATFORMID;
         $filterParams = array();
@@ -1437,7 +1437,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getByTypeAndParam($_DTD, $type, $param, $load = true)
+    public function getByTypeAndParam($_DTD, $type, $param, $load = true)
     {
         global $DB, $DTD, $PLATFORMID;
         $typeid = $DTD->get_field_id($_DTD, $type);
@@ -1474,7 +1474,7 @@ class CORE extends PERMISSIONS
      * @param  $value
      * @return $result
      */
-    function SelectByGlobalParam($param, $value)
+    public function SelectByGlobalParam($param, $value)
     {
         global $DB, $PLATFORMID;
         if (!$param || !$value) {
@@ -1496,7 +1496,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getTree($startid = null, $relationtype = 0)
+    public function getTree($startid = null, $relationtype = 0)
     {
         global $CURRENTPLATFORM, $DB;
         if (!$startid) {
@@ -1528,7 +1528,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access public
      */
-    function getFullTree($startid = null)
+    public function getFullTree($startid = null)
     {
         global $CURRENTPLATFORM, $DB;
         if (!$startid) {
@@ -1551,7 +1551,7 @@ class CORE extends PERMISSIONS
      * @return array $RETURN
      * @access public
      */
-    function translate_object_data($ADDPRIMARY = null)
+    public function translate_object_data($ADDPRIMARY = null)
     {
         global $SYS_LANGUAGES, $LANGUAGES, $EDITLANGUAGE;
         
@@ -1580,7 +1580,7 @@ class CORE extends PERMISSIONS
      * @return array $RETURN
      * @access public
      */
-    function translate_object_atributes()
+    public function translate_object_atributes()
     {
         if (! $this->_arraydata)
             $this->_xml_to_array();
@@ -1594,7 +1594,7 @@ class CORE extends PERMISSIONS
      * @return array
      * @access private
      */
-    function _xml_to_array($LANG = null)
+    protected function _xml_to_array($LANG = null)
     {
         global $XML, $DTD, $EDITLANGUAGE, $DEFAULTLANGUAGE;
         
@@ -1618,7 +1618,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access private
      */
-    function _assgin_object($O)
+    protected function _assgin_object($O)
     {
         $Obj = (array)$O;
         $end = count($Obj);
@@ -1638,7 +1638,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function dump($value = null)
+    public function dump($value = null)
     {
         if (! $value)
             $value = $this;
@@ -1656,7 +1656,7 @@ class CORE extends PERMISSIONS
      * @return NULL
      * @access public
      */
-    function buildFilter($tbl, &$params = array())
+    public function buildFilter($tbl, &$params = array())
     {
         global $CURRENTUSER, $DB;
         if (!in_array($tbl, array("global", "glb"), true)) {
@@ -1685,7 +1685,7 @@ class CORE extends PERMISSIONS
         return " AND (" . implode(" OR ", $conditions) . ")";
     }
 
-    function html_entity_decode($val)
+    public function html_entity_decode($val)
     {
         return str_replace(array(
             "&quot;"
@@ -1696,4 +1696,3 @@ class CORE extends PERMISSIONS
 
 }
 
-?>

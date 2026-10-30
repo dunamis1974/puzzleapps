@@ -20,7 +20,7 @@ class PLATFORM extends CORE {
 	 *
 	 * @return object
 	 */
-	function __construct() {
+	public function __construct() {
 		$numargs = func_num_args ();
 		
 		if ($numargs == 1) {
@@ -43,7 +43,7 @@ class PLATFORM extends CORE {
 	 * @return object
 	 * @access public
 	 */
-	function LoadPlatform() {
+	public function LoadPlatform() {
 		global $_DOINSTALL, $_GENERAL_EMAIL, $PLATFORMNAME, $PLATFORMID, $DTD, $DB;
 		
 		//$platform_ = $CORE->getByTypeAndParam("platform", "name", );
@@ -100,7 +100,7 @@ class PLATFORM extends CORE {
 	 * @param $platform
 	 * @return string $_BODY
 	 */
-	function groupsForm(&$O) {
+	public function groupsForm(&$O) {
 		global $SYSTEMIMAGES, $CURRENTUSER;
 		
 		/**
@@ -149,14 +149,14 @@ class PLATFORM extends CORE {
 	 * @param array $data
 	 * @return boolean
 	 */
-	function CreatePlatform($data) {
+	public function CreatePlatform($data) {
 		$ODD = "platform";
 		$O = new PLATFORM ( $ODD, $data );
 		$O->insert ();
 		return true;
 	}
 
-	function _insert_data($val, $oid) {
+	protected function _insert_data($val, $oid) {
 		parent::_insert_data($val, $oid);
 		if ($val === null) {
 			$this->updatePlatform();
@@ -166,7 +166,7 @@ class PLATFORM extends CORE {
 	/**
 	 * PLATFORM::updatePlatform()
 	 */
-	function updatePlatform() {
+	public function updatePlatform() {
 		global $DB;
 		if ($this->id) {
 			$sql = "UPDATE global SET _platform = ? WHERE id = ?";
@@ -180,7 +180,7 @@ class PLATFORM extends CORE {
 	/**
 	 * PLATFORM::updateDescription()
 	 */
-	function updateDescription($data) {
+	public function updateDescription($data) {
 		global $DB;
 		if ($this->id) {
 			$sql = "UPDATE platform SET descrption = ? WHERE gid = ?";
@@ -189,4 +189,3 @@ class PLATFORM extends CORE {
 	}
 }
 
-?>

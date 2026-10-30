@@ -18,7 +18,7 @@ class PERMISSIONS {
 	 * @return NULL 
 	 * @access public 
 	 */
-	function load_permissions($user) {
+	public function load_permissions($user) {
 		global $DB;
 		
 		if (! $user)
@@ -62,7 +62,7 @@ class PERMISSIONS {
 	 * @return NULL 
 	 * @access public 
 	 */
-	function changeGroup($id, $grp) {
+	public function changeGroup($id, $grp) {
 		global $DB;
 		if ($id && $grp) {
 			$sql = "UPDATE global SET _group = ? WHERE id = ?";
@@ -79,7 +79,7 @@ class PERMISSIONS {
 	 * @return NULL 
 	 * @access public 
 	 */
-	function changeOwner($id, $usr) {
+	public function changeOwner($id, $usr) {
 		global $DB;
 		if ($id && $usr) {
 			$sql = "UPDATE global SET _owner = ? WHERE id = ?";
@@ -96,7 +96,7 @@ class PERMISSIONS {
 	 * @return boolean 
 	 * @access public 
 	 */
-	function changePermissions($id, $prm) {
+	public function changePermissions($id, $prm) {
 		global $DB;
 		if ($id) {
 			$sql = "UPDATE global SET _o = ?, _g = ?, _w = ? WHERE id = ?";
@@ -109,7 +109,7 @@ class PERMISSIONS {
 	 *
 	 * @return array $data
 	 */
-	function GetGroups() {
+	public function GetGroups() {
 		global $DB, $CURRENTPLATFORM;
 		
 		$sql = "SELECT * FROM groups WHERE platform = ? ORDER BY groupname";
@@ -124,7 +124,7 @@ class PERMISSIONS {
 	 * @param $id
 	 * @return array $data
 	 */
-	function GetGroup($id = null) {
+	public function GetGroup($id = null) {
 		global $DB, $CURRENTPLATFORM;
 		
 		if (! $id)
@@ -142,7 +142,7 @@ class PERMISSIONS {
 	 * @param $user
 	 * @return string $groups
 	 */
-	function GetUserGroups($user) {
+	public function GetUserGroups($user) {
 		global $DB;
 		
 		$sql = "SELECT g.* FROM groups g, users_in_groups u WHERE u.userid = ? and g.id = u._group";
@@ -163,7 +163,7 @@ class PERMISSIONS {
 	 * @return array $data
 	 * @access private
 	 */
-	function _GetUserGroups() {
+	protected function _GetUserGroups() {
 		global $DB;
 		
 		$sql = "SELECT g.* FROM groups g, users_in_groups u WHERE u.userid = ? and g.id = u._group";
@@ -171,7 +171,7 @@ class PERMISSIONS {
 		return $data;
 	}
 	
-	function writeAccess() {
+	public function writeAccess() {
 		global $CURRENTUSER;
 		if ($CURRENTUSER->isSuperUser ())
 			return true;
@@ -190,7 +190,7 @@ class PERMISSIONS {
 	 * @param object $O
 	 * @return string $_BODY
 	 */
-	function groupsForm(&$O) {
+	public function groupsForm(&$O) {
 		global $CURRENTUSER;
 		
 		/**
@@ -239,7 +239,7 @@ class PERMISSIONS {
 	 * @param $user
 	 * @return array $data
 	 */
-	function permissionsForm(&$O, $form = true) {
+	public function permissionsForm(&$O, $form = true) {
 		global $CURRENTUSER, $SYSTEMIMAGES;
 		
 		if (! $O && is_object ( $this ))
@@ -332,4 +332,3 @@ class PERMISSIONS {
 	}
 }
 
-?>

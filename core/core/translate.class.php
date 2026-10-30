@@ -17,7 +17,7 @@ class Translate {
 	 * @return string $source
 	 * @access public 
 	 */
-	function Go($source) {
+	public function Go($source) {
 		$source = str_replace ( "\r", "", $source );
 		$source = trim ( $source ) . "\n";
 		$source = preg_replace_callback ( "/({{.*?}}|##.*?##)/ms", "__lang_callback", $source );
@@ -55,4 +55,3 @@ function __lang_callback($things) {
 	return $thing;
 }
 
-?>
